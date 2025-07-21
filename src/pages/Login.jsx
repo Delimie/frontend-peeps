@@ -17,7 +17,7 @@ function Login() {
             Welcome Back!
           </h2>
           <h1 className="text-4xl font-bold text-[#18867e] tracking-wide mb-1">
-            SIGN IN
+            SIGN IN by Ploy
           </h1>
         </div>
 
