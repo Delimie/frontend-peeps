@@ -4,7 +4,7 @@ import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
-import Peeps from "../pages/Peeps";
+import Profile from "../pages/authUser/profile";
 
 function AppRouter() {
   return (
@@ -16,16 +16,15 @@ function AppRouter() {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
 
-            {/* <Route element={<ProtectRouteUser />}>
-              <Route path="mytask" element={<MyTaskPage />} />
+            {/* <Route element={<ProtectRouteUser />}> */}
               <Route path="profile" element={<Profile />} />
-              <Route path="favorite" element={<Favorite />} />
-              <Route path="community" element={<Community />} />
-            </Route>
+              {/* <Route path="favorite" element={<Favorite />} />
+              <Route path="community" element={<Community />} /> */}
+            {/* </Route> */}
 
-            <Route element={<ProtectRouteAdmin />}>
+            {/* <Route element={<ProtectRouteAdmin />}>
               <Route path="dashboard" element={<Dashboard />} />
-            </Route> */}
+            </Route>  */}
           </Route>
         </Routes>
     </>
