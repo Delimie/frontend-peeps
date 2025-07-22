@@ -15,7 +15,7 @@ export default function FormInput({
       <input
         type={type}
         placeholder={placeholder}
-        className="mb-1 rounded-lg px-3 py-2 bg-[#F3B761] placeholder:text-[#786531] text-[#246980] font-medium border border-[#bee8b0] focus:outline-none focus:border-[#2dc1b7]"
+        className="mb-1 rounded-lg px-3 py-2 bg-[#F3B761] placeholder:text-[#786531] placeholder:opacity-50 font-medium focus:outline-none shadow-gray-300 shadow-[4px_4px_0px]"
         {...register(name)}
         {...props}
       />

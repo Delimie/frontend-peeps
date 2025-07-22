@@ -17,7 +17,7 @@ function Register() {
       <div className="w-[450px] mx-auto">
         <form
           onSubmit={handleSubmit()}
-          className="bg-white rounded-3xl  shadow-xl px-16 py-8 flex flex-col gap-2"
+          className="bg-white rounded-3xl shadow-xl px-16 py-8 flex flex-col gap-2"
         >
           <h1 className="text-3xl font-bold tracking-wide mb-4 text-center">
             Create Account
@@ -39,13 +39,6 @@ function Register() {
             register={register}
             error={errors.email?.message}
           />
-          <FormInput
-            label="PHONE"
-            name="phone"
-            placeholder="Enter your phone"
-            register={register}
-            error={errors.phone?.message}
-          />
 
           <FormInput
             label="PASSWORD"
@@ -65,16 +58,24 @@ function Register() {
             error={errors.confirmPassword?.message}
           />
 
-          <button className="bg-[#8CBEB2] px-2 py-2 mt-4 rounded-lg font-semibold cursor-pointer hover:bg-[#5ea192] hover:scale-102 duration-120">
+          <FormInput
+            label="PHONE"
+            name="phone"
+            placeholder="Enter your phone"
+            register={register}
+            error={errors.phone?.message}
+          />
+
+          <button className="bg-[#8CBEB2] w-40 ml-20 px-2 py-2 mt-4 rounded-2xl font-semibold cursor-pointer hover:bg-[#5ea192] hover:scale-102 duration-120 shadow-gray-300 shadow-[4px_4px_0px]">
             Create Account
           </button>
           <div className="mt-3 text-center text-[#258178] text-sm">
-            มีบัญชีอยู่แล้ว?
+            {/* Already have account? */}
             <Link
               to="/login"
               className="text-[#8ca317] ml-2 font-semibold hover:text-[#2dc1b7] underline"
             >
-              เข้าสู่ระบบ
+              Login
             </Link>
           </div>
         </form>
