@@ -10,7 +10,8 @@ function MainNav() {
   return (
     <div className="fixed top-0 left-0 w-full flex justify-between items-center bg-[#F2EBBF] px-8 py-2 h-12 z-50">
       <div className="flex gap-2 items-center">
-        <span className="text-2xl drop-shadow-sm">LOGOS</span>
+        {/* <span className="text-2xl drop-shadow-sm">LOGOS</span> */}
+        <img src="./Peeps_Logo.png" className="w-12"/>
         <Link
           to="/"
           className="font-extrabold tracking-wider text-2xl"
