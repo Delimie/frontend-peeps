@@ -9,22 +9,24 @@ function Login() {
     formState: { errors },
   } = useForm();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-[#F2EBBF]">
       <div className="w-[370px] mx-auto">
         <div className="mb-6 text-center">
           <span className="text-4xl">LOGO พวกเราอะ</span>
           <h2 className="text-xl mt-2 font-semibold text-[#2dc1b7]">
-            Welcome Back!
+            เทสจ้าาาาาาา อยากใส่ไรก็ใส่
           </h2>
-          <h1 className="text-4xl font-bold text-[#18867e] tracking-wide mb-1">
-            SIGN IN by Ploy
+
+          <h1 className="text-4xl font-bold text-[#55a149] tracking-wide mb-1">
+            SIGN IN
+
           </h1>
         </div>
 
-        <form className="bg-white rounded-3xl shadow-xl px-8 py-8 flex flex-col gap-3 border border-[#bee8b0]">
+        <form className="bg-white rounded-3xl shadow-xl px-8 py-8 flex flex-col gap-2 border border-[#e8e5b0]">
           <FormInput
-            label="Username"
-            placeholder="Enter your username"
+            label="Email or Phone"
+            placeholder="Enter your email or phone"
             error={errors.username?.message}
             register={register}
             name="username"
@@ -39,7 +41,7 @@ function Login() {
             name="password"
           />
 
-          <button className="bg-amber-100 px-2 py-2 rounded-lg font-bold cursor-pointer">
+          <button className="bg-amber-100 px-2 py-2 rounded-lg font-bold cursor-pointer mt-2">
             LOGIN
           </button>
         </form>
