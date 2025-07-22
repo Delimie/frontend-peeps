@@ -12,6 +12,7 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="peeps" element={<Peeps />} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
 
