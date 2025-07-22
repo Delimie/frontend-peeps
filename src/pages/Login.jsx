@@ -16,8 +16,10 @@ function Login() {
           <h2 className="text-xl mt-2 font-semibold text-[#2dc1b7]">
             เทสจ้าาาาาาา อยากใส่ไรก็ใส่
           </h2>
+
           <h1 className="text-4xl font-bold text-[#55a149] tracking-wide mb-1">
             SIGN IN
+
           </h1>
         </div>
 
