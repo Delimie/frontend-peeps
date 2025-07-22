@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
 import Profile from "../pages/authUser/profile";
+import Peeps from "../pages/Peeps";
 
 function AppRouter() {
   return (
