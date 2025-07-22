@@ -15,7 +15,7 @@ function Login() {
         <div className="mb-6 text-center">
           <span className="text-4xl">LOGO พวกเราอะ</span>
           <h2 className="text-xl mt-2 font-semibold text-[#2dc1b7]">
-            เทสจ้าาาาาาา อยากใส่ไรก็ใส่
+            เทสจ้าาาาาาา อยากใส่ไรก็ใส่ testtttttttttttttt
           </h2>
 
           <h1 className="text-4xl font-bold text-[#55a149] tracking-wide mb-1">
