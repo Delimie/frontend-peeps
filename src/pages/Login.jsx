@@ -1,18 +1,20 @@
 import { useForm } from "react-hook-form";
 import FormInput from "../components/FormInput";
+
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validators/validator";
 import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
 
-
 function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+
   } = useForm({ resolver: yupResolver(loginSchema) , mode: "onSubmit"});
+
 
   const login = useAuthStore((state)=> state.login)
   const navigate = useNavigate()

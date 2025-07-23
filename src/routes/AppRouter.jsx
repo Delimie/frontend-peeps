@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
 import Profile from "../pages/authUser/profile";
+import Peeps from "../pages/Peeps";
 
 function AppRouter() {
   return (
@@ -12,6 +13,7 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="peeps" element={<Peeps />} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
 
