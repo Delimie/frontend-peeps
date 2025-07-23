@@ -11,16 +11,13 @@ function MainNav() {
   return (
     <div className="fixed top-0 left-0 w-full grid grid-cols-3 items-center bg-[#F2EBBF] px-8 py-2 h-20 z-50">
       <div className="flex gap-2 items-center">
-        <span className="text-2xl drop-shadow-sm">LOGOS</span>
-        <Link
-          to="/"
-          className="font-extrabold tracking-wider text-2xl"
-        >
+        <img src="./Peeps_Logo.png" className="w-12" />
+        <Link to="/" className="font-extrabold tracking-wider text-2xl">
           PEEPS!
         </Link>
       </div>
 
-      <div className="flex justify-center items-center gap-10">
+      <div className="hidden md:flex justify-between items-center gap-6">
         <Link to="/" className={NavBarStyle}>
           Home
         </Link>
@@ -31,7 +28,7 @@ function MainNav() {
           Pricing
         </Link>
         <Link to="/profile" className={NavBarStyle}>
-          <p>About Us</p>
+          About
         </Link>
         <div
           className="relative"
@@ -77,25 +74,13 @@ function MainNav() {
         </div>
       </div>
 
-      <div className="flex justify-end gap-2 items-center">
-        {/* <Link
-          to="/login"
-          className="text-[#de9227] bg-white text-lg font-medium hover:text-[#ffe066] transition hover:scale-105 border-2 px-2 rounded-xl"
-        >
-          LOG IN
-        </Link>
-        <Link
-          to="/register"
-          className="text-[#de9227] bg-white text-lg font-medium hover:text-[#ffe066] transition hover:scale-105 border-2 px-2 rounded-xl"
-        >
-          REGISTER
-        </Link> */}
+      <div className="flex gap-2 justify-end">
         <button
-          className="px-2 py-1 rounded-md cursor-pointer"
+          className="px-2 py-1 rounded-md cursor-pointer flex items-end"
           onClick={() => setOpen(true)}
         >
           <span className="text-white font-bold">
-            <UserIcon/>
+            <UserIcon />
           </span>
         </button>
       </div>
@@ -119,12 +104,21 @@ function MainNav() {
           ✕
         </button>
         <nav className="mt-12 flex flex-col gap-4 p-8">
-          {/* <a href="#" className="hover:underline">
-            หน้าแรก
-          </a> */}
+          <Link
+            to="/login"
+            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+          >
+            LOG IN
+          </Link>
+          <Link
+            to="/register"
+            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+          >
+            REGISTER
+          </Link>
           <Link
             to="/profile"
-            className="text-[#21b3af] bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
           >
             ข้อมูลส่วนตัว
           </Link>
