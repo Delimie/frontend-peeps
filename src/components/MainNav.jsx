@@ -21,7 +21,7 @@ function MainNav() {
         <Link to="/" className={NavBarStyle}>
           Home
         </Link>
-        <Link to="/profile" className={NavBarStyle}>
+        <Link to="/peeps" className={NavBarStyle}>
           Peeps!
         </Link>
         <Link to="/profile" className={NavBarStyle}>
