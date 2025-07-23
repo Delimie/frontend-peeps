@@ -13,9 +13,9 @@ export const registerSchema = object({
       return emailRegex.test(value) || thaiMobileRegex.test(value)
     }
   ),
-  password: string().min(6).required(),
+  password: string().min(6).required('Enter your password'),
   confirmPassword: string().oneOf([ref("password")], 'confirmPassword must match password'),
-  email: string().email(),
+  email: string().email().required('Enter your email'),
   mobile: string().matches(thaiMobileRegex),
   birthDate: date().required('Enter your birth date').max(new Date(), 'Birth date must not be in the future'),
   gender: string().oneOf(['men', 'women', 'others'], 'Gender must be either "men" or "women" or "others'),
