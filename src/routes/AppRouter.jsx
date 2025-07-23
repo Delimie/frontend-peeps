@@ -6,28 +6,30 @@ import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
 import Profile from "../pages/authUser/profile";
 import Peeps from "../pages/Peeps";
+import NewRegister from "../pages/NewRegister";
 
 function AppRouter() {
   return (
     <>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="peeps" element={<Peeps />} />
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="peeps" element={<Peeps />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="newregister" element={<NewRegister />} />
 
-            {/* <Route element={<ProtectRouteUser />}> */}
-              <Route path="profile" element={<Profile />} />
-              {/* <Route path="favorite" element={<Favorite />} />
+          {/* <Route element={<ProtectRouteUser />}> */}
+          <Route path="profile" element={<Profile />} />
+          {/* <Route path="favorite" element={<Favorite />} />
               <Route path="community" element={<Community />} /> */}
-            {/* </Route> */}
+          {/* </Route> */}
 
-            {/* <Route element={<ProtectRouteAdmin />}>
+          {/* <Route element={<ProtectRouteAdmin />}>
               <Route path="dashboard" element={<Dashboard />} />
             </Route>  */}
-          </Route>
-        </Routes>
+        </Route>
+      </Routes>
     </>
   );
 }
