@@ -180,12 +180,12 @@ function Register() {
           )}
 
           <div className="mt-3 text-center text-[#258178] text-sm">
-            มีบัญชีอยู่แล้ว?
+            {/* Already have account? */}
             <Link
               to="/login"
               className="text-[#8ca317] ml-2 font-semibold hover:text-[#2dc1b7] underline"
             >
-              เข้าสู่ระบบ
+              Login
             </Link>
           </div>
         </form>
