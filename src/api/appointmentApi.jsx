@@ -16,4 +16,4 @@ export const getAllAppointmentApi = (appointId, token) => appointmentsApi.get(`/
 
 export const updateAppointmentApi = (appointId, body, token) => appointmentsApi.patch(`/${appointId}`, body, addToken(token));
 
-export const deleteAppointmentApi = (appointId, token) => appointmentsApi.delete(`/${appointId}`, addToken(token));
+// export const deleteAppointmentApi = (appointId, token) => appointmentsApi.delete(`/${appointId}`, addToken(token));
