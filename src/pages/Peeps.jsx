@@ -25,7 +25,14 @@ function Peeps() {
     <div className="min-h-screen bg-[#F2EBBF] flex justify-center pt-20 pb-20">
       <div className="flex items-center w-2/3 gap-5">
         {/* แถบซ้าย */}
-        <div className="bg-white w-1/4 h-[80vh] rounded-l-3xl pt-7 relative">
+        <div className="w-1/4 h-[80vh] flex">
+          <div className="flex flex-col items-end pt-20 gap-5">
+            <div className="h-[5vh] w-[2vw] bg-[#F3B562] rounded-l-4xl"></div>
+            <div className="h-[5vh] w-[2vw] bg-[#F3B562] rounded-l-4xl"></div>
+            <div className="h-[5vh] w-[4vw] bg-[#F06060] rounded-l-4xl"></div>
+            <div className="h-[5vh] w-[2vw] bg-[#F3B562] rounded-l-4xl"></div>
+          </div>
+        <div className="bg-white w-full h-full rounded-l-3xl pt-7 relative">
           <div className="bg-[#8CBEB2] rounded-r-2xl h-[5vh] w-3/4 flex items-center justify-center">
             <h1 className="text-white font-semibold">Group's Name</h1>
           </div>
@@ -65,10 +72,11 @@ function Peeps() {
             ))}
           </div>
         </div>
+        </div>
 
         {/* Modal: Create Room */}
         {isCreateModalOpen && (
-          <div className="fixed inset-0 bg-[#5C4B51] bg-opacity-40 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-[#5C4B51]/50 flex items-center justify-center z-50">
             <div className="bg-white w-96 p-6 rounded-xl shadow-lg relative">
               <button
                 onClick={() => setIsCreateModalOpen(false)}
@@ -107,7 +115,7 @@ function Peeps() {
 
         {/* Modal: Delete Room Confirmation */}
         {isDeleteModalOpen && (
-          <div className="fixed inset-0 bg-[#5C4B51] bg-opacity-40 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-[#5C4B51]/50 flex items-center justify-center z-50">
             <div className="bg-white w-96 p-6 rounded-xl shadow-lg relative">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
@@ -149,7 +157,7 @@ function Peeps() {
         <div className="bg-white w-3/4 h-[80vh] rounded-r-3xl">
           <div className="h-full flex flex-col justify-end items-end pb-5">
             {/* แชตบับเบิ้ล */}
-            <div className="h-[60vh] w-full">
+            <div className="h-[60vh] w-full flex flex-col gap-3 px-4">
               {/* ฝั่งซ้าย
               <div className="flex justify-start pl-5">
                 <div className="bg-[#F06060] w-2/5 h-[16vh] flex rounded-4xl justify-center p-3">
@@ -165,21 +173,77 @@ function Peeps() {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 </div>
               </div> */}
-              
-              {/* person1 */}
-              <div>
-                <img src="./mockProfilePic1.jpg" alt="mockProfilePic1"className="w-[4vw]"/>
-              </div>
-              
 
+              {/* person1 */}
+              <div className="flex gap-5">
+                <div>
+                <img
+                  src="./mockProfilePic1.jpg"
+                  alt="mockProfilePic1"
+                  className="w-[4vw] rounded-full"
+                />
+                </div>
+                <div className="flex flex-col">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </div>
+              </div>
+
+              {/* person2 */}
+              <div className="flex gap-5">
+                <div>
+                <img
+                  src="./mockProfilePic2.jpg"
+                  alt="mockProfilePic2"
+                  className="w-[4vw] rounded-full"
+                />
+                </div>
+                <div className="flex flex-col">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  </div>
+              </div>
+
+              {/* person3 */}
+              <div className="flex gap-5">
+                <div>
+                <img
+                  src="./mockProfilePic3.jpg"
+                  alt="mockProfilePic3"
+                  className="w-[4vw] rounded-full"
+                />
+                </div>
+                <div className="flex flex-col">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  </div>
+              </div>
+
+              {/* person1 */}
+              <div className="flex gap-5">
+                <div>
+                <img
+                  src="./mockProfilePic1.jpg"
+                  alt="mockProfilePic1"
+                  className="w-[4vw] rounded-full"
+                />
+                </div>
+                <div className="flex flex-col">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </div>
+              </div>
             </div>
 
             {/* text area */}
-            <div className="w-11/12 h-[10vh] bg-[#F3B562] rounded-l-4xl flex items-center justify-center gap-2 pl-4">
+            <div className="w-11/12 h-[8vh] bg-[#F3B562] rounded-l-4xl flex items-center justify-center gap-2 pl-4">
               <textarea
                 type="text"
                 placeholder="Type here..."
-                className="h-[8vh] w-6/7 resize-none"
+                className="h-[6vh] w-6/7 resize-none "
               />
               <div className="bg-[#F2EBBF] rounded-full h-9 w-9 flex justify-center items-center">
                 <button type="submit">
