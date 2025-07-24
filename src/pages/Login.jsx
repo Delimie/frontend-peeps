@@ -5,31 +5,28 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validators/validator";
 import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
-import LogoAnimation from "../components/Animation";
-
+import { LogoAnimation } from "../components/Animation";
 
 function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+  } = useForm({ resolver: yupResolver(loginSchema), mode: "onSubmit" });
 
-  } = useForm({ resolver: yupResolver(loginSchema) , mode: "onSubmit"});
-
-
-  const login = useAuthStore((state)=> state.login)
-  const navigate = useNavigate()
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      const res = await login(data)
+      const res = await login(data);
       toast.success("Welcome back!!");
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Please try again");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2EBBF]">

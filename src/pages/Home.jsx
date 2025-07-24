@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import { LandingGallery } from "../components/Animation";
 
 function Home() {
-
   return (
-    <div>Homesssssss</div>
-  )
+    <>
+      <p className="flex justify-center items-center text-5xl font-bold mt-18 pt-15">
+        TEST PAGE
+      </p>
+      <div className="flex justify-center items-center pb-18">
+        <LandingGallery />
+      </div>
+    </>
+  );
 }
 
-export default Home
+export default Home;
