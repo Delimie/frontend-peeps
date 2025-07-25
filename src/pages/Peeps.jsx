@@ -247,7 +247,7 @@ function Peeps() {
               />
               <div className="bg-[#F2EBBF] rounded-full h-9 w-9 flex justify-center items-center">
                 <button type="submit">
-                  <SendHorizontal className="text-[#5C4B51]" />
+                  <SendHorizontal className="text-[#5C4B51] cursor-pointer" />
                 </button>
               </div>
             </div>
