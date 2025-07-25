@@ -1,16 +1,15 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
-import Profile from "../pages/authUser/Profile";
 import Peeps from "../pages/Peeps";
 import NewRegister from "../pages/NewRegister";
 import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
+import Profile from "../pages/authUser/profile";
 
 function AppRouter() {
   return (
