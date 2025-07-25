@@ -7,8 +7,10 @@ import Layout from "../layouts/Layout";
 import Profile from "../pages/authUser/Profile";
 import Peeps from "../pages/Peeps";
 import NewRegister from "../pages/NewRegister";
-import About from "../pages/About";
+import Pricing from "../pages/Pricing";
+import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
+import About from "../pages/About";
 
 function AppRouter() {
   return (
@@ -25,9 +27,11 @@ function AppRouter() {
 
           {/* <Route element={<ProtectRouteUser />}> */}
           <Route path="profile" element={<Profile />} />
-          {/* <Route path="favorite" element={<Favorite />} />
-              <Route path="community" element={<Community />} /> */}
-          {/* </Route> */}
+          <Route path="pricing" element={<Pricing />} />
+          <Route path="payment" element={<Payment />} />
+        
+              {/* <Route path="community" element={<Community />} /> */} 
+          {/* </Route>
 
           {/* <Route element={<ProtectRouteAdmin />}>
               <Route path="dashboard" element={<Dashboard />} />
