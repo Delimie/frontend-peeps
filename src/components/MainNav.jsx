@@ -33,7 +33,7 @@ function MainNav() {
         <Link to="/pricing" className={NavBarStyle}>
           Pricing
         </Link>
-        <Link to="/profile" className={NavBarStyle}>
+        <Link to="/about" className={NavBarStyle}>
           About
         </Link>
         <div
