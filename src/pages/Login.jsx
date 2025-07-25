@@ -1,43 +1,42 @@
 import { useForm } from "react-hook-form";
 import FormInput from "../components/FormInput";
-
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validators/validator";
 import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
+import { LogoAnimation } from "../components/Animation";
 
 function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+  } = useForm({ resolver: yupResolver(loginSchema), mode: "onSubmit" });
 
-  } = useForm({ resolver: yupResolver(loginSchema) , mode: "onSubmit"});
-
-
-  const login = useAuthStore((state)=> state.login)
-  const navigate = useNavigate()
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      const res = await login(data)
+      const res = await login(data);
       toast.success("Welcome back!!");
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Please try again");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2EBBF]">
       <div className="flex flex-col items-center gap-3 w-full">
         <div className="flex flex-col items-center mb-5">
-          <img src="./Peeps_Logo.png" className="w-50" alt="Peeps Logo" />
-          <h1 className="text-5xl font-extrabold text-[#5c552e] tracking-wide drop-shadow-sm mb-1">
-            WELCOME <span className="text-[#ef6060]">P<span className="text-[#e09935]">EE</span>PS!</span>
-          </h1>
+          <LogoAnimation/>
+          {/* <img src="./Peeps_Logo.png" className="w-50" alt="Peeps Logo" /> */}
+          {/* <h1 className="text-5xl font-extrabold text-[#5c552e] tracking-wide drop-shadow-sm mb-1">
+            WELCOME <span className="text-[#ef6060]">P<span className="text-[#e09935]">E<span className="text-[#85b5b5]">E</span></span>PS!</span>
+          </h1> */}
         </div>
 
         <div className="w-[380px] mx-auto">
