@@ -1,66 +1,74 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Avatar from "../../components/avatar";
-import { EditIcon, ProfilePic } from "../../assets/icon";
+import { EditIcon } from "../../assets/icon";
+import useAuthStore from "../../stores/authStore";
 
 function Profile() {
+  const user = useAuthStore((state) => state.user);
+  const getProfile = useAuthStore((state) => state.getUserProfile);
+
+  console.log(user);
+
+  useEffect(() => {
+    getProfile(3);
+  }, []);
+
   return (
-    <div className="flex flex-col items-center h-screen text-xl font-sans">
-      <div className="whitebox flex flex-col gap-5 justify-center items-center my-30 w-200 h-200 bg-[#FFFCFC] rounded-2xl">
+    <div className="flex flex-col items-center h-screen text-xl mt-30 font-sans bg-white">
+      <div className="whitebox flex flex-col gap-6 justify-center items-center py-10 px-8 bg-[#FFFCFC] rounded-2xl shadow-md w-[800px]">
         <p className="font-bold text-3xl">Profile</p>
-        <div className="greybox rounded-2xl bg-[#EFEFEF] h-140 w-170 flex">
-          <div className="flex mx-auto pb-80">
-            <ProfilePic />
+
+        <div className="greybox flex flex-row bg-[#EFEFEF] rounded-2xl w-full p-8 gap-8">
+          {/* Avatar */}
+          <div className="flex items-start justify-center w-1/3">
+            <Avatar />
           </div>
-          <div className="textInfo w-100 flex flex-col pt-15 gap-4">
+
+          {/* Info */}
+          <div className="textInfo w-2/3 flex flex-col gap-4">
             <div>
               <p className="font-bold">Name :</p>
-              <p>Andy</p>
+              <p>{user.name}</p>
             </div>
             <div>
               <p className="font-bold">Email :</p>
-              <p>andy@mail.com</p>
+              <p>{user.email}</p>
             </div>
-
-            <div className="flex gap-15">
+            <div className="flex gap-10">
               <div>
-                <p className="font-bold">Phone Number :</p>
-                <p>0123456789</p>
+                <p className="font-bold">Phone Num. :</p>
+                <p>{user.mobile}</p>
               </div>
               <div>
                 <p className="font-bold">Birthdate :</p>
-                <p>10/10/2010</p>
+                <p>{user.birthDate.slice(0, 10)}</p>
               </div>
             </div>
-
-            <div className="flex gap-34">
+            <div className="flex gap-10">
               <div>
                 <p className="font-bold">Gender :</p>
-                <p>Male</p>
+                <p>{user.gender}</p>
               </div>
               <div>
                 <p className="font-bold">Occupation :</p>
-                <p>Engineer</p>
+                <p>{user.occupation}</p>
               </div>
             </div>
-
             <div>
               <p className="font-bold">Address :</p>
-              <p className="Address">123 Abcdefg St., Bangkok,</p>
-              <div className="flex gap-3">
-                <p className="Country">Thailand</p>
-                <p className="Zip">10001</p>
-              </div>
+              <p>{user.address}</p>
             </div>
-            <br />
-            <button
-              type="btn"
-              className="flex hover:cursor-pointer transition hover:scale-105 py-2 w-50 rounded-2xl bg-[#F3B761] gap-5 items-center justify-center"
-            >
-              <EditIcon />
-              Edit Profile
-            </button>
           </div>
         </div>
+
+        {/* Button */}
+        <button
+          type="button"
+          className="flex hover:cursor-pointer transition hover:scale-105 py-2 px-5 rounded-2xl bg-[#F3B761] gap-2 items-center justify-center"
+        >
+          <EditIcon />
+          Edit Profile
+        </button>
       </div>
     </div>
   );
