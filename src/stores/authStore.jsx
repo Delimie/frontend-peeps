@@ -7,7 +7,7 @@ const useAuthStore = create(
   persist(
     (set, get) => ({
       user: null,
-      token: "",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzUzNDI0MzkwLCJleHAiOjE3NTYwMTYzOTB9.asaz41z87KzSk2BEwCh1nYzcd_8luHLaxhSUPEdqAR0",
       isLoading: true,
       login: async (input) => {
         const res = await authApi.post("/login", input);
