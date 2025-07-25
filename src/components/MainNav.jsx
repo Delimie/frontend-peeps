@@ -27,7 +27,7 @@ function MainNav() {
         <Link to="/profile" className={NavBarStyle}>
           Pricing
         </Link>
-        <Link to="/profile" className={NavBarStyle}>
+        <Link to="/about" className={NavBarStyle}>
           About
         </Link>
         <div

@@ -4,9 +4,11 @@ import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
-import Profile from "../pages/authUser/profile";
+import Profile from "../pages/authUser/Profile";
 import Peeps from "../pages/Peeps";
 import NewRegister from "../pages/NewRegister";
+import About from "../pages/About";
+import BubbleBox from "../components/BubbleBox";
 
 function AppRouter() {
   return (
@@ -18,6 +20,8 @@ function AppRouter() {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
+          <Route path="about" element={<About />} />
+          <Route path="bubble" element={<BubbleBox />} />
 
           {/* <Route element={<ProtectRouteUser />}> */}
           <Route path="profile" element={<Profile />} />
