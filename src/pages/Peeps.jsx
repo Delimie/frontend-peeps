@@ -2,6 +2,7 @@ import { ChevronDown, Plus, SendHorizontal, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { socket } from "../socket/socket";
 import { CHAT_ACTION } from "../shared/constants/socket.constant";
+import useAuthStore from "../stores/authStore";
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -9,6 +10,8 @@ function Peeps() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
   const [roomToDelete, setRoomToDelete] = useState(null);
+  
+  const token = useAuthStore(state => state.token);
 
   const createRoom = () => {
     if (newRoomName.trim() === "") return;
@@ -28,10 +31,16 @@ function Peeps() {
     socket.emit('hello:server', { message: 'hello' });
     socket.on(CHAT_ACTION.CHAT_SYNC, (data) => {
       console.log(`Server response with ${data.message}`);
-    })
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Connection error:', err.message, 'Error code :');
+      console.log(err);
+    });
 
     return () => {
       socket.off(CHAT_ACTION.CHAT_SYNC);
+      socket.off('connect_error');
     };
   }, []);
 
