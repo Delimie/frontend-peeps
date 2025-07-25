@@ -9,8 +9,8 @@ import Peeps from "../pages/Peeps";
 import NewRegister from "../pages/NewRegister";
 import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
-import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
+import BubbleBox from "../components/BubbleBox";
 
 function AppRouter() {
   return (
