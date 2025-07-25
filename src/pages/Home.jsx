@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { Test } from "../assets/icon";
+import { LandingGallery } from "../components/Animation";
 
 function Home() {
   return (
-    <div>
-      <div className="min-h-screen bg-[#ffffff] flex justify-center pt-20 pb-20">
-        <Test />
+    <>
+      <p className="flex justify-center items-center text-5xl font-bold mt-18 pt-15">
+        TEST PAGE
+      </p>
+      <div className="flex justify-center items-center pb-18">
+        <LandingGallery />
       </div>
-    </div>
+    </>
   );
 }
 

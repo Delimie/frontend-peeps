@@ -13,7 +13,13 @@ function MainNav() {
       <div className="flex gap-2 items-center">
         <img src="./Peeps_Logo.png" className="w-12" />
         <Link to="/" className="font-extrabold tracking-wider text-2xl">
-          PEEPS!
+          <span className="text-[#ef6060]">
+            P
+            <span className="text-[#e09935]">
+              E<span className="text-[#85b5b5]">E</span>
+            </span>
+            PS!
+          </span>
         </Link>
       </div>
 
@@ -24,10 +30,10 @@ function MainNav() {
         <Link to="/peeps" className={NavBarStyle}>
           Peeps!
         </Link>
-        <Link to="/profile" className={NavBarStyle}>
+        <Link to="/pricing" className={NavBarStyle}>
           Pricing
         </Link>
-        <Link to="/profile" className={NavBarStyle}>
+        <Link to="/about" className={NavBarStyle}>
           About
         </Link>
         <div
