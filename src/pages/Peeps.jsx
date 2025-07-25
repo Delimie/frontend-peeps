@@ -1,5 +1,7 @@
 import { ChevronDown, Plus, SendHorizontal, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { socket } from "../socket/socket";
+import { CHAT_ACTION } from "../shared/constants/socket.constant";
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -21,6 +23,18 @@ function Peeps() {
     setRooms(updated);
   };
 
+  useEffect(() => {
+
+    socket.emit('hello:server', { message: 'hello' });
+    socket.on(CHAT_ACTION.CHAT_SYNC, (data) => {
+      console.log(`Server response with ${data.message}`);
+    })
+
+    return () => {
+      socket.off(CHAT_ACTION.CHAT_SYNC);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F2EBBF] flex justify-center pt-20 pb-20">
       <div className="flex items-center w-2/3 gap-5">
@@ -32,46 +46,46 @@ function Peeps() {
             <div className="h-[5vh] w-[4vw] bg-[#F06060] rounded-l-4xl"></div>
             <div className="h-[5vh] w-[2vw] bg-[#F3B562] rounded-l-4xl"></div>
           </div>
-        <div className="bg-white w-full h-full rounded-l-3xl pt-7 relative">
-          <div className="bg-[#8CBEB2] rounded-r-2xl h-[5vh] w-3/4 flex items-center justify-center">
-            <h1 className="text-white font-semibold">Group's Name</h1>
-          </div>
-
-          <div className="mt-5 space-y-2">
-            <div className="flex items-center gap-2 text-gray-700 font-medium">
-              <ChevronDown size={16} />
-              <p>Channel</p>
+          <div className="bg-white w-full h-full rounded-l-3xl pt-7 relative">
+            <div className="bg-[#8CBEB2] rounded-r-2xl h-[5vh] w-3/4 flex items-center justify-center">
+              <h1 className="text-white font-semibold">Group's Name</h1>
             </div>
 
-            {/* ปุ่มเปิด Modal Create Room */}
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-1 mt-3 text-green-700 hover:text-green-900 text-sm cursor-pointer"
-            >
-              <Plus className="h-4" />
-              Create Room
-            </button>
-
-            {/* รายการห้อง */}
-            {rooms.map((room, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between px-2 py-1 bg-[#8CBEB2] hover:bg-[#F3B562] text-white"
-              >
-                <p className="text-sm flex items-center gap-1">{room}</p>
-                <button
-                  onClick={() => {
-                    setRoomToDelete(index);
-                    setIsDeleteModalOpen(true);
-                  }}
-                  className="hover:text-[#F06060]"
-                >
-                  <Trash2 className="h-4 cursor-pointer" />
-                </button>
+            <div className="mt-5 space-y-2">
+              <div className="flex items-center gap-2 text-gray-700 font-medium">
+                <ChevronDown size={16} />
+                <p>Channel</p>
               </div>
-            ))}
+
+              {/* ปุ่มเปิด Modal Create Room */}
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center gap-1 mt-3 text-green-700 hover:text-green-900 text-sm cursor-pointer"
+              >
+                <Plus className="h-4" />
+                Create Room
+              </button>
+
+              {/* รายการห้อง */}
+              {rooms.map((room, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between px-2 py-1 bg-[#8CBEB2] hover:bg-[#F3B562] text-white"
+                >
+                  <p className="text-sm flex items-center gap-1">{room}</p>
+                  <button
+                    onClick={() => {
+                      setRoomToDelete(index);
+                      setIsDeleteModalOpen(true);
+                    }}
+                    className="hover:text-[#F06060]"
+                  >
+                    <Trash2 className="h-4 cursor-pointer" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Modal: Create Room */}
@@ -177,11 +191,11 @@ function Peeps() {
               {/* person1 */}
               <div className="flex gap-5">
                 <div>
-                <img
-                  src="./mockProfilePic1.jpg"
-                  alt="mockProfilePic1"
-                  className="w-[4vw] rounded-full"
-                />
+                  <img
+                    src="./mockProfilePic1.jpg"
+                    alt="mockProfilePic1"
+                    className="w-[4vw] rounded-full"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
@@ -193,11 +207,11 @@ function Peeps() {
               {/* person2 */}
               <div className="flex gap-5">
                 <div>
-                <img
-                  src="./mockProfilePic2.jpg"
-                  alt="mockProfilePic2"
-                  className="w-[4vw] rounded-full"
-                />
+                  <img
+                    src="./mockProfilePic2.jpg"
+                    alt="mockProfilePic2"
+                    className="w-[4vw] rounded-full"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
@@ -205,31 +219,31 @@ function Peeps() {
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  </div>
+                </div>
               </div>
 
               {/* person3 */}
               <div className="flex gap-5">
                 <div>
-                <img
-                  src="./mockProfilePic3.jpg"
-                  alt="mockProfilePic3"
-                  className="w-[4vw] rounded-full"
-                />
+                  <img
+                    src="./mockProfilePic3.jpg"
+                    alt="mockProfilePic3"
+                    className="w-[4vw] rounded-full"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  </div>
+                </div>
               </div>
 
               {/* person1 */}
               <div className="flex gap-5">
                 <div>
-                <img
-                  src="./mockProfilePic1.jpg"
-                  alt="mockProfilePic1"
-                  className="w-[4vw] rounded-full"
-                />
+                  <img
+                    src="./mockProfilePic1.jpg"
+                    alt="mockProfilePic1"
+                    className="w-[4vw] rounded-full"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
