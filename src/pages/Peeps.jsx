@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { socket } from "../socket/socket";
 import { CHAT_ACTION } from "../shared/constants/socket.constant";
 import useAuthStore from "../stores/authStore";
+import { userTyping } from "../socket/handlers/chatHandler.js";
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -10,7 +11,7 @@ function Peeps() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
   const [roomToDelete, setRoomToDelete] = useState(null);
-  
+
   const token = useAuthStore(state => state.token);
 
   const createRoom = () => {
@@ -26,9 +27,10 @@ function Peeps() {
     setRooms(updated);
   };
 
+  // Socket useEffect : start
   useEffect(() => {
+    if (!socket.connected) socket.connect();
 
-    socket.emit('hello:server', { message: 'hello' });
     socket.on(CHAT_ACTION.CHAT_SYNC, (data) => {
       console.log(`Server response with ${data.message}`);
     });
@@ -41,8 +43,22 @@ function Peeps() {
     return () => {
       socket.off(CHAT_ACTION.CHAT_SYNC);
       socket.off('connect_error');
+
+      socket.disconnect();
     };
   }, []);
+
+  const [messageInput, setMessageInput] = useState('');
+  // // Socket useEffect : chat status
+  useEffect(() => {
+
+    const input = messageInput
+    userTyping(input);
+
+    return () => {
+    }
+
+  }, [messageInput]);
 
   return (
     <div className="min-h-screen bg-[#F2EBBF] flex justify-center pt-20 pb-20">
@@ -266,6 +282,7 @@ function Peeps() {
               <textarea
                 type="text"
                 placeholder="Type here..."
+                onChange={(e) => setMessageInput(e.target.value)}
                 className="h-[6vh] w-6/7 resize-none "
               />
               <div className="bg-[#F2EBBF] rounded-full h-9 w-9 flex justify-center items-center">
