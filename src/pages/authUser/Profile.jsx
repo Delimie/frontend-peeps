@@ -11,6 +11,7 @@ function Profile() {
   const [openModal, setOpenModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   const getProfile = useAuthStore((state) => state.getUserProfile);
+  const token = useAuthStore((state) => state.token);
   const {
     register,
     handleSubmit,
@@ -18,10 +19,10 @@ function Profile() {
     formState: { errors },
   } = useForm();
 
-  console.log(user);
+  if (!user) return <div>Loading...</div>;
 
   useEffect(() => {
-    getProfile(1);
+    getProfile();
   }, []);
 
   useEffect(() => {
@@ -30,8 +31,8 @@ function Profile() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await updateUserApi("1",data);
-      console.log(res)
+      const res = await updateUserApi(user.id, data, token);
+      await getProfile();
       toast.success("Your profile has updated");
       setOpenModal(false);
     } catch (error) {
@@ -39,8 +40,6 @@ function Profile() {
       toast.error("Please try again");
     }
   };
-
-  if (!user) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col items-center h-screen text-xl mt-30 font-sans bg-white">
@@ -98,7 +97,7 @@ function Profile() {
           <EditIcon />
           Edit Profile
         </button>
-{openModal && (
+        {openModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
             <div className="bg-white rounded-2xl p-8 min-w-[320px] shadow-lg relative">
               <button
@@ -108,7 +107,10 @@ function Profile() {
                 ×
               </button>
               <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
-              <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <FormInput
                   label="Name"
                   name="name"

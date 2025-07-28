@@ -21,6 +21,7 @@ function Login() {
     try {
       const res = await login(data);
       toast.success("Welcome back!!");
+      console.log(res)
       navigate("/");
     } catch (error) {
       console.log(error);
