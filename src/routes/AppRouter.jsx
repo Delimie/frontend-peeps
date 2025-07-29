@@ -15,6 +15,8 @@ import ProfSet from "../components/SidebarSet/Settings/ProfSet";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
 import CardSet from "../components/SidebarSet/Settings/CardSet";
 import Transactions from "../components/SidebarSet/Settings/Transactions";
+import PeepsLayout from "../layouts/PeepsLayout";
+import ChannelChat from "../pages/ChannelChat";
 
 function AppRouter() {
   return (
@@ -23,6 +25,9 @@ function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="peeps" element={<Peeps />} />
+          <Route path="peeps/:groupId" element={<PeepsLayout />}>
+            <Route path=":channelId" element={<ChannelChat />} />
+          </Route>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
@@ -40,8 +45,8 @@ function AppRouter() {
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
           <Route path="debt-summary" element={<DebtSummary />} />
-        
-              {/* <Route path="community" element={<Community />} /> */} 
+
+          {/* <Route path="community" element={<Community />} /> */}
 
           {/* <Route path="community" element={<Community />} /> */}
           {/* </Route>
