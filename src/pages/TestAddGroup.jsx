@@ -22,11 +22,7 @@ function TestPeeps() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newUserId, setNewUserId] = useState("");
-  const group = useGroupStore((state)=> state.groups)
   const user = useAuthStore((state)=> state.user)
-
-  console.log(user)
-  console.log(group)
 
   // เมื่อเลือกกลุ่มปัจจุบัน ให้โหลดสมาชิกในกลุ่ม
   useEffect(() => {
@@ -78,6 +74,7 @@ function TestPeeps() {
           </div>
           {/* รายชื่อ group */}
           <div className="space-y-2">
+          
             {groups.map((group) => (
               <div
                 key={group.id}
@@ -87,6 +84,7 @@ function TestPeeps() {
                     : "hover:bg-[#F3B562] text-[#8CBEB2]"
                 }`}
                 onClick={() => handleSelectGroup(group)}
+                
               >
                 <span>{group.name}</span>
               </div>
