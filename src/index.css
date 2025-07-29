@@ -11,15 +11,28 @@ body {
 
 /* font - หัวข้อ mitr / คอนเท้น noto / บับเบิ้ลแชต&น่ารัก ๆ itim */
 
+.toReceive {
+  color: #8CBEB2;
+  font-weight: bold;
+}
 
-#mitr {
+.toPay{
+  color: #F06060;
+  font-weight: bold;
+}
+
+h1{
   font-family: 'Mitr', sans-serif;
 }
 
-#noto {
+.mitr {
+  font-family: 'Mitr', sans-serif;
+}
+
+.noto {
   font-family: 'Noto Sans Thai', sans-serif;
 }
 
-#itim {
+.itim {
   font-family: 'Itim', cursive;
 }
