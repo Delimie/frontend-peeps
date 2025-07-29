@@ -221,7 +221,7 @@ function Peeps() {
                         Snoopy
                         <time className="text-xs opacity-50">12:45</time>
                       </div>
-                      <div className="chat-bubble rounded-xl bg-[#8CBEB2] text-lg">
+                      <div className="chat-bubble rounded-xl bg-[#b9dfd6] text-lg">
                         Hi! 🙋‍♂️
                       </div>
                       <div className="chat-footer opacity-50">Seen by 2</div>
@@ -249,7 +249,7 @@ function Peeps() {
               <textarea
                 type="text"
                 placeholder="Type here..."
-                className="h-[6vh] w-6/7 resize-none "
+                className="h-[6vh] w-6/7 resize-none"
               />
               <div className="bg-[#F2EBBF] rounded-full h-9 w-9 flex justify-center items-center">
                 <button type="submit">

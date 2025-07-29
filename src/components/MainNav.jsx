@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserIcon } from "../assets/icon";
+import useAuthStore from "../stores/authStore";
 
 function MainNav() {
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const NavBarStyle =
     "text-lg font-medium hover:text-[#de9227] transition hover:scale-105";
+
+  const user = useAuthStore((state) => state.user); // <<< state จาก store
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
 
   return (
     <div className="fixed top-0 left-0 w-full grid grid-cols-3 items-center bg-[#F2EBBF] px-8 py-2 h-20 z-50">
@@ -110,30 +115,48 @@ function MainNav() {
           ✕
         </button>
         <nav className="mt-12 flex flex-col gap-4 p-8">
-          <Link
-            to="/login"
-            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
-          >
-            LOG IN
-          </Link>
-          <Link
-            to="/register"
-            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
-          >
-            REGISTER
-          </Link>
-          <Link
-            to="/profile"
-            className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
-          >
-            Settings
-          </Link>
-          <a href="#" className="hover:underline">
-            ประวัติบิลของคุณ
-          </a>
-          <a href="#" className="hover:underline">
-            ติดต่อ
-          </a>
+          {!user ? (
+            <>
+              <Link
+                to="/login"
+                className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+              >
+                LOG IN
+              </Link>
+              <Link
+                to="/register"
+                className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+              >
+                REGISTER
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/profile"
+                className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+                onClick={() => setOpen(false)}
+              >
+                ข้อมูลส่วนตัว
+              </Link>
+              <a href="#" className="hover:underline">
+                ประวัติบิลของคุณ
+              </a>
+              <a href="#" className="hover:underline">
+                ติดต่อ
+              </a>
+              <button
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                  navigate("/login");
+                }}
+                className="text-left bg-white text-md hover:text-[#de9227] transition hover:scale-105"
+              >
+                ออกจากระบบ
+              </button>
+            </>
+          )}
         </nav>
       </div>
     </div>
