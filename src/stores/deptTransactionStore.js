@@ -4,7 +4,7 @@ import {
   getDebtTransactionByIdApi,
   getUserDebtTransactionsApi,
   confirmDebtTransactionApi,
-} from "../apis/debtTransaction.api";
+} from "../api/deptTransaction";
 
 const useDebtTransactionStore = create((set, get) => ({
   transactions: [],
