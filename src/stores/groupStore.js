@@ -6,18 +6,21 @@ import {
   getGroupByIdApi,
   removeUserFromGroupApi,
   updateGroupApi,
+  getUsersInGroupApi,
 } from "../api/groupApi";
 
 const useGroupStore = create((set, get) => ({
   groups: [],
   currentGroup: null,
+  groupUsers: [], // <-- เพิ่ม state เก็บ users ในกลุ่ม
   loading: false,
 
-  //สร้างกลุ่มใหม่
-  createGroup: async (body, user) => {
+  // สร้างกลุ่มใหม่
+  createGroup: async (body, userId) => {
     set({ loading: true });
-    const resp = await createGroupApi(body);
-    const newGroup = { ...resp.data.result, users: [user] };
+    const resp = await createGroupApi(body); // resp.data คือ group ที่ backend ส่งกลับ
+    console.log("createGroup resp.data:", resp.data);
+    const newGroup = resp.data;
     set((state) => ({
       loading: false,
       groups: [newGroup, ...state.groups],
@@ -25,7 +28,7 @@ const useGroupStore = create((set, get) => ({
     return resp;
   },
 
-  //ดึงกลุ่มด้วย ID
+  // ดึงกลุ่มด้วย ID
   getGroupById: async (id) => {
     set({ loading: true });
     const resp = await getGroupByIdApi(id);
@@ -33,14 +36,35 @@ const useGroupStore = create((set, get) => ({
     return resp;
   },
 
-  //แก้ไขกลุ่ม
-  updateGroup: async (id, body) => {
-    const resp = await updateGroupApi(id, body);
-    await get().getGroupById(id); // รีเฟรชข้อมูลกลุ่มหลังอัปเดต
+  // ดึง users ในกลุ่ม
+  getUsersInGroup: async (groupId) => {
+    set({ loading: true });
+    const resp = await getUsersInGroupApi(groupId);
+    set({ groupUsers: resp.data.message, loading: false });
     return resp;
   },
 
-  //ลบกลุ่ม
+  addUserToGroup: async (groupId, userId, role = "USER") => {
+    // API รับเป็น body { userId, role }
+    const resp = await addUserToGroupApi(groupId, { userId, role });
+    await get().getUsersInGroup(groupId);
+    await get().getGroupById(groupId);
+    return resp;
+  },
+
+  removeUserFromGroup: async (groupId, userId) => {
+    const resp = await removeUserFromGroupApi(groupId, userId);
+    await get().getUsersInGroup(groupId);
+    await get().getGroupById(groupId);
+    return resp;
+  },
+
+  updateGroup: async (id, body) => {
+    const resp = await updateGroupApi(id, body);
+    await get().getGroupById(id);
+    return resp;
+  },
+
   deleteGroup: async (id) => {
     const resp = await deleteGroupApi(id);
     set((state) => ({
@@ -49,21 +73,6 @@ const useGroupStore = create((set, get) => ({
     return resp;
   },
 
-  //เพิ่มผู้ใช้เข้ากลุ่ม
-  addUserToGroup: async (groupId, userId) => {
-    const resp = await addUserToGroupApi(groupId, userId);
-    await get().getGroupById(groupId);
-    return resp;
-  },
-
-  //เอาผู้ใช้ออกจากกลุ่ม
-  removeUserFromGroup: async (groupId, userId) => {
-    const resp = await removeUserFromGroupApi(groupId, userId);
-    await get().getGroupById(groupId);
-    return resp;
-  },
-
-  //ตั้งค่ากลุ่มปัจจุบัน
   setCurrentGroup: (group) => set({ currentGroup: group }),
 }));
 

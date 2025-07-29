@@ -10,6 +10,7 @@ import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
 import Profile from "../pages/authUser/profile";
+import TestPeeps from "../pages/TestAddGroup";
 
 function AppRouter() {
   return (
@@ -18,6 +19,7 @@ function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="peeps" element={<Peeps />} />
+          <Route path="peeps2" element={<TestPeeps />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
