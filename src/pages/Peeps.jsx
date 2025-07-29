@@ -1,5 +1,9 @@
 import { ChevronDown, Plus, SendHorizontal, Trash2, X } from "lucide-react";
 import { useState } from "react";
+import  Baymax  from "../assets/ProfilePic/Baymax.jpg";
+import Snoopy from "../assets/ProfilePic/Snoopy.jpg";
+import Spiderman from "../assets/ProfilePic/spiderman.jpg";
+import Spongebob from "../assets/ProfilePic/Spongebob.jpg"
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -32,46 +36,46 @@ function Peeps() {
             <div className="h-[5vh] w-[4vw] bg-[#F06060] rounded-l-4xl"></div>
             <div className="h-[5vh] w-[2vw] bg-[#F3B562] rounded-l-4xl"></div>
           </div>
-        <div className="bg-white w-full h-full rounded-l-3xl pt-7 relative">
-          <div className="bg-[#8CBEB2] rounded-r-2xl h-[5vh] w-3/4 flex items-center justify-center">
-            <h1 className="text-white font-semibold">Group's Name</h1>
-          </div>
-
-          <div className="mt-5 space-y-2">
-            <div className="flex items-center gap-2 text-gray-700 font-medium">
-              <ChevronDown size={16} />
-              <p>Channel</p>
+          <div className="bg-white w-full h-full rounded-l-3xl pt-7 relative">
+            <div className="bg-[#8CBEB2] rounded-r-2xl h-[5vh] w-7/8 flex items-center justify-center">
+              <h1 className="text-white font-semibold">Group's Name</h1>
             </div>
 
-            {/* ปุ่มเปิด Modal Create Room */}
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-1 mt-3 text-green-700 hover:text-green-900 text-sm cursor-pointer"
-            >
-              <Plus className="h-4" />
-              Create Room
-            </button>
-
-            {/* รายการห้อง */}
-            {rooms.map((room, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between px-2 py-1 bg-[#8CBEB2] hover:bg-[#F3B562] text-white"
-              >
-                <p className="text-sm flex items-center gap-1">{room}</p>
-                <button
-                  onClick={() => {
-                    setRoomToDelete(index);
-                    setIsDeleteModalOpen(true);
-                  }}
-                  className="hover:text-[#F06060]"
-                >
-                  <Trash2 className="h-4 cursor-pointer" />
-                </button>
+            <div className="mt-5 space-y-2">
+              <div className="flex items-center gap-2 text-gray-700 font-medium">
+                <ChevronDown size={16} />
+                <p>Channel</p>
               </div>
-            ))}
+
+              {/* ปุ่มเปิด Modal Create Room */}
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center gap-1 mt-3 text-green-700 hover:text-green-900 text-sm cursor-pointer"
+              >
+                <Plus className="h-4" />
+                Create Room
+              </button>
+
+              {/* รายการห้อง */}
+              {rooms.map((room, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between px-2 py-1 bg-[#8CBEB2] hover:bg-[#F3B562] text-white"
+                >
+                  <p className="text-sm flex items-center gap-1">{room}</p>
+                  <button
+                    onClick={() => {
+                      setRoomToDelete(index);
+                      setIsDeleteModalOpen(true);
+                    }}
+                    className="hover:text-[#F06060]"
+                  >
+                    <Trash2 className="h-4 cursor-pointer" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Modal: Create Room */}
@@ -175,67 +179,69 @@ function Peeps() {
               </div> */}
 
               {/* person1 */}
-              <div className="flex gap-5">
-                <div>
-                <img
-                  src="./mockProfilePic1.jpg"
-                  alt="mockProfilePic1"
-                  className="w-[4vw] rounded-full"
-                />
+              <div className="chat chat-start">
+                <div className="chat-image avatar">
+                  <div className="w-12 rounded-full">
+                    <img src={Baymax} alt="User Avatar" />
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                <div className="chat-header">
+                  Baymax
+                  <time className="text-xs opacity-50">10:10</time>
+                </div>
+                <div className="chat-bubble rounded-xl bg-[#F3B761] text-lg">
+                  Good Morning
                 </div>
               </div>
 
               {/* person2 */}
-              <div className="flex gap-5">
-                <div>
-                <img
-                  src="./mockProfilePic2.jpg"
-                  alt="mockProfilePic2"
-                  className="w-[4vw] rounded-full"
-                />
-                </div>
-                <div className="flex flex-col">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  </div>
-              </div>
+              <div className="chat chat-start">
+                      <div className="chat-image avatar">
+                        <div className="w-12 rounded-full">
+                          <img src={Spiderman} alt="User Avatar" />
+                        </div>
+                      </div>
+                      <div className="chat-header">
+                        Spiderman
+                        <time className="text-xs opacity-50">12:34</time>
+                      </div>
+                      <div className="chat-bubble rounded-xl bg-[#F3B761] text-lg">
+                        Hello!
+                      </div>
+                    </div>
 
               {/* person3 */}
-              <div className="flex gap-5">
-                <div>
-                <img
-                  src="./mockProfilePic3.jpg"
-                  alt="mockProfilePic3"
-                  className="w-[4vw] rounded-full"
-                />
-                </div>
-                <div className="flex flex-col">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  </div>
-              </div>
+              <div className="chat chat-end">
+                      <div className="chat-image avatar">
+                        <div className="w-12 rounded-full">
+                          <img src={Snoopy} alt="User Avatar" />
+                        </div>
+                      </div>
+                      <div className="chat-header">
+                        Snoopy
+                        <time className="text-xs opacity-50">12:45</time>
+                      </div>
+                      <div className="chat-bubble rounded-xl bg-[#b9dfd6] text-lg">
+                        Hi! 🙋‍♂️
+                      </div>
+                      <div className="chat-footer opacity-50">Seen by 2</div>
+                    </div>
 
               {/* person1 */}
-              <div className="flex gap-5">
-                <div>
-                <img
-                  src="./mockProfilePic1.jpg"
-                  alt="mockProfilePic1"
-                  className="w-[4vw] rounded-full"
-                />
-                </div>
-                <div className="flex flex-col">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                </div>
-              </div>
+              <div className="chat chat-start">
+                      <div className="chat-image avatar">
+                        <div className="w-12 rounded-full">
+                          <img src={Spongebob} alt="User Avatar" />
+                        </div>
+                      </div>
+                      <div className="chat-header">
+                        Spongebob
+                        <time className="text-xs opacity-50">12:45</time>
+                      </div>
+                      <div className="chat-bubble rounded-xl bg-[#F3B761] text-lg">
+                        Afternoon!
+                      </div>
+                    </div>
             </div>
 
             {/* text area */}
@@ -243,7 +249,7 @@ function Peeps() {
               <textarea
                 type="text"
                 placeholder="Type here..."
-                className="h-[6vh] w-6/7 resize-none "
+                className="h-[6vh] w-6/7 resize-none"
               />
               <div className="bg-[#F2EBBF] rounded-full h-9 w-9 flex justify-center items-center">
                 <button type="submit">
