@@ -20,19 +20,34 @@ function Peeps() {
     setNewRoomName("");
     setIsCreateModalOpen(false);
   };
-
+  
   const removeRoom = (index) => {
     const updated = [...rooms];
     updated.splice(index, 1);
     setRooms(updated);
   };
+  
+    const [messageInput, setMessageInput] = useState('');
+    const [isTyping, setIsTyping] =useState(false);
 
   // Socket useEffect : start
   useEffect(() => {
     if (!socket.connected) socket.connect();
 
     socket.on(CHAT_ACTION.CHAT_SYNC, (data) => {
-      console.log(`Server response with ${data.message}`);
+      console.log(`Server re
+        sponse with ${data.message}`);
+    });
+
+    socket.on(CHAT_ACTION.CHAT_TYPING, (data)=>{
+      if(data.status){
+        console.log(`User ${data.userName} is Typing`);
+        setIsTyping(true);
+        return;
+      }
+
+      console.log(`User ${data.name} is not Typing `);
+      setIsTyping(false);
     });
 
     socket.on('connect_error', (err) => {
@@ -42,13 +57,14 @@ function Peeps() {
 
     return () => {
       socket.off(CHAT_ACTION.CHAT_SYNC);
+      socket.off(CHAT_ACTION.CHAT_TYPING);
+
       socket.off('connect_error');
 
       socket.disconnect();
     };
   }, []);
 
-  const [messageInput, setMessageInput] = useState('');
   // // Socket useEffect : chat status
   useEffect(() => {
 

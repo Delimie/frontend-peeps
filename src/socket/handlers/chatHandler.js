@@ -3,7 +3,7 @@ import { socket } from "../socket.js"
 
 export const userSendChat = (message) => {
   const userId = useAuthStore(state => state.user?.id);
-  socket.emit(CHAT_ACTION.CHAT_SEND, { message: message, userId: userId });
+  socket.emit(CHAT_ACTION.CHAT_SEND, { content: message, userId: userId, channelId : channelId });
 }
 
 export function userTyping(input) {
