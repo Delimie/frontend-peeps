@@ -11,6 +11,7 @@ import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import About from "../pages/About";
 import BubbleBox from "../components/BubbleBox";
+import NotFound from "../pages/NotFound";
 
 function AppRouter() {
   return (
@@ -24,13 +25,14 @@ function AppRouter() {
           <Route path="newregister" element={<NewRegister />} />
           <Route path="about" element={<About />} />
           <Route path="bubble" element={<BubbleBox />} />
+          <Route path="notfound" element={<NotFound />} />
 
           {/* <Route element={<ProtectRouteUser />}> */}
           <Route path="profile" element={<Profile />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
-        
-              {/* <Route path="community" element={<Community />} /> */} 
+
+          {/* <Route path="community" element={<Community />} /> */}
           {/* </Route>
 
           {/* <Route element={<ProtectRouteAdmin />}>

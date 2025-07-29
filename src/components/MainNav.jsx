@@ -126,7 +126,7 @@ function MainNav() {
             to="/profile"
             className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
           >
-            ข้อมูลส่วนตัว
+            Settings
           </Link>
           <a href="#" className="hover:underline">
             ประวัติบิลของคุณ

@@ -4,10 +4,10 @@ import { EditIcon, ProfilePic } from "../../assets/icon";
 
 function Profile() {
   return (
-    <div className="flex flex-col items-center h-screen text-xl font-sans">
-      <div className="whitebox flex flex-col gap-5 justify-center items-center my-30 w-200 h-200 bg-[#FFFCFC] rounded-2xl">
+    <div className="flex flex-col items-center h-full text-xl font-sans">
+      <div className="whitebox flex flex-col justify-center items-center my-30 w-200 h-200 bg-[#FFFCFC] rounded-2xl">
         <p className="font-bold text-3xl">Profile</p>
-        <div className="greybox rounded-2xl bg-[#EFEFEF] h-140 w-170 flex">
+        <div className="greybox rounded-2xl bg-[#EFEFEF] h-140 w-170 flex my-10">
           <div className="flex mx-auto pb-80">
             <ProfilePic />
           </div>
