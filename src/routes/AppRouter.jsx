@@ -9,15 +9,12 @@ import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
-
 import DebtSummary from "../pages/DebtSummary";
-
 import Profile from "../pages/authUser/Profile";
 import ProfSet from "../components/SidebarSet/Settings/ProfSet";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
 import CardSet from "../components/SidebarSet/Settings/CardSet";
 import Transactions from "../components/SidebarSet/Settings/Transactions";
-
 
 function AppRouter() {
   return (
@@ -45,7 +42,6 @@ function AppRouter() {
           <Route path="debt-summary" element={<DebtSummary />} />
         
               {/* <Route path="community" element={<Community />} /> */} 
-
 
           {/* <Route path="community" element={<Community />} /> */}
           {/* </Route>
