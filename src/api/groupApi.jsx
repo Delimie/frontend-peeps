@@ -12,13 +12,12 @@ groupApi.interceptors.request.use((config) => {
   return config;
 });
 
-// --- กลุ่มหลัก ---
+
 export const createGroupApi = (body) => groupApi.post("/", body);
 export const getGroupByIdApi = (id) => groupApi.get(`/${id}`);
 export const updateGroupApi = (id, body) => groupApi.patch(`/${id}`, body);
 export const deleteGroupApi = (id) => groupApi.delete(`/${id}`);
 
-// --- ผู้ใช้ในกลุ่ม ---
 export const addUserToGroupApi = (groupId, body) =>
   groupApi.post(`/${groupId}/users`, body);
 
@@ -28,6 +27,5 @@ export const removeUserFromGroupApi = (groupId, userId) =>
 export const getUsersInGroupApi = (groupId) =>
   groupApi.get(`/${groupId}/users`);
 
-// --- สรุปข้อมูลกลุ่ม ---
 export const getGroupSummaryApi = (groupId) =>
   groupApi.get(`/${groupId}/summary`);

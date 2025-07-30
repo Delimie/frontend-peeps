@@ -11,9 +11,10 @@ import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
 import Profile from "../pages/authUser/Profile";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
-import Transactions from "../pages/authUser/DisplaySet";
 import PaymentsSet from "../components/SidebarSet/Settings/PaymentsSet";
 import DisplaySet from "../pages/authUser/DisplaySet";
+import TestPeeps from "../pages/TestAddGroup";
+import Overview from "../pages/Overview";
 
 function AppRouter() {
   return (
@@ -22,6 +23,7 @@ function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="peeps" element={<Peeps />} />
+          <Route path="peeps2" element={<TestPeeps />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
@@ -37,7 +39,9 @@ function AppRouter() {
           <Route path="profile" element={<Profile />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
-          <Route path="transactions" element={<Transactions />} />
+          <Route path="overview" element={<Overview />} />
+        
+              {/* <Route path="community" element={<Community />} /> */} 
 
           {/* <Route path="community" element={<Community />} /> */}
           {/* </Route>
