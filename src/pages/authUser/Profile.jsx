@@ -66,9 +66,9 @@ function Profile() {
                 <p className="font-bold">Email :</p>
                 <p>{user.email}</p>
               </div>
-              <div className="flex gap-10">
+              <div className="flex gap-10.5">
                 <div>
-                  <p className="font-bold">Phone Num. :</p>
+                  <p className="font-bold">Phone No. :</p>
                   <p>{user.mobile}</p>
                 </div>
                 <div>
@@ -76,7 +76,7 @@ function Profile() {
                   <p>{user.birthDate.slice(0, 10)}</p>
                 </div>
               </div>
-              <div className="flex gap-10">
+              <div className="flex gap-18">
                 <div>
                   <p className="font-bold">Gender :</p>
                   <p>{user.gender}</p>
