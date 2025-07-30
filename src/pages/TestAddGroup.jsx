@@ -5,10 +5,10 @@ import SideBarGroup from "../components/Peeps/GroupSideBar";
 
 function TestAddGroup() {
   return (
-    <div className="flex mx-auto mt-25 w-4/5 bg-amber-100 min-h-screen">
-      <SideBarGroup/>
-      <MainSideBar/>
-      <ChatSocket/>
+    <div className="flex mx-auto w-4/5 mt-20 bg-amber-100 min-h-[calc(100vh-80px)]">
+      <SideBarGroup />
+      <MainSideBar />
+      <ChatSocket />
     </div>
   );
 }

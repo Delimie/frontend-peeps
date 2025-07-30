@@ -5,7 +5,7 @@ function MainSideBar() {
 
 
   return (
-    <div className='p-4 w-[200px] bg-amber-100 min-h-screen'>
+    <div className='p-4 w-[200px] bg-amber-100'>
     <div>Group Name</div>
     <div>Add Member</div>
     <div>+ Create Channel</div>

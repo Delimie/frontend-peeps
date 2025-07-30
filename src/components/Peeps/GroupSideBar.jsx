@@ -9,7 +9,7 @@ function SideBarGroup() {
   };
 
   return (
-    <div className="p-4 not-even:w-[200px] bg-amber-50 min-h-screen">
+    <div className="p-4 not-even:w-[200px] bg-amber-50">
       <div>Create group</div>
       <div>group name</div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { EditIcon } from "../../assets/icon";
 import useAuthStore from "../../stores/authStore";
@@ -8,12 +8,12 @@ import { useForm } from "react-hook-form";
 import FormInput from "../../components/FormInput";
 import SettingSidebar from "../../components/SettingSidebar";
 
-
 function Profile() {
   const [openModal, setOpenModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   const getProfile = useAuthStore((state) => state.getUserProfile);
   const token = useAuthStore((state) => state.token);
+  const modalRef = useRef(null);
   const {
     register,
     handleSubmit,
@@ -22,6 +22,12 @@ function Profile() {
   } = useForm();
 
   if (!user) return <div>Loading...</div>;
+
+  const handleBackdropClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      setOpenModal(false);
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -45,7 +51,7 @@ function Profile() {
 
   return (
     <div>
-      <SettingSidebar/>
+      <SettingSidebar />
       <div className="flex flex-col items-center h-screen text-xl mt-30 font-sans bg-white">
         <div className="whitebox flex flex-col gap-6 justify-center items-center py-10 px-8 bg-[#FFFCFC] rounded-2xl shadow-md w-[800px]">
           <p className="font-bold text-3xl">Profile</p>
@@ -102,8 +108,15 @@ function Profile() {
             Edit Profile
           </button>
           {openModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-              <div className="bg-white rounded-2xl p-8 min-w-[320px] shadow-lg relative">
+            <div
+              className="fixed inset-0 flex items-center justify-center z-50 bg-black/40"
+              onMouseDown={handleBackdropClick}
+            >
+              <div
+                ref={modalRef}
+                className="bg-white rounded-2xl p-8 min-w-[320px] shadow-lg relative"
+                onMouseDown={(e) => e.stopPropagation()} // ป้องกันปิด modal ถ้าคลิกข้างใน
+              >
                 <button
                   className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl"
                   onClick={() => setOpenModal(false)}
