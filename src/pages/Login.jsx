@@ -3,9 +3,9 @@ import FormInput from "../components/FormInput";
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validators/validator";
-import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
 import { LogoAnimation } from "../components/Animation";
+import useAuthStore from "../stores/authStore";
 
 function Login() {
   const {

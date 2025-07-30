@@ -42,11 +42,6 @@ function AppRouter() {
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
           <Route path="debt-summary" element={<DebtSummary />} />
-        
-              {/* <Route path="community" element={<Community />} /> */} 
-
-          {/* <Route path="community" element={<Community />} /> */}
-          {/* </Route>
 
           {/* <Route element={<ProtectRouteAdmin />}>
               <Route path="dashboard" element={<Dashboard />} />
