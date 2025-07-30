@@ -7,7 +7,7 @@ import { updateUserApi } from "../../api/usersApi";
 import { useForm } from "react-hook-form";
 import FormInput from "../../components/FormInput";
 import SettingSidebar from "../../components/SettingSidebar";
-import { div } from "motion/react-client";
+
 
 function Profile() {
   const [openModal, setOpenModal] = useState(false);

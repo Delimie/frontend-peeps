@@ -15,6 +15,7 @@ import ProfSet from "../components/SidebarSet/Settings/ProfSet";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
 import CardSet from "../components/SidebarSet/Settings/CardSet";
 import Transactions from "../components/SidebarSet/Settings/Transactions";
+import TestPeeps from "../pages/TestAddGroup";
 
 function AppRouter() {
   return (
@@ -23,6 +24,7 @@ function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="peeps" element={<Peeps />} />
+          <Route path="peeps2" element={<TestPeeps />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
