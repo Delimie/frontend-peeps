@@ -97,7 +97,6 @@ function Peeps() {
     };
   }, []);
 
-  const [messageInput, setMessageInput] = useState('');
   // // Socket useEffect : chat status
   useEffect(() => {
 
