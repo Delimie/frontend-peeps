@@ -76,6 +76,39 @@ function Peeps() {
 
   }, [messageInput]);
 
+  // Socket useEffect : start
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+
+    socket.on(CHAT_ACTION.CHAT_SYNC, (data) => {
+      console.log(`Server response with ${data.message}`);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Connection error:', err.message, 'Error code :');
+      console.log(err);
+    });
+
+    return () => {
+      socket.off(CHAT_ACTION.CHAT_SYNC);
+      socket.off('connect_error');
+
+      socket.disconnect();
+    };
+  }, []);
+
+  const [messageInput, setMessageInput] = useState('');
+  // // Socket useEffect : chat status
+  useEffect(() => {
+
+    const input = messageInput
+    userTyping(input);
+
+    return () => {
+    }
+
+  }, [messageInput]);
+
   return (
     <div className="min-h-screen bg-[#F2EBBF] flex justify-center pt-20 pb-20">
       <div className="flex items-center w-2/3 gap-5">
