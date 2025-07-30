@@ -1,11 +1,9 @@
-import { useState } from "react";
 import Baymax from "../assets/ProfilePic/Baymax.jpg";
 import Snoopy from "../assets/ProfilePic/Snoopy.jpg";
 import Spiderman from "../assets/ProfilePic/spiderman.jpg";
 import Spongebob from "../assets/ProfilePic/Spongebob.jpg";
 import Sidebar from "../components/ChatComponent/Sidebar";
 import ChatRoom from "../components/ChatComponent/ChatRoom";
-import { ChevronDown, Plus, SendHorizontal, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { socket } from "../socket/socket";
 import { CHAT_ACTION } from "../shared/constants/socket.constant";
