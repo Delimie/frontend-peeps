@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Itim&family=Mitr:wght@200;300;400;500;600;700&family=Noto+Sans+Thai:wght@100..900&display=swap');
 @import "tailwindcss";
-@plugin "daisyui";
-
+@plugin "daisyui" {
+  themes: light --default;
+}
 body {
   background: #F2EBBF;
   color: #5C4B51
@@ -10,15 +11,28 @@ body {
 
 /* font - หัวข้อ mitr / คอนเท้น noto / บับเบิ้ลแชต&น่ารัก ๆ itim */
 
+.toReceive {
+  color: #8CBEB2;
+  font-weight: bold;
+}
 
-#mitr {
+.toPay{
+  color: #F06060;
+  font-weight: bold;
+}
+
+h1{
   font-family: 'Mitr', sans-serif;
 }
 
-#noto {
+.mitr {
+  font-family: 'Mitr', sans-serif;
+}
+
+.noto {
   font-family: 'Noto Sans Thai', sans-serif;
 }
 
-#itim {
+.itim {
   font-family: 'Itim', cursive;
 }
