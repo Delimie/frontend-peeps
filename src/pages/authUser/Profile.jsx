@@ -7,9 +7,13 @@ import { updateUserApi } from "../../api/usersApi";
 import { useForm } from "react-hook-form";
 import FormInput from "../../components/FormInput";
 import SettingSidebar from "../../components/SettingSidebar";
+import { FaCameraIcon } from "../../components/icon";
 
 
 function Profile() {
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+  const [qrCode, setQrCode] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   const getProfile = useAuthStore((state) => state.getUserProfile);
@@ -20,6 +24,11 @@ function Profile() {
     reset,
     formState: { errors },
   } = useForm();
+
+  const handleProfileImageChange = (file) => {
+    setProfileImage(file);
+    setProfileImagePreview(URL.createObjectURL(file));
+  };
 
   if (!user) return <div>Loading...</div>;
 
@@ -33,27 +42,83 @@ function Profile() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await updateUserApi(user.id, data, token);
+      const formData = new FormData();
+      for (const key in data) {
+        if (data[key] !== undefined && data[key] !== null) {
+          formData.append(key, data[key]);
+        }
+      }
+
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+
+      if (qrCode) {
+        formData.append("qrCode", qrCode);
+      }
+
+      await updateUserApi(user.id, formData, token);
       await getProfile();
-      toast.success("Your profile has updated");
+      toast.success("Your profile has been updated");
       setOpenModal(false);
+      setProfileImage(null)
+      setProfileImagePreview(null);
+      setQrCode(null)
     } catch (error) {
-      console.log(error);
-      toast.error("Please try again");
+      console.error(error);
+      toast.error("Update failed");
     }
   };
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     const res = await updateUserApi(user.id, data, token);
+  //     await getProfile();
+  //     toast.success("Your profile has updated");
+  //     setOpenModal(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Please try again");
+  //   }
+  // };
+
   return (
     <div>
-      <SettingSidebar/>
+      <SettingSidebar />
       <div className="flex flex-col items-center h-screen text-xl mt-30 font-sans bg-white">
         <div className="whitebox flex flex-col gap-6 justify-center items-center py-10 px-8 bg-[#FFFCFC] rounded-2xl shadow-md w-[800px]">
           <p className="font-bold text-3xl">Profile</p>
 
-          <div className="greybox flex flex-row bg-[#EFEFEF] rounded-2xl w-full p-8 gap-8">
+          <div className="greybox flex flex-row bg-[#EFEFEF] rounded-2xl w-full p-8 gap-20">
             {/* Avatar */}
-            <div className="flex items-start justify-center w-1/3">
+            {/* <div className="flex items-start justify-center w-1/3">
               <Avatar size={150} />
+            </div> */}
+            <div className="relative group w-[150px] h-[150px] rounded-full overflow-hidden">
+              {profileImagePreview ? (
+                <img
+                  src={profileImagePreview}
+                  alt="Profile Preview"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : user.profileImage ? (
+                <img
+                  src={user.profileImage}
+                  alt="User Profile"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <Avatar size={150} />
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => handleProfileImageChange(e.target.files[0])}
+              />
+
+              <FaCameraIcon className="absolute bottom-2 left-1/2 -translate-x-1/2 w-6 h-6 opacity-0 group-hover:opacity-100 transition bg-gray-400 rounded-full p-1" />
             </div>
 
             {/* Info */}
@@ -110,6 +175,7 @@ function Profile() {
                 >
                   ×
                 </button>
+
                 <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
                 <form
                   className="flex flex-col gap-4"
@@ -142,7 +208,7 @@ function Profile() {
                     type="date"
                     register={register}
                     error={errors.birthDate?.message}
-                    // ถ้า birthDate มี T ใส่ defaultValue={user.birthDate.slice(0, 10)} ได้เช่นกัน
+                  // ถ้า birthDate มี T ใส่ defaultValue={user.birthDate.slice(0, 10)} ได้เช่นกัน
                   />
                   <FormInput
                     label="Gender"
@@ -175,6 +241,15 @@ function Profile() {
                     register={register}
                     error={errors.address?.message}
                     placeholder="Address"
+                  />
+                  <FormInput
+                    label="Upload QR Code"
+                    name="qrCode"
+                    type="file"
+                    accept="image/*"
+                    register={register}
+                    error={errors.qrCode?.message}
+                    onChange={(e) => setQrCode(e.target.files[0])}
                   />
                   <button
                     type="submit"
