@@ -4,7 +4,7 @@ import * as motion from "motion/react-client";
 
 function SettingSidebar() {
   return (
-    <div className="h-fit flex justify-center p-5 rounded-2xl flex-col gap-8 fixed mx-5 text-lg font-medium bg-[#F2EBBF]">
+    <div className="h-fit flex justify-center p-5 pr-8 rounded-2xl flex-col gap-8 fixed mx-8 text-lg font-medium bg-[#F2EBBF] shadow-[2px_6px_10px_#959EA7]">
       <Link
         to="/Profile"
         className="hover:text-[#de9227] transition hover:scale-105"
@@ -18,16 +18,16 @@ function SettingSidebar() {
         Password
       </Link>
       <Link
-        to="/CardSet"
+        to="/PaymentsSet"
         className="hover:text-[#de9227] transition hover:scale-105"
       >
-        Cards and Payments
+        Payments
       </Link>
       <Link
-        to="/Transactions"
+        to="/Display"
         className="hover:text-[#de9227] transition hover:scale-105"
       >
-        Transactions
+        Display Settings
       </Link>
     </div>
   );

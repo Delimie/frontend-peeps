@@ -65,12 +65,12 @@ function Login() {
             </button>
           </form>
           <div className="mt-5 text-center text-[#258178] text-base">
-            ยังไม่มีบัญชี?
+            Don't have account?
             <Link
               to="/register"
               className="text-[#8ca317] ml-2 font-semibold hover:text-[#2dc1b7] underline underline-offset-4 transition-colors"
             >
-              สมัครสมาชิก
+              Register
             </Link>
           </div>
         </div>
