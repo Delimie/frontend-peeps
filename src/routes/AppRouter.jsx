@@ -9,13 +9,13 @@ import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
-import DebtSummary from "../pages/DebtSummary";
 import Profile from "../pages/authUser/Profile";
 import ProfSet from "../components/SidebarSet/Settings/ProfSet";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
 import CardSet from "../components/SidebarSet/Settings/CardSet";
 import Transactions from "../components/SidebarSet/Settings/Transactions";
 import TestPeeps from "../pages/TestAddGroup";
+import Overview from "../pages/Overview";
 
 function AppRouter() {
   return (
@@ -41,7 +41,12 @@ function AppRouter() {
           <Route path="profile" element={<Profile />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
-          <Route path="debt-summary" element={<DebtSummary />} />
+          <Route path="overview" element={<Overview />} />
+        
+              {/* <Route path="community" element={<Community />} /> */} 
+
+          {/* <Route path="community" element={<Community />} /> */}
+          {/* </Route>
 
           {/* <Route element={<ProtectRouteAdmin />}>
               <Route path="dashboard" element={<Dashboard />} />
