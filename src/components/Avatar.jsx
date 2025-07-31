@@ -1,17 +1,33 @@
-import React from "react";
+import useAuthStore from "../stores/authStore"
+import { useRef } from "react"
 
-function Avatar({ avatar, size = 100 }) {
+function Avatar({ size = 100, previewUrl, onFileChange }) {
+  const user = useAuthStore((state) => state.user);
+  const fileInputRef = useRef(null)
+
+  const handleClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleChange = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  if (onFileChange) {
+    onFileChange(file);
+  }
+};
+
+  const displayImage = previewUrl || user?.profileImage || null
+
   return (
-    <div
-      className="w-[80px] h-[80px] rounded-full border-3 border-white flex items-center justify-center bg-[#ffed90] overflow-hidden"
-      style={{
-        width: size,
-        height: size,
-      }}
+     <div
+      className="rounded-full border-2 border-white bg-[#ffed90] overflow-hidden cursor-pointer flex items-center justify-center"
+      style={{ width: size, height: size }}
+      onClick={handleClick}
     >
-      {avatar ? (
+      {displayImage ? (
         <img
-          src={avatar}
+          src={displayImage}
           alt="avatar"
           className="w-full h-full object-cover rounded-full"
           draggable={false}
@@ -19,6 +35,14 @@ function Avatar({ avatar, size = 100 }) {
       ) : (
         <span className="text-3xl">🎨</span>
       )}
+
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleChange}
+      />
     </div>
   );
 }
