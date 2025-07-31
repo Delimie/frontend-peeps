@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { EditIcon } from "../../assets/icon";
 import useAuthStore from "../../stores/authStore";
@@ -9,7 +9,6 @@ import FormInput from "../../components/FormInput";
 import SettingSidebar from "../../components/SettingSidebar";
 import { FaCameraIcon } from "../../components/icon";
 
-
 function Profile() {
   const [profileImage, setProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
@@ -18,6 +17,7 @@ function Profile() {
   const user = useAuthStore((state) => state.user);
   const getProfile = useAuthStore((state) => state.getUserProfile);
   const token = useAuthStore((state) => state.token);
+  const modalRef = useRef(null);
   const {
     register,
     handleSubmit,
@@ -31,6 +31,12 @@ function Profile() {
   };
 
   if (!user) return <div>Loading...</div>;
+
+  const handleBackdropClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      setOpenModal(false);
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -167,8 +173,15 @@ function Profile() {
             Edit Profile
           </button>
           {openModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-              <div className="bg-white rounded-2xl p-8 min-w-[320px] shadow-lg relative">
+            <div
+              className="fixed inset-0 flex items-center justify-center z-50 bg-black/40"
+              onMouseDown={handleBackdropClick}
+            >
+              <div
+                ref={modalRef}
+                className="bg-white rounded-2xl p-8 min-w-[320px] shadow-lg relative"
+                onMouseDown={(e) => e.stopPropagation()} // ป้องกันปิด modal ถ้าคลิกข้างใน
+              >
                 <button
                   className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl"
                   onClick={() => setOpenModal(false)}
