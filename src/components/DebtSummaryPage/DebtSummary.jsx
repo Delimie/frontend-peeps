@@ -14,16 +14,26 @@ const debts = [
   { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
 ];
 
-
 function DebtSum() {
-  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
+  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] =
+    useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
 
   return (
     <div>
-      <button className="p-2 bg-amber-200">Create Group's Bill</button>
-      <button>Check your bills</button>
+      <div className="flex justify-between gap-2">
+        <div className="flex gap-6">
+        <button className="p-2 bg-amber-200 rounded-md">
+          Create Group's Bill
+        </button>
+        <button className="p-2 bg-amber-300 rounded-md">
+          Blah blah blah
+        </button>
+          </div>
+        <button className="p-2 bg-amber-200 rounded-md">
+          Check your bills
+        </button>
+      </div>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl pt-8 pl-10">Debt Summary</h1>
         <div className="pt-8 pr-14">

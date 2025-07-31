@@ -9,6 +9,15 @@ const channelList = [
   { id: "channel3", name: "นัดเที่ยว" },
 ];
 
+const memberList = [
+  { name: "Allie", avatar: "./mockProfilePic2.jpg" },
+  { name: "Auu", avatar: "./mockProfilePic3.jpg" },
+  { name: "Dew", avatar: "./mockProfilePic1.jpg" },
+  { name: "Gao", avatar: "./mockProfilePic2.jpg" },
+  { name: "1", avatar: "./mockProfilePic2.jpg" },
+  { name: "Ploy", avatar: "./mockProfilePic2.jpg" },
+];
+
 function MainSideBar() {
   const params = useParams();
   const navigate = useNavigate();
@@ -16,6 +25,8 @@ function MainSideBar() {
   const currentChannel = params.menu || channelList[0].id;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userIdInput, setUserIdInput] = useState("");
+  const [isMemberOpen, setIsMemberOpen] = useState(false);
+
 
   const handleChangeChannel = (chId) => {
     if (!currentGroup) return;
@@ -34,17 +45,50 @@ function MainSideBar() {
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] min-h-full shadow-lg rounded-l-3xl">
       <div>
         <h2 className="text-lg font-bold text-[#5C4B51] mb-1">Group Name</h2>
-        <div className="text-xs text-[#8CBEB2] mb-4">Test</div>
-        <div className="flex justify-between">
-        <UserPlus className="text-[#8CBEB2]" />
+
+           {/* Member Card Dropdown */}
+      <div className="mb-3">
         <button
-          className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm"
-          onClick={() => setIsAddModalOpen(true)}
+          className="w-full flex items-center justify-between bg-[#F2EBBF] px-3 py-2 rounded-xl shadow font-semibold text-[#5C4B51] hover:bg-[#FFE066] transition"
+          onClick={() => setIsMemberOpen((v) => !v)}
         >
-          + Add Member
+          <span>Members</span>
+          <span
+            className={`transition-transform ${
+              isMemberOpen ? "rotate-90" : ""
+            }`}
+          >
+            ▶
+          </span>
         </button>
+        {isMemberOpen && (
+          <div className="bg-white rounded-xl mt-2 px-2 py-2 shadow-inner border border-[#8CBEB2] flex flex-col gap-2">
+            {memberList.map((member, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 px-2 py-1 hover:bg-[#F2EBBF] rounded-lg transition"
+              >
+                <span className="text-sm text-[#5C4B51] itim">
+                  {member.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+        <div className="flex gap-2">
+          <UserPlus className="text-[#8CBEB2]" />
+          <button
+            className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm"
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            + Add Member
+          </button>
         </div>
       </div>
+
+   
+
       {/* Channel list */}
       <div>
         <div className="flex items-center justify-between mb-1">
