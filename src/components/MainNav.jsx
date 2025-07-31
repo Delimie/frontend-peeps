@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserIcon } from "../assets/icon";
+import { HamburgerIcon, UserIcon } from "../assets/icon";
 import useAuthStore from "../stores/authStore";
 
 function MainNav() {
@@ -91,7 +91,7 @@ function MainNav() {
           onClick={() => setOpen(true)}
         >
           <span className="text-white font-bold">
-            <UserIcon />
+            <HamburgerIcon />
           </span>
         </button>
       </div>
@@ -133,17 +133,30 @@ function MainNav() {
           ) : (
             <>
               <Link
-                to="/profile"
-                className=" bg-white text-md hover:text-[#ffe066] transition hover:scale-105"
+                to="/Overview"
+                className=" bg-white text-md hover:text-[#de9227] transition hover:scale-105"
                 onClick={() => setOpen(false)}
               >
-                ข้อมูลส่วนตัว
+                Overview
               </Link>
-              <a href="#" className="hover:underline">
-                ประวัติบิลของคุณ
+              <a
+                href="#"
+                className=" bg-white text-md hover:text-[#de9227] transition hover:scale-105"
+              >
+                Transactions
               </a>
-              <a href="#" className="hover:underline">
-                ติดต่อ
+              <Link
+                to="/profile"
+                className=" bg-white text-md hover:text-[#de9227] transition hover:scale-105"
+                onClick={() => setOpen(false)}
+              >
+                Settings
+              </Link>
+              <a
+                href="#"
+                className=" bg-white text-md hover:text-[#de9227] transition hover:scale-105"
+              >
+                Help & FAQ
               </a>
               <button
                 onClick={() => {
@@ -153,7 +166,7 @@ function MainNav() {
                 }}
                 className="text-left bg-white text-md hover:text-[#de9227] transition hover:scale-105"
               >
-                ออกจากระบบ
+                Logout
               </button>
             </>
           )}

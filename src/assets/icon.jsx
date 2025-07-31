@@ -24,7 +24,6 @@ export function UserIcon() {
   );
 }
 
-
 export function DropdownIcon() {
   return (
     <svg
@@ -130,5 +129,21 @@ export function ProfilePic() {
         ></path>{" "}
       </g>
     </svg>
+  );
+}
+
+export function HamburgerIcon() {
+  return (
+    // ตัวครอบไอคอนทั้งหมด กำหนดขนาดและจัดวางเส้น
+    <div className="flex h-5 w-6 flex-col justify-between">
+      {/* เส้นที่ 1 */}
+      <div className="h-1 w-full rounded-full bg-[#8CBEB2]"></div>
+
+      {/* เส้นที่ 2 */}
+      <div className="h-1 w-full rounded-full bg-[#F06060]"></div>
+
+      {/* เส้นที่ 3 */}
+      <div className="h-1 w-full rounded-full bg-[#F3B761]"></div>
+    </div>
   );
 }

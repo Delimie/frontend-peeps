@@ -9,13 +9,12 @@ import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
-import DebtSummary from "../pages/DebtSummary";
 import Profile from "../pages/authUser/Profile";
-import ProfSet from "../components/SidebarSet/Settings/ProfSet";
 import PassSet from "../components/SidebarSet/Settings/PassSet";
-import CardSet from "../components/SidebarSet/Settings/CardSet";
-import Transactions from "../components/SidebarSet/Settings/Transactions";
+import PaymentsSet from "../components/SidebarSet/Settings/PaymentsSet";
+import DisplaySet from "../pages/authUser/DisplaySet";
 import TestPeeps from "../pages/TestAddGroup";
+import Overview from "../pages/Overview";
 
 function AppRouter() {
   return (
@@ -32,16 +31,15 @@ function AppRouter() {
           <Route path="bubble" element={<BubbleBox />} />
           {/* <Route path="notfound" element={<NotFound />} /> */}
 
-          <Route path="ProfSet" element={<ProfSet />} />
           <Route path="PassSet" element={<PassSet />} />
-          <Route path="CardSet" element={<CardSet />} />
-          <Route path="Transactions" element={<Transactions />} />
+          <Route path="PaymentsSet" element={<PaymentsSet />} />
+          <Route path="Display" element={<DisplaySet />} />
 
           {/* <Route element={<ProtectRouteUser />}> */}
           <Route path="profile" element={<Profile />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
-          <Route path="debt-summary" element={<DebtSummary />} />
+          <Route path="overview" element={<Overview />} />
         
               {/* <Route path="community" element={<Community />} /> */} 
 
