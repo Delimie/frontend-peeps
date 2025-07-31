@@ -12,8 +12,15 @@ export const getMeApi = (token) => usersApi.get("/getme", addToken(token));
 export const getAllUsersApi = (token) => usersApi.get("/", addToken(token));
 export const getUserApi = (id, token) =>
   usersApi.get(`/${id}`, addToken(token));
+// export const updateUserApi = (id, body, token) =>
+//   usersApi.patch(`/${id}`, body, addToken(token));
 export const updateUserApi = (id, body, token) =>
-  usersApi.patch(`/${id}`, body, addToken(token));
+  usersApi.patch(`/${id}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 export const deleteUserApi = (id, token) =>
   usersApi.delete(`/${id}`, addToken(token));
 export const getUserBalanceApi = (id, token) =>
