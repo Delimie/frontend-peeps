@@ -1,25 +1,29 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 
+const debts = [
+  { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
+  {
+    name: "Allie",
+    toPay: 0,
+    toReceive: 150,
+    avatar: "./mockProfilePic2.jpg",
+  },
+  { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
+  { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
+  { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
+];
+
+
 function DebtSum() {
   const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const debts = [
-    { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-    {
-      name: "Allie",
-      toPay: 0,
-      toReceive: 150,
-      avatar: "./mockProfilePic2.jpg",
-    },
-    { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
-    { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-    { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
-  ];
 
   return (
     <div>
+      <button className="p-2 bg-amber-200">Create Group's Bill</button>
+      <button>Check your bills</button>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl pt-8 pl-10">Debt Summary</h1>
         <div className="pt-8 pr-14">

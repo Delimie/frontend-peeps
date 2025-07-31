@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Avatar from "../Avatar";
 import useAuthStore from "../../stores/authStore";
+import Avatar from "../avatar";
 
 const groupList = [
   { id: "g1", name: "Peeps" },

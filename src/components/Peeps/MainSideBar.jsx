@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
+import { UserPlus } from "lucide-react";
 
 const channelList = [
   { id: "chat", name: "General" },
@@ -34,12 +35,15 @@ function MainSideBar() {
       <div>
         <h2 className="text-lg font-bold text-[#5C4B51] mb-1">Group Name</h2>
         <div className="text-xs text-[#8CBEB2] mb-4">Test</div>
+        <div className="flex justify-between">
+        <UserPlus className="text-[#8CBEB2]" />
         <button
-          className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-xs"
+          className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm"
           onClick={() => setIsAddModalOpen(true)}
         >
           + Add Member
         </button>
+        </div>
       </div>
       {/* Channel list */}
       <div>
@@ -83,9 +87,16 @@ function MainSideBar() {
         <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
           Appointment
         </button>
-        <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
-          Manage Members
-        </button>
+        <NavLink
+          to={`/peeps/${currentGroup}/management`}
+          className={({ isActive }) =>
+            isActive
+              ? "text-[#8CBEB2] font-bold"
+              : "text-[#5C4B51] hover:text-[#8CBEB2]"
+          }
+        >
+          Management
+        </NavLink>
         <button className="hover:text-[#ffffff] text-center text-[#5C4B51] bg-[#F3B562] px-2 py-2 text-sm font-semibold rounded-md">
           Leave Group
         </button>

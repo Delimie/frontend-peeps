@@ -4,6 +4,7 @@ import WelcomePeeps from "./WelcomePeeps";
 import ChatSocket from "./ChatSocket";
 import Appointment from "./Appointment";
 import DebtSum from "../DebtSummaryPage/DebtSummary";
+import Management from "./Management";
 
 function MainContainer() {
   const { groupId, menu } = useParams();
@@ -25,9 +26,10 @@ function MainContainer() {
 
   // มี groupId + menu
   let Content;
-  if (menu === "chat") Content = <ChatSocket />;
+  if (menu === `chat`) Content = <ChatSocket />;
   else if (menu === "bill") Content = <DebtSum />;
   else if (menu === "appointment") Content = <Appointment />;
+  else if (menu === "management") Content = <Management />;
   else Content = <div>Not found</div>;
 
   return (
