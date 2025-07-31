@@ -19,7 +19,7 @@ function DebtSum() {
   ];
 
   return (
-    <div className="bg-white h-6/7 w-2/5 min-w-[570px] rounded-4xl shadow-[5px_5px_5px_1px_rgba(0,_0,_0,_0.1)] overflow-y-auto">
+    <div>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl pt-8 pl-10">Debt Summary</h1>
         <div className="pt-8 pr-14">
