@@ -26,7 +26,7 @@ function MainContainer() {
   // มี groupId + menu
   let Content;
   if (menu === "chat") Content = <ChatSocket />;
-  else if (menu === "groupbill") Content = <DebtSum />;
+  else if (menu === "bill") Content = <DebtSum />;
   else if (menu === "appointment") Content = <Appointment />;
   else Content = <div>Not found</div>;
 

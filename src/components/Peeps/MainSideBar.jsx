@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 
 const channelList = [
@@ -70,9 +70,16 @@ function MainSideBar() {
       <div className="flex-1"></div>
       {/* Group functions */}
       <div className="mt-8 flex flex-col justify-end gap-2 text-md">
-        <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
+        <NavLink
+          to={`/peeps/${currentGroup}/bill`}
+          className={({ isActive }) =>
+            isActive
+              ? "text-[#8CBEB2] font-bold"
+              : "text-[#5C4B51] hover:text-[#8CBEB2]"
+          }
+        >
           Group's Bill
-        </button>
+        </NavLink>
         <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
           Appointment
         </button>

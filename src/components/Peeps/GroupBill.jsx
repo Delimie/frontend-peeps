@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import DebtSum from "../DebtSummaryPage/DebtSummary";
 
 function GroupBill() {
   return (
-    <div>GroupBill</div>
-  )
+    <div>
+      <DebtSum />
+    </div>
+  );
 }
 
-export default GroupBill
+export default GroupBill;

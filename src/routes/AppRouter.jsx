@@ -31,7 +31,7 @@ function AppRouter() {
           <Route path="newregister" element={<NewRegister />} />
           <Route path="about" element={<About />} />
           <Route path="bubble" element={<BubbleBox />} />
-          {/* <Route path="notfound" element={<NotFound />} /> */}
+          {/* <Route path="*" element={<NotFound />} /> */}
 
           <Route path="ProfSet" element={<ProfSet />} />
           <Route path="PassSet" element={<PassSet />} />
