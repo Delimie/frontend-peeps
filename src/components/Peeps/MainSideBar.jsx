@@ -26,7 +26,8 @@ function MainSideBar() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userIdInput, setUserIdInput] = useState("");
   const [isMemberOpen, setIsMemberOpen] = useState(false);
-
+  const [isAddChannelModalOpen, setIsAddChannelModalOpen] = useState(false);
+  const [channelName, setChannelName] = useState("");
 
   const handleChangeChannel = (chId) => {
     if (!currentGroup) return;
@@ -93,9 +94,12 @@ function MainSideBar() {
       <div>
         <div className="flex items-center justify-between mb-1">
           <span className="text-[#5C4B51] font-semibold">Channels</span>
-          <button className="text-[#8CBEB2] text-xs hover:underline">
-            + Add
-          </button>
+  <button
+        className="text-[#8CBEB2] text-xs hover:underline"
+        onClick={() => setIsAddChannelModalOpen(true)}
+      >
+        + Add
+      </button>
         </div>
         <div className="flex flex-col gap-1">
           {channelList.map((ch) => (
@@ -187,7 +191,31 @@ function MainSideBar() {
             </div>
           </form>
         </Modal>
+
+        
       )}
+
+      <Modal open={isAddChannelModalOpen} onClose={() => setIsAddChannelModalOpen(false)}>
+        <h2 className="text-xl font-bold text-[#5C4B51] mb-5">Add Channel</h2>
+        <input
+          type="text"
+          placeholder="Enter channel name"
+          value={channelName}
+          onChange={(e) => setChannelName(e.target.value)}
+          className="w-full mb-4 px-3 py-2 rounded-lg bg-[#F7F3D7] border-none outline-none placeholder:text-[#B7A969] text-[#5C4B51] font-medium"
+        />
+        <button
+          className="w-full rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
+          disabled={!channelName.trim()}
+          onClick={() => {
+            // TODO: เพิ่ม channel logic ที่นี่ เช่น push เข้า array, call API, หรือแสดง toast
+            setIsAddChannelModalOpen(false);
+            setChannelName("");
+          }}
+        >
+          Add
+        </button>
+      </Modal>
     </div>
   );
 }

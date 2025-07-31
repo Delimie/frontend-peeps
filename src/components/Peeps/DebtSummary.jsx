@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
+import BillModal from "./BillModal";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -15,13 +16,17 @@ function DebtSummary() {
     useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
+  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col">
       <div className="w-full max-w bg-white rounded-2xl px-8 py-6 mb-8 border-2 border-[#8CBEB2]">
         <div className="flex justify-between gap-2 items-center mb-2">
           <div className="flex gap-3">
-            <button className="px-4 py-2 bg-[#8CBEB2] text-white font-bold rounded-lg shadow hover:bg-[#F3B562] hover:text-[#5C4B51] transition">
+            <button
+              className="px-4 py-2 bg-[#8CBEB2] text-white font-bold rounded-lg shadow hover:bg-[#F3B562] hover:text-[#5C4B51] transition"
+              onClick={() => setIsBillModalOpen(true)}
+            >
               Create Group's Bill
             </button>
             <button className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
@@ -44,10 +49,9 @@ function DebtSummary() {
           </button>
         </div>
       </div>
+
       <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
         <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
-          <div></div>
-          <div></div>
           <div className="text-center text-2xl font-mitr text-[#5C4B51]">
             To Pay
           </div>
@@ -87,6 +91,7 @@ function DebtSummary() {
           </div>
         ))}
       </div>
+
       {/* Select Recipient Modal */}
       {isSelectRecipientModalOpen && (
         <div className="fixed inset-0 bg-[#5C4B51]/40 flex items-center justify-center z-50">
@@ -132,7 +137,14 @@ function DebtSummary() {
           </div>
         </div>
       )}
-      {/* Payment Modal */}
+
+      {isBillModalOpen && (
+        <BillModal
+          open={isBillModalOpen}
+          onClose={() => setIsBillModalOpen(false)}
+        />
+      )}
+  
       {isPaymentModalOpen && (
         <div className="fixed inset-0 bg-[#5C4B51]/40 flex items-center justify-center z-50">
           <div className="bg-white w-[420px] p-7 rounded-2xl shadow-2xl border-2 border-[#8CBEB2] relative">
