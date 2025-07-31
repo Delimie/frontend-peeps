@@ -3,16 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 
 const channelList = [
-  { id: "general", name: "General" },
-  { id: "chit-chat", name: "คุยเล่น" },
-  { id: "memes", name: "นัดเที่ยว" },
+  { id: "chat", name: "General" },
+  { id: "channel2", name: "คุยเล่น" },
+  { id: "channel3", name: "นัดเที่ยว" },
 ];
 
 function MainSideBar() {
   const params = useParams();
   const navigate = useNavigate();
-    const currentGroup = params.groupId;
-  const currentChannel = params.channelId || channelList[0].id;
+  const currentGroup = params.groupId;
+  const currentChannel = params.menu || channelList[0].id;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userIdInput, setUserIdInput] = useState("");
 
@@ -55,12 +55,12 @@ function MainSideBar() {
               key={ch.id}
               onClick={() => handleChangeChannel(ch.id)}
               className={`px-3 py-2 rounded-xl text-left font-medium
-                ${
-                  currentChannel === ch.id
-                    ? "bg-[#8CBEB2] text-white shadow"
-                    : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-                }
-              `}
+      ${
+        currentChannel === ch.id
+          ? "bg-[#8CBEB2] text-white shadow"
+          : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+      }
+    `}
             >
               # {ch.name}
             </button>
@@ -79,7 +79,7 @@ function MainSideBar() {
         <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
           Manage Members
         </button>
-        <button className="hover:text-[#ffffff] text-center text-[#5C4B51] bg-rose-100 px-2 py-2 text-sm rounded-md">
+        <button className="hover:text-[#ffffff] text-center text-[#5C4B51] bg-[#F3B562] px-2 py-2 text-sm font-semibold rounded-md">
           Leave Group
         </button>
       </div>

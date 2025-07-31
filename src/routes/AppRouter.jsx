@@ -16,7 +16,7 @@ import CardSet from "../components/SidebarSet/Settings/CardSet";
 import Transactions from "../components/SidebarSet/Settings/Transactions";
 import TestPeeps from "../pages/TestAddGroup";
 import Overview from "../pages/Overview";
-import MainContainer from "../components/Peeps/MainContainer";
+import HomePeeps from "../pages/HomePeeps";
 
 function AppRouter() {
   return (
@@ -44,9 +44,9 @@ function AppRouter() {
           <Route path="payment" element={<Payment />} />
           <Route path="overview" element={<Overview />} />
 
-          <Route path="peeps" element={<TestPeeps />} />
-          <Route path="peeps/:groupId" element={<MainContainer />} />
-          <Route path="peeps/:groupId/:tab" element={<MainContainer />} />
+          <Route path="peeps" element={<HomePeeps/>} />
+          <Route path="peeps/:groupId" element={<TestPeeps />} />
+          <Route path="peeps/:groupId/:menu" element={<TestPeeps />} />
         </Route>
       </Routes>
     </>

@@ -1,9 +1,13 @@
-import React from 'react'
+import SideBarGroup from "../components/Peeps/GroupSideBar";
+import MainContainer from "../components/Peeps/MainContainer";
 
-function HomePeeps() {
+function HomePeeps () {
   return (
-    <div>HomePeeps</div>
-  )
+    <div className="flex mx-auto w-4/5 mt-20 min-h-[calc(100vh-80px)]">
+      <SideBarGroup />
+      <MainContainer/>
+    </div>
+  );
 }
 
-export default HomePeeps
+export default HomePeeps;

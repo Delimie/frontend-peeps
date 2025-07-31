@@ -24,7 +24,7 @@ function SideBarGroup() {
       <Avatar className="mb-6"/>
       <p>Hello {user.name}!</p>
     <div className="bg-[#fffcee] mt-4 flex flex-col gap-2 py-6 px-3 w-[160px] h-fit rounded-l-2xl">
-      <button className="mb-4 text-sm bg-[#F3B562] text-[#5C4B51] px-3 py-2 rounded-xl font-semibold hover:bg-[#FFE066] transition">
+      <button className="mb-2 text-sm bg-[#F3B562] text-[#5C4B51] px-3 py-2 rounded-xl font-semibold hover:bg-[#FFE066] transition">
         + Create Group
       </button>
       <div className="flex flex-col">
