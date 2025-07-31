@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { authApi } from "../api/authApi";
-import { getMeApi } from "../api/usersApi";
+import { getMeApi, postNewPassword } from "../api/usersApi";
 
 const useAuthStore = create(
   persist(
@@ -43,6 +43,12 @@ const useAuthStore = create(
         set({ userBalance: res.data.result, loading: false });
         return res;
       },
+      postUserNewPassword: async (id, body) => {
+        const token = useAuthStore.getState().token;
+        const res = await postNewPassword(id, body, token);
+        // await get().getUser(id);
+        return res;
+      }
     }),
     { name: "userStorage", storage: createJSONStorage(() => localStorage) }
   )

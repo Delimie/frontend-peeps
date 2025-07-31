@@ -18,3 +18,5 @@ export const deleteUserApi = (id, token) =>
   usersApi.delete(`/${id}`, addToken(token));
 export const getUserBalanceApi = (id, token) =>
   usersApi.get(`/${id}/balance`, addToken(token));
+export const postNewPassword = (body, token) =>
+  usersApi.post(`/change-password`, body, addToken(token));
