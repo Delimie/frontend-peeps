@@ -3,7 +3,7 @@ import React from "react";
 function Avatar({ avatar, size = 100 }) {
   return (
     <div
-      className="w-[80px] h-[80px] rounded-full border-3 border-white shadow-lg flex items-center justify-center bg-[#ffed90] overflow-hidden"
+      className="w-[80px] h-[80px] rounded-full border-3 border-white flex items-center justify-center bg-[#ffed90] overflow-hidden"
       style={{
         width: size,
         height: size,

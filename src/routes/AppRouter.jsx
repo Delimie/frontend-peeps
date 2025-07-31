@@ -15,6 +15,7 @@ import PaymentsSet from "../components/SidebarSet/Settings/PaymentsSet";
 import DisplaySet from "../pages/authUser/DisplaySet";
 import TestPeeps from "../pages/TestAddGroup";
 import Overview from "../pages/Overview";
+import HomePeeps from "../pages/HomePeeps";
 
 function AppRouter() {
   return (
@@ -22,14 +23,14 @@ function AppRouter() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="peeps" element={<Peeps />} />
-          <Route path="peeps2" element={<TestPeeps />} />
+          <Route path="peeps2" element={<Peeps />} />
+
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="newregister" element={<NewRegister />} />
           <Route path="about" element={<About />} />
           <Route path="bubble" element={<BubbleBox />} />
-          {/* <Route path="notfound" element={<NotFound />} /> */}
+          {/* <Route path="*" element={<NotFound />} /> */}
 
           <Route path="PassSet" element={<PassSet />} />
           <Route path="PaymentsSet" element={<PaymentsSet />} />
@@ -40,15 +41,10 @@ function AppRouter() {
           <Route path="pricing" element={<Pricing />} />
           <Route path="payment" element={<Payment />} />
           <Route path="overview" element={<Overview />} />
-        
-              {/* <Route path="community" element={<Community />} /> */} 
 
-          {/* <Route path="community" element={<Community />} /> */}
-          {/* </Route>
-
-          {/* <Route element={<ProtectRouteAdmin />}>
-              <Route path="dashboard" element={<Dashboard />} />
-            </Route>  */}
+          <Route path="peeps" element={<HomePeeps/>} />
+          <Route path="peeps/:groupId" element={<TestPeeps />} />
+          <Route path="peeps/:groupId/:menu" element={<TestPeeps />} />
         </Route>
       </Routes>
     </>

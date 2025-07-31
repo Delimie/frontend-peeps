@@ -2,10 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "../validators/validator";
-import { registerApi } from "../api/authApi";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { registerApi } from "../api/authApi";
 
 function Register() {
   const {
