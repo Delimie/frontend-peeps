@@ -24,10 +24,31 @@ const useChatStore = create(
           }
         }
       ],
+      memberTyping : [],
+      updateMemberTyping : (data) =>{
+        if(!data)return;
+        const {userId, userName, status} = data;
+        const existingMember = [...get().memberTyping];
+
+        // Check if member still typing status = true
+        if(status){
+          // Check if updated user not existing yet?
+          if(existingMember.includes((member)=> member.userId !== userId)){
+            return;
+          }
+          set({memberTyping : [...existingMember, {userId, userName}]});
+          return;
+        }
+        // Member is not typing status = false assume they are in array already remove them
+        const newMemberTyping = existingMember.filter((member)=> member.userId !== userId);
+        console.log(newMemberTyping);
+        set ({memberTyping :[...newMemberTyping]});
+      },
       sendMessage: (data) => {
         // const { content = null, userId, channelId, groupId, file = null, ...restData } = data 
 
         //Server side can handle callback if you want
+
         socket.emit(CHAT_ACTION.CHAT_SEND, data);
       },
       deleteMessage: (data) => {
@@ -89,7 +110,7 @@ const useChatStore = create(
       },
     }),
     {
-      name: "group-storage"
+      name: "chat-storage"
     }
   )
 );

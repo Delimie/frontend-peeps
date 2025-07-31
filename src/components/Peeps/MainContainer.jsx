@@ -4,6 +4,8 @@ import WelcomePeeps from "./WelcomePeeps";
 import ChatSocket from "./ChatSocket";
 import Appointment from "./Appointment";
 import DebtSum from "../DebtSummaryPage/DebtSummary";
+import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.constant";
+import { socket } from "../../socket/socket";
 
 function MainContainer() {
   const { groupId, menu } = useParams();
@@ -13,6 +15,15 @@ function MainContainer() {
     if (groupId && !menu) {
       navigate(`/peeps/${groupId}/chat`, { replace: true });
     }
+
+    if (groupId) {
+      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
+    }
+
+    if(menu){
+      socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, {channelId : menu});
+    }
+
   }, [groupId, menu, navigate]);
 
   if (!groupId) {

@@ -7,14 +7,17 @@ export const userSendChat = (message) => {
 }
 
 export function userTyping(input) {
-  if (!input) {
+  const {status ,channelId} = input
+  if (!status) {
     socket.emit(CHAT_ACTION.CHAT_TYPING, {
+      channelId: channelId,
       status: STATUS.INACTIVE
     })
     return;
   }
-
+  
   socket.emit(CHAT_ACTION.CHAT_TYPING, {
+    channelId: channelId,
     status: STATUS.ACTIVE
   });
 }
