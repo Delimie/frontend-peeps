@@ -10,6 +10,7 @@ import SettingSidebar from "../../components/SettingSidebar";
 import { FaCameraIcon } from "../../components/icon";
 
 function Profile() {
+  const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [qrCode, setQrCode] = useState(null);
@@ -25,7 +26,10 @@ function Profile() {
     formState: { errors },
   } = useForm();
 
-  const handleProfileImageChange = (file) => {
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setProfileImage(file);
     setProfileImagePreview(URL.createObjectURL(file));
   };
@@ -67,12 +71,27 @@ function Profile() {
       await getProfile();
       toast.success("Your profile has been updated");
       setOpenModal(false);
-      setProfileImage(null)
+      setProfileImage(null);
       setProfileImagePreview(null);
-      setQrCode(null)
+      setQrCode(null);
     } catch (error) {
       console.error(error);
       toast.error("Update failed");
+    }
+  };
+
+  const handleSaveProfileImage = async () => {
+    if (!profileImage) return;
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", profileImage);
+      await updateUserApi(user.id, formData, token);
+      await getProfile();
+      toast.success("Profile image updated");
+      setProfileImage(null);
+      setProfileImagePreview(null);
+    } catch (error) {
+      toast.error("Failed to update profile image");
     }
   };
 
@@ -100,31 +119,51 @@ function Profile() {
             {/* <div className="flex items-start justify-center w-1/3">
               <Avatar size={150} />
             </div> */}
-            <div className="relative group w-[150px] h-[150px] rounded-full overflow-hidden">
-              {profileImagePreview ? (
-                <img
-                  src={profileImagePreview}
-                  alt="Profile Preview"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : user.profileImage ? (
-                <img
-                  src={user.profileImage}
-                  alt="User Profile"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
-                <Avatar size={150} />
-              )}
-
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="relative group w-[150px] h-[150px] cursor-pointer"
+            >
+              <Avatar
+                avatar={true}
+                size={150}
+                previewUrl={profileImagePreview}
+                onFileChange={handleProfileImageChange}
+              />
               <input
                 type="file"
                 accept="image/*"
-                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                onChange={(e) => handleProfileImageChange(e.target.files[0])}
+                ref={fileInputRef}
+                onChange={handleProfileImageChange}
+                className="hidden"
               />
-
-              <FaCameraIcon className="absolute bottom-2 left-1/2 -translate-x-1/2 w-6 h-6 opacity-0 group-hover:opacity-100 transition bg-gray-400 rounded-full p-1" />
+              <div className="rounded-full absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-semibold">
+                <FaCameraIcon className="w-16 h-16" />
+              </div>
+              {profileImage && (
+                <div className="flex gap-2 mt-2">
+                  <button
+                    type="button"
+                    className="px-4 py-2 cursor-pointer bg-[#F3B562] rounded-2xl hover:scale-105 transition"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSaveProfileImage();
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-[#F06060] cursor-pointer rounded-2xl hover:scale-105 transition"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setProfileImage(null);
+                      setProfileImagePreview(null);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Info */}
@@ -221,7 +260,7 @@ function Profile() {
                     type="date"
                     register={register}
                     error={errors.birthDate?.message}
-                  // ถ้า birthDate มี T ใส่ defaultValue={user.birthDate.slice(0, 10)} ได้เช่นกัน
+                    // ถ้า birthDate มี T ใส่ defaultValue={user.birthDate.slice(0, 10)} ได้เช่นกัน
                   />
                   <FormInput
                     label="Gender"
