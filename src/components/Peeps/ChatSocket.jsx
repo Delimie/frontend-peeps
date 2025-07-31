@@ -1,19 +1,29 @@
 import { SendHorizontal } from "lucide-react";
 import ChatBubble from "./ChatBubble";
 
+const currentUser = "Snoopy";
+const messages = [
+  { user: "Baymax", text: "Good Morning", time: "10:10" },
+  { user: "Snoopy", text: "Hi! 🙋‍♂️", time: "12:45", footer: "Seen by 2" },
+];
+
 function ChatSocket() {
   return (
     <>
       <div className="text-2xl font-bold mb-2 text-[#8CBEB2]">
         # Channel Name
       </div>
-      <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4">
-        <ChatBubble
-          user="Baymax"
-          time="10:10"
-          text="Good Morning"
-          position="start"
-        />
+      <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
+        {messages.map((msg, idx) => (
+          <ChatBubble
+            key={idx}
+            user={msg.user}
+            time={msg.time}
+            message={msg.message}
+            footer={msg.footer}
+            position={msg.user === currentUser ? "end" : "start"}
+          />
+        ))}
       </div>
       <form className="flex gap-2">
         <input
