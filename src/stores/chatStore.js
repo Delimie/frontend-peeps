@@ -31,9 +31,9 @@ const useChatStore = create(
         socket.emit(CHAT_ACTION.CHAT_SEND, data);
       },
       deleteMessage: (data) => {
-        const { id } = data
+        const { id, channelId, groupId } = data
 
-        socket.emit(CHAT_ACTION.CHAT_DELETE, { id: id }, (res) => {
+        socket.emit(CHAT_ACTION.CHAT_DELETE, { id, channelId, groupId }, (res) => {
           if (res.success) {
             console.log(res.message);
             const newDeleteChats = get().chats.reduce((acc, el) => el.id != id ? acc.push(el) : acc, []);
@@ -44,9 +44,9 @@ const useChatStore = create(
         });
       },
       editMessage: (data) => {
-        const { id, content } = data
+        const { id, content, channelId, groupId } = data
 
-        socket.emit(CHAT_ACTION.CHAT_EDIT, { id: id, content: content }, (res) => {
+        socket.emit(CHAT_ACTION.CHAT_EDIT, { id, content, channelId, groupId }, (res) => {
           if (res.success) {
             console.log(res.message);
             const newDeleteChats = get().chats.reduce((acc, el) => el.id != id ? acc.push(el) : acc, []);
@@ -57,7 +57,7 @@ const useChatStore = create(
         });
       },
       listenToMessage: (socket) => {
-        socket.on(CHAT_EVENT.SYNC_MESSAGE, (data) => {
+        socket.on(CHAT_ACTION.CHAT_SEND, (data) => {
           const { message, attachment } = data;
           const finalMessage = { ...message, attachment };
 
@@ -65,15 +65,19 @@ const useChatStore = create(
         });
 
         socket.on(CHAT_ACTION.CHAT_DELETE, (data) => {
-          const { id } = data;
+          const { id, message } = data;
+          console.log(message);
+
           const newDeleteChats = get().chats.reduce((acc, el) => el.id != id ? acc.push(el) : acc, []);
 
           set((state) => ({ chats: [newDeleteChats] }));
         });
 
         socket.on(CHAT_ACTION.CHAT_EDIT, (data) => {
-          const { id } = data;
-          const newUpdatedChats = get().chats.reduce((acc, el) => el.id === id ? acc.push(data) : acc.push(el), []);
+          const { message, newData } = data;
+          console.log(message);
+
+          const newUpdatedChats = get().chats.reduce((acc, el) => el.id === id ? acc.push(newData) : acc.push(el), []);
 
           set((state) => ({ chats: [newUpdatedChats] }));
         });
