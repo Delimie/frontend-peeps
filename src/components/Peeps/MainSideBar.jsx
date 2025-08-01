@@ -5,7 +5,7 @@ import { UserPlus } from "lucide-react";
 import useGroupStore from "../../stores/groupStore";
 
 const channelList = [
-  { id: "channel1", name: "General" },
+  { id: "1", name: "General" },
   { id: "channel2", name: "คุยเล่น" },
   { id: "channel3", name: "นัดเที่ยว" },
 ];
