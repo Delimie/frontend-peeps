@@ -6,15 +6,15 @@ import Modal from "../Modal";
 import useGroupStore from "../../stores/groupStore";
 
 const groupList = [
-  { id: "g1", name: "Peeps" },
-  { id: "g2", name: "ฮือออ" },
-  { id: "g3", name: "แงงง" },
+  { id: "1", name: "Peeps" },
+  { id: "2", name: "ฮือออ" },
+  { id: "3", name: "แงงง" },
 ];
 
 function SideBarGroup() {
-  const params = useParams();
+  const { groupId } = useParams();
   const navigate = useNavigate();
-  const currentGroup = params.groupId || groupList[0].id;
+  const currentGroup = groupId || groupList[0].id;
   const user = useAuthStore((state) => state.user);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -26,7 +26,8 @@ function SideBarGroup() {
   return (
     <div className="flex flex-col items-center mt-4">
       <Avatar />
-      <span className="mt-5 font-semibold text-lg">HELLO {user.name}!</span>
+      <span className="mt-5 font-semibold text-lg">Welcome!</span>
+      <span className="font-semibold text-lg">{user.name}!</span>
       <div className="bg-[#fffcee] mt-4 flex flex-col gap-2 py-6 px-3 w-[160px] h-fit rounded-l-2xl">
         <button
           className="mb-2 text-sm bg-[#F3B562] text-[#5C4B51] px-3 py-2 rounded-xl font-semibold hover:bg-[#FFE066] transition"

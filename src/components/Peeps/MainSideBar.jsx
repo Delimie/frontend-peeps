@@ -20,9 +20,9 @@ const memberList = [
 ];
 
 function MainSideBar() {
-  const {groupId , channelId} = useParams();
+  const { groupId, channelId } = useParams();
   const navigate = useNavigate();
-  const currentGroup = groupId
+  const currentGroup = groupId;
   const currentChannel = channelId || channelList[0].id;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userIdInput, setUserIdInput] = useState("");
@@ -37,7 +37,7 @@ function MainSideBar() {
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
     if (!isMemberOpen && currentGroup) {
-      await getUsersInGroup(currentGroup); 
+      await getUsersInGroup(currentGroup);
     }
   };
 
@@ -61,7 +61,7 @@ function MainSideBar() {
         {/* Member Card Dropdown */}
         <div className="mb-3">
           <button
-            className="w-full flex items-center justify-between bg-[#F2EBBF] px-3 py-2 rounded-xl shadow font-semibold text-[#5C4B51] hover:bg-[#FFE066] transition"
+            className="w-full cursor-pointer flex items-center justify-between bg-[#F2EBBF] px-3 py-2 rounded-xl shadow font-semibold text-[#5C4B51] hover:bg-[#FFE066] transition-all"
             onClick={handleOpenMembers}
           >
             <span>Members</span>
@@ -74,7 +74,7 @@ function MainSideBar() {
             </span>
           </button>
           {isMemberOpen && (
-            <div className="bg-white rounded-xl mt-2 px-2 py-2 shadow-inner border border-[#8CBEB2] flex flex-col gap-2">
+            <div className="bg-white rounded-xl mt-2 px-2 py-2 shadow-inner border border-[#8CBEB2] flex flex-col gap-2 transition">
               {memberList.map((member, idx) => (
                 <div
                   key={idx}
@@ -88,16 +88,18 @@ function MainSideBar() {
             </div>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-5">
           <UserPlus className="text-[#8CBEB2]" />
           <button
-            className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm"
+            className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm w-full"
             onClick={() => setIsAddModalOpen(true)}
           >
             + Add Member
           </button>
         </div>
       </div>
+
+      <hr className="border-gray-300" />
 
       {/* Channel list */}
       <div>
