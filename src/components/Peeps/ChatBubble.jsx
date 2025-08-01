@@ -1,4 +1,5 @@
-function ChatBubble({ user, time, message, position, img, footer }) {
+
+function ChatBubble({ userName, createdAt, content, position, img, footer }) {
   return (
     <div className={`chat chat-${position}`}>
       <div className="chat-image avatar">
@@ -7,8 +8,8 @@ function ChatBubble({ user, time, message, position, img, footer }) {
         </div>
       </div>
       <div className="chat-header">
-        {user}
-        <time className="text-xs opacity-50 ml-2">{time}</time>
+        {userName}
+        <time className="text-xs opacity-50 ml-2">{createdAt}</time>
       </div>
       <div
         className={`chat-bubble rounded-xl ${
@@ -17,7 +18,7 @@ function ChatBubble({ user, time, message, position, img, footer }) {
             : "bg-[#F3B761] text-[#5C4B51]"
         } text-lg`}
       >
-        {message}
+        {content}
       </div>
       {footer && <div className="chat-footer opacity-50">{footer}</div>}
     </div>

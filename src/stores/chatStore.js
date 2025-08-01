@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { socket } from "../socket/socket";
 import { CHAT_ACTION, CHAT_EVENT } from "../shared/constants/socket.constant";
+import useAuthStore from "./authStore";
+import useUserListStore from "./userListStore";
 
 const useChatStore = create(
   persist(
@@ -13,9 +15,25 @@ const useChatStore = create(
           content: "Hello Hey",
           createdAt: 'dayjs',
           updatedAt: 'dayjs',
-          channelId: 2345,
+          channelId: 1,
           attachment: {
             id: 5,
+            url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
+            type: "image/png",
+            name: "dog.png",
+            size: "1234kbps",
+            messageId: 1
+          }
+        },
+        {
+          id: 2,
+          userId: 2,
+          content: "Hello I'm Luffy",
+          createdAt: 'dayjs',
+          updatedAt: 'dayjs',
+          channelId: 1,
+          attachment: {
+            id: 3,
             url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
             type: "image/png",
             name: "dog.png",
@@ -41,13 +59,13 @@ const useChatStore = create(
         }
         // Member is not typing status = false assume they are in array already remove them
         const newMemberTyping = existingMember.filter((member)=> member.userId !== userId);
-        console.log(newMemberTyping);
         set ({memberTyping :[...newMemberTyping]});
       },
       sendMessage: (data) => {
         // const { content = null, userId, channelId, groupId, file = null, ...restData } = data 
 
         //Server side can handle callback if you want
+        // console.log('testing input :',data);
 
         socket.emit(CHAT_ACTION.CHAT_SEND, data);
       },
@@ -77,8 +95,9 @@ const useChatStore = create(
           console.log(res.message);
         });
       },
-      listenToMessage: (socket) => {
+      listenToMessage: () => {
         socket.on(CHAT_ACTION.CHAT_SEND, (data) => {
+          console.log('recieve message');
           const { message, attachment } = data;
           const finalMessage = { ...message, attachment };
 
@@ -104,7 +123,7 @@ const useChatStore = create(
         });
       },
       stopListenToMessage: () => {
-        socket.off(CHAT_EVENT.SYNC_MESSAGE);
+        socket.off(CHAT_ACTION.CHAT_SEND);
         socket.off(CHAT_ACTION.CHAT_DELETE);
         socket.off(CHAT_ACTION.CHAT_EDIT);
       },

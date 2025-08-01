@@ -4,7 +4,7 @@ import Modal from "../Modal";
 import { UserPlus } from "lucide-react";
 
 const channelList = [
-  { id: "chat", name: "General" },
+  { id: "1", name: "General" },
   { id: "channel2", name: "คุยเล่น" },
   { id: "channel3", name: "นัดเที่ยว" },
 ];

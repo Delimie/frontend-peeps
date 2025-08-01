@@ -14,18 +14,16 @@ function MainContainer() {
 
   useEffect(() => {
     if (groupId && !menu) {
-      navigate(`/peeps/${groupId}/chat`, { replace: true });
-    }
-
-    if (groupId) {
-      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
-    }
-
-    if(menu){
-      socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, {channelId : menu});
+      navigate(`/peeps/${groupId}/1`, { replace: true });
     }
 
   }, [groupId, menu, navigate]);
+
+  useEffect(() => {
+    if (groupId) {
+      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
+    }
+  }, [groupId])
 
   if (!groupId) {
     return (
@@ -37,12 +35,12 @@ function MainContainer() {
 
   // มี groupId + menu
   let Content;
-  if (menu === `chat`) Content = <ChatSocket />;
+  if (menu === `225`) Content = <ChatSocket />;
   else if (menu === "bill") Content = <DebtSummary />;
   else if (menu === "appointment") Content = <Appointment />;
   else if (menu === "management") Content = <Management />;
-  else Content = <div>Not found</div>;
-
+  else Content =  <ChatSocket />;
+  
   return (
     <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF]">
       {Content}
