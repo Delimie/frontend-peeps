@@ -8,14 +8,14 @@ import Management from "./Management";
 import DebtSummary from "./DebtSummary";
 
 function MainContainer() {
-  const { groupId, menu } = useParams();
+  const { groupId, channelId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (groupId && !menu) {
-      navigate(`/peeps/${groupId}/chat`, { replace: true });
+    if (groupId && !channelId) {
+      navigate(`/peeps/${groupId}/${channelId}`, { replace: true });
     }
-  }, [groupId, menu, navigate]);
+  }, [groupId, channelId, navigate]);
 
   if (!groupId) {
     return (
@@ -25,13 +25,12 @@ function MainContainer() {
     );
   }
 
-  // มี groupId + menu
   let Content;
-  if (menu === `chat`) Content = <ChatSocket />;
-  else if (menu === "bill") Content = <DebtSummary />;
-  else if (menu === "appointment") Content = <Appointment />;
-  else if (menu === "management") Content = <Management />;
-  else Content = <div>Not found</div>;
+  if (channelId === `chat`) Content = <ChatSocket />;
+  else if (channelId === "bill") Content = <DebtSummary />;
+  else if (channelId === "appointment") Content = <Appointment />;
+  else if (channelId === "management") Content = <Management />;
+  else Content = <ChatSocket />;
 
   return (
     <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF]">

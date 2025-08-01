@@ -44,7 +44,7 @@ function AppRouter() {
 
           <Route path="peeps" element={<HomePeeps/>} />
           <Route path="peeps/:groupId" element={<TestPeeps />} />
-          <Route path="peeps/:groupId/:menu" element={<TestPeeps />} />
+          <Route path="peeps/:groupId/:channelId" element={<TestPeeps />} />
         </Route>
       </Routes>
     </>
