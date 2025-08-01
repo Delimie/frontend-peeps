@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
+import Avatar from "../avatar";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -62,15 +63,9 @@ function DebtSummary() {
         {debts.map((item, index) => (
           <div
             key={index}
-            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-2 rounded-xl shadow-sm border border-[#FFE066] bg-white"
+            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
           >
-            <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-[#8CBEB2] bg-[#F2EBBF] flex items-center justify-center">
-              <img
-                src={item.avatar}
-                alt={item.name}
-                className="object-cover w-full h-full"
-              />
-            </div>
+            <Avatar size={65} />
             <span className="text-[#5C4B51] font-semibold text-xl itim">
               {item.name}
             </span>
@@ -144,7 +139,7 @@ function DebtSummary() {
           onClose={() => setIsBillModalOpen(false)}
         />
       )}
-  
+
       {isPaymentModalOpen && (
         <div className="fixed inset-0 bg-[#5C4B51]/40 flex items-center justify-center z-50">
           <div className="bg-white w-[420px] p-7 rounded-2xl shadow-2xl border-2 border-[#8CBEB2] relative">
