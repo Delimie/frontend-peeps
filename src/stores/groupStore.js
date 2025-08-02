@@ -8,6 +8,7 @@ import {
   removeUserFromGroupApi,
   updateGroupApi,
   getUsersInGroupApi,
+  getMyGroupsAPI,
 } from "../api/groupApi";
 
 const useGroupStore = create(
@@ -70,7 +71,15 @@ const useGroupStore = create(
         }));
         return resp;
       },
-
+      getMyGroups: async () => {
+        set({ loading: true, error: null });
+        try {
+          const res = await getMyGroupsAPI();
+          set({ groups: res.data, loading: false });
+        } catch (err) {
+          set({ error: err.message || "Failed to fetch groups", loading: false });
+        }
+      },
       setCurrentGroup: (group) => set({ currentGroup: group }),
     }),
     {

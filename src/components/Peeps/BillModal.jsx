@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Avatar from "../avatar";
 import { X } from "lucide-react";
 import { swalAlert } from "../../utils/swalAlert";
+import useExpenseStore from "../../stores/expensesStore";
+import useAuthStore from "../../stores/authStore";
+import { useForm } from "react-hook-form";
 
 const members = [
   { name: "Allie", avatar: "./mockProfilePic2.jpg" },
@@ -9,19 +12,48 @@ const members = [
   { name: "Allie ร่างแยก", avatar: "./mockProfilePic1.jpg" },
 ];
 
-function BillModal({ open, onClose }) {
+function BillModal({ open, onClose, groupId }) {
+  const token = useAuthStore(state => state.token)
+  const user = useAuthStore(state => state.user)
+  const createExpense = useExpenseStore(state => state.createExpense)
+  const { register, handleSubmit, formState, reset, setValue, watch } = useForm()
+  const { isSubmitting, errors } = formState
+  // console.log(token)
+  const billName = watch('title')
+  const total = watch('amount')
+
   const [step, setStep] = useState(1);
 
+  const onSubmit = async (data) => {
+    try {
+      const createData = {
+        title: data.title,
+        amount: Number(data.amount),
+        receiptImage: "fake.jpg",
+        groupId: 1,
+        userId: 3,
+        date: data.date || new Date().toISOString().split("T")[0]
+      }
+      console.log("[CREATE DATA]", createData)
+      const result = await createExpense(createData, token)
+      console.log(result)
+      alert("Assigned success")
+      setStep(2)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   // สำหรับข้อมูลบิล
-  const [billName, setBillName] = useState("");
-  const [total, setTotal] = useState("");
+  // const [billName, setBillName] = useState("");
+  // const [total, setTotal] = useState("");
 
   // จำนวนเงินแต่ละคน
   const [splits, setSplits] = useState(members.map(() => ""));
 
   //ให้หารให้ลงตัวก่อน
   useEffect(() => {
-    if (!total || total <= 0) {
+    if (!total || Number(total) <= 0) {
       setSplits(members.map(() => ""));
       return;
     }
@@ -49,7 +81,7 @@ function BillModal({ open, onClose }) {
 
         {/* STEP 1: ฟอร์มสร้างบิล */}
         {step === 1 && (
-          <>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="text-[1.6rem] font-bold mb-3 text-[#222]">
               Bill Management
             </div>
@@ -57,8 +89,9 @@ function BillModal({ open, onClose }) {
             <input
               type="text"
               placeholder="กรุณากรอกชื่อบิล"
-              value={billName}
-              onChange={(e) => setBillName(e.target.value)}
+              // value={billName}
+              // onChange={(e) => setBillName(e.target.value)}
+              {...register('title')}
               className="w-full rounded-lg px-3 py-2 bg-[#F7F3D7] text-[#555] mb-4 outline-none border-none placeholder:text-[#B7A969] font-medium"
             />
 
@@ -68,8 +101,9 @@ function BillModal({ open, onClose }) {
             <input
               type="number"
               placeholder="ยอดทั้งหมด"
-              value={total}
-              onChange={(e) => setTotal(e.target.value)}
+              // value={total}
+              // onChange={(e) => setTotal(e.target.value)}
+              {...register('amount')}
               className="w-full rounded-lg px-4 py-2 bg-[#F7F3D7] text-[#555] mb-5 outline-none border-none placeholder:text-[#B7A969] font-medium"
             />
 
@@ -89,12 +123,14 @@ function BillModal({ open, onClose }) {
 
             <button
               className="w-full rounded-full px-5 py-2 bg-[#98C5B8] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
-              onClick={() => setStep(2)}
-              disabled={!billName || !total}
+              // onClick={() => setStep(2)}
+              type="submit"
+              disabled={!billName || Number(total) <= 0 || isSubmitting}
+            // disabled={isSubmitting}
             >
               Next
             </button>
-          </>
+          </form>
         )}
         {/* STEP 2: ฟอร์มแบ่งเงินแต่ละคน */}
         {step === 2 && (
