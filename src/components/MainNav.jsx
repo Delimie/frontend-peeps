@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { HamburgerIcon, UserIcon } from "../assets/icon";
 import useAuthStore from "../stores/authStore";
+import { LogIn } from "lucide-react";
 
 function MainNav() {
   const [open, setOpen] = useState(false);
@@ -166,10 +167,10 @@ function MainNav() {
                 }}
                 className="text-left bg-white text-md hover:text-[#de9227] transition hover:scale-105"
               >
-                Logout
+                <span className="flex gap-3"><LogIn size={22}/>Logout </span>
               </button>
             </>
-          )}
+          )} 
         </nav>
       </div>
     </div>

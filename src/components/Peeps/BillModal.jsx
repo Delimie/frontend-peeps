@@ -114,7 +114,7 @@ function BillModal({ open, onClose, groupId }) {
             </div> */}
 
             <div className="flex items-center gap-2 mb-8 font-semibold">
-              <span className="text-[#222]">with</span>
+              <span className="text-[#222]">share with</span>
               <Avatar size={32} />
               <button className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-xl text-[#AAA] font-bold border border-gray-200 hover:bg-[#F2EBBF] transition">
                 +
@@ -132,6 +132,7 @@ function BillModal({ open, onClose, groupId }) {
             </button>
           </form>
         )}
+
         {/* STEP 2: ฟอร์มแบ่งเงินแต่ละคน */}
         {step === 2 && (
           <>
@@ -156,13 +157,7 @@ function BillModal({ open, onClose, groupId }) {
                 >
                   {/* กลุ่ม avatar + name */}
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center">
-                      <img
-                        src={m.avatar}
-                        alt={m.name}
-                        className="w-full h-full rounded-full object-cover"
-                      />
-                    </div>
+                      <Avatar size={40}/>
                     <span
                       className="text-[#222] font-semibold truncate"
                       style={{ width: 150 }}
@@ -251,13 +246,7 @@ function BillModal({ open, onClose, groupId }) {
                       className="flex items-center justify-between gap-3 mb-2"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center">
-                          <img
-                            src={m.avatar}
-                            alt={m.name}
-                            className="w-full h-full rounded-full object-cover"
-                          />
-                        </div>
+                          <Avatar size={40} />
                         <span
                           className="text-[#F06060] font-semibold truncate"
                           style={{ width: 120 }}
