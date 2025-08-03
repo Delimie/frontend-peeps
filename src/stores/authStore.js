@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { authApi } from "../api/authApi";
-import { getMeApi, postNewPassword } from "../api/usersApi";
+import { getAllUsersApi, getMeApi, postNewPassword } from "../api/usersApi";
 
 const useAuthStore = create(
   persist(
@@ -9,6 +9,7 @@ const useAuthStore = create(
       user: null,
       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzUzNDI5OTU0LCJleHAiOjE3NTYwMjE5NTR9.W5n7IwlPo3LtvctOYXLz55ty6SHRFhRXiIKxQVmZpSs",
       isLoading: true,
+      users: [],
       login: async (input) => {
         const res = await authApi.post("/login", input);
         set({ token: res.data.token, user: res.data.user });
@@ -48,7 +49,21 @@ const useAuthStore = create(
         const res = await postNewPassword(id, body, token);
         // await get().getUser(id);
         return res;
-      }
+      },
+      getAllUsers: async () => {
+        const token = get().token;
+        set({ isLoading: true });
+        try {
+          const res = await getAllUsersApi(token);
+           console.log("API getAllUsers response:", res.data.result);
+          set({ users: res.data.result, isLoading: false });
+          return res;
+        } catch (err) {
+          console.error("getAllUsers failed:", err);
+          set({ isLoading: false });
+          throw err;
+        }
+      },
     }),
     { name: "userStorage", storage: createJSONStorage(() => localStorage) }
   )
