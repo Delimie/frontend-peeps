@@ -31,8 +31,8 @@ function MainSideBar() {
   const [channelName, setChannelName] = useState("");
 
   //store
-  const groupUsers = useGroupStore((state) => state.groupUsers);
-  const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
+  // const groupUsers = useGroupStore((state) => state.groupUsers);
+  // const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
 
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);

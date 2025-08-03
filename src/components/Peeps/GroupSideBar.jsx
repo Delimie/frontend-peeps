@@ -26,8 +26,8 @@ function SideBarGroup() {
   return (
     <div className="flex flex-col items-center mt-4">
       <Avatar />
-      <span className="mt-5 font-semibold text-lg">Welcome!</span>
-      <span className="font-semibold text-lg">{user.name}!</span>
+      {/* <span className="mt-5 font-semibold text-lg">Welcome!</span> */}
+      <span className="mt-5 font-semibold text-lg">Hello {user.name} !</span>
       <div className="bg-[#fffcee] mt-4 flex flex-col gap-2 py-6 px-3 w-[160px] h-fit rounded-l-2xl">
         <button
           className="mb-2 text-sm bg-[#F3B562] text-[#5C4B51] px-3 py-2 rounded-xl font-semibold hover:bg-[#FFE066] transition"
