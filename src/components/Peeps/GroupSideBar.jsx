@@ -5,25 +5,26 @@ import Avatar from "../avatar";
 import Modal from "../Modal";
 import useGroupStore from "../../stores/groupStore";
 import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
 
-const groupList = [
-  { id: "g1", name: "Peeps" },
-  { id: "g2", name: "ฮือออ" },
-  { id: "g3", name: "แงงง" },
-];
+// const groupList = [
+//   { id: "g1", name: "Peeps" },
+//   { id: "g2", name: "ฮือออ" },
+//   { id: "g3", name: "แงงง" },
+// ];
 
 function SideBarGroup() {
   const params = useParams();
   const navigate = useNavigate();
-  const currentGroup = params.groupId || groupList[0].id;
+  const { groups, getMyGroups, loading, error, createGroup } = useGroupStore();
+  const currentGroup = params.groupId || (groups && groups.length > 0 ? groups[0].id : null);
   const token = useAuthStore(state => state.token)
-  const createGroup = useGroupStore(state => state.createGroup)
+  // const createGroup = useGroupStore(state => state.createGroup)
   const { register, handleSubmit, formState, reset } = useForm()
   const { isSubmitting, errors } = formState
   const user = useAuthStore((state) => state.user);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   // const [groupName, setGroupName] = useState("");
-  const { groups, getMyGroups, loading, error } = useGroupStore();
   // console.log(getMyGroups)
 
   useEffect(() => {
@@ -36,16 +37,25 @@ function SideBarGroup() {
 
   const onSubmit = async (data) => {
     try {
-      const createData = { name: data.name }
-      console.log("[CREATE Group]", createData)
-      const result = await createGroup(createData, token)
-      console.log(result)
-      console.log(token)
-      alert("Assigned success")
-      reset()
-      setIsCreateGroupModalOpen(false)
+      const resp = await createGroup({ name: data.name });
+      const newGroup = resp.group;
+      await Swal.fire({
+        icon: 'success',
+        title: 'Group Created!',
+        text: `Group "${newGroup.name}" has been created successfully.`,
+        confirmButtonColor: '#8CBEB2'
+      });
+      navigate(`/peeps/${newGroup.id}`);
+      reset();
+      setIsCreateGroupModalOpen(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to create group. Please try again.',
+        confirmButtonColor: '#F3B562'
+      });
     }
   }
 
@@ -61,7 +71,10 @@ function SideBarGroup() {
           + Create Group
         </button>
         <div className="flex flex-col">
-          {groupList.map((g) => (
+          <h3 className="w-full text-center text-[#5C4B51] font-semibold text-sm bg-[#F7F3D7] py-2 rounded-lg">
+            My Groups
+          </h3>
+          {groups.map((g) => (
             <button
               key={g.id}
               onClick={() => handleChangeGroup(g.id)}
@@ -113,16 +126,16 @@ function SideBarGroup() {
             </button>
           </form>
         </Modal>
-        <div>
+        {/* <div>
           <h3 className="font-bold">My Groups</h3>
           {loading && <p>Loading groups...</p>}
           {error && <p className="text-red-500">{error}</p>}
           <ul>
-            {groups.map((group) => (
+            {Array.isArray(groups) && groups.map((group) => (
               <li key={group.id}>{group.name}</li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );
