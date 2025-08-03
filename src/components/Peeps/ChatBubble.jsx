@@ -1,6 +1,5 @@
 
 function ChatBubble({ userName, createdAt, content, position, img, footer }) {
-  console.log(img);
   return (
     <div className={`chat chat-${position}`}>
       <div className="chat-image avatar">

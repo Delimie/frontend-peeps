@@ -8,11 +8,11 @@ import useChannelStore from "../../stores/channelStore";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 
-// const groupList = [
-//   { id: 1, name: "Peeps" },
-//   { id: 2, name: "ฮือออ" },
-//   { id: 3, name: "แงงง" },
-// ];
+const groupList = [
+  { id: 1, name: "Peeps" },
+  { id: 2, name: "ฮือออ" },
+  { id: 3, name: "แงงง" },
+];
 
 function SideBarGroup() {
   const params = useParams();
@@ -21,7 +21,6 @@ function SideBarGroup() {
   const currentGroup = Number(params.groupId) || groupList[0].id;
   const { groups, getMyGroups, loading, error, createGroup } = useGroupStore();
   const token = useAuthStore(state => state.token)
-  // const createGroup = useGroupStore(state => state.createGroup)
   const { register, handleSubmit, formState, reset } = useForm()
   const { isSubmitting, errors } = formState
   const user = useAuthStore((state) => state.user);
@@ -33,10 +32,13 @@ function SideBarGroup() {
     getMyGroups();
   }, []);
 
+  const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
+
   const channels = useChannelStore(state => state.channels);
 
-  const handleChangeGroup = (groupId) => {
-    const firstChannel = (channels.find(el => el.groupId === Number(groupId))).channelList[0].channelId;
+  const handleChangeGroup = async (groupId) => {
+    await getChannelByGroupId(Number(groupId));
+    const firstChannel = (channels.find(el => el.groupId === Number(groupId)))?.channelList[0]?.channelId;
     navigate(`/peeps/${groupId}/${firstChannel}`);
   };
 
@@ -50,7 +52,7 @@ function SideBarGroup() {
         text: `Group "${newGroup.name}" has been created successfully.`,
         confirmButtonColor: '#8CBEB2'
       });
-      navigate(`/peeps/${newGroup.id}`);
+      await handleChangeGroup(Number(newGroup.id));
       reset();
       setIsCreateGroupModalOpen(false);
     } catch (error) {

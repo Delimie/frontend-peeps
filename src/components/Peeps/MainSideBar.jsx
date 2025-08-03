@@ -27,34 +27,29 @@ function MainSideBar() {
   const updateChannel = useChannelStore((state) => state.updateChannel);
   const deleteChannel = useChannelStore((state) => state.deleteChannel);
 
-  const channelList = useMemo(() => {
-    const listOutChannel = channels.find(el => el.groupId === Number(groupId));
-    return listOutChannel?.channelList ?? [];
-  }, [channels,groupId]);
   const currentChannel = channelId || channelList[0].channelId;
-
+  
   const memberList = useMemo(()=>{
-   return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
-    { name: "Auu", avatar: "./mockProfilePic3.jpg" },
-    { name: "Dew", avatar: "./mockProfilePic1.jpg" },
-    { name: "Gao", avatar: "./mockProfilePic2.jpg" },
-    { name: "1", avatar: "./mockProfilePic2.jpg" },
-    { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
-  },[])
-
-  const handleOpenMembers = async () => {
-    setIsMemberOpen((v) => !v);
-    if (!isMemberOpen && currentGroup) {
-      await getUsersInGroup(currentGroup);
-    }
-  };
-
-  const handleChangeChannel = (chId) => {
-    if (!currentGroup) return;
-    console.log('navigate');
+    return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
+      { name: "Auu", avatar: "./mockProfilePic3.jpg" },
+      { name: "Dew", avatar: "./mockProfilePic1.jpg" },
+      { name: "Gao", avatar: "./mockProfilePic2.jpg" },
+      { name: "1", avatar: "./mockProfilePic2.jpg" },
+      { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
+    },[])
+    
+    const handleOpenMembers = async () => {
+      setIsMemberOpen((v) => !v);
+      if (!isMemberOpen && currentGroup) {
+        await getUsersInGroup(currentGroup);
+      }
+    };
+    
+    const handleChangeChannel = (chId) => {
+      if (!currentGroup) return;
     navigate(`/peeps/${currentGroup}/${chId}`);
   };
-
+  
   const handleAddMember = (e) => {
     e.preventDefault();
     alert("Added user: " + userIdInput);
@@ -62,11 +57,19 @@ function MainSideBar() {
     setUserIdInput("");
   };
 
+  const channelList = useMemo(() => {
+    const listOutChannel = channels.find(el => el.groupId === Number(groupId));
+    return listOutChannel?.channelList ?? [];
+  }, [channels]);
+
+  //Fetch Channel by Group Id
   useEffect(() => {
-    console.log('run find channels');
-    // getChannelByGroupId(groupId);
+    getChannelByGroupId(Number(groupId));
   }, [groupId]);
 
+  
+  
+  
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] min-h-full shadow-lg rounded-l-3xl">
       <div>
@@ -77,12 +80,12 @@ function MainSideBar() {
           <button
             className="w-full flex items-center justify-between bg-[#F2EBBF] px-3 py-2 rounded-xl shadow font-semibold text-[#5C4B51] hover:bg-[#FFE066] transition"
             onClick={handleOpenMembers}
-          >
+            >
             <span>Members</span>
             <span
               className={`transition-transform ${isMemberOpen ? "rotate-90" : ""
-                }`}
-            >
+              }`}
+              >
               🧀
             </span>
           </button>
@@ -90,8 +93,8 @@ function MainSideBar() {
             <div className="bg-white rounded-xl mt-2 px-2 py-2 shadow-inner border border-[#8CBEB2] flex flex-col gap-2">
               {memberList.map((member, idx) => (
                 <div
-                  key={idx}
-                  className="flex items-center gap-3 px-2 py-1 hover:bg-[#F2EBBF] rounded-lg transition"
+                key={idx}
+                className="flex items-center gap-3 px-2 py-1 hover:bg-[#F2EBBF] rounded-lg transition"
                 >
                   <span className="text-sm text-[#5C4B51] itim">
                     {member.name}
@@ -235,10 +238,12 @@ function MainSideBar() {
         <button
           className="w-full rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
           disabled={!channelName.trim()}
-          onClick={() => {
+          onClick={async () => {
             setIsAddChannelModalOpen(false);
-            createChannel({ name: channelName, type: "TEXT", groupId: groupId })
+            const response = await createChannel({ name: channelName, type: "TEXT", groupId: Number(groupId) });
             setChannelName("");
+            // console.log('response is',response,' ',response.id);
+            if(response) handleChangeChannel(response.id);
           }}
         >
           Add

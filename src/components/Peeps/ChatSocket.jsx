@@ -66,11 +66,12 @@ function ChatSocket() {
   // Socket useEffect : handle Change Channel
   useEffect(() => {
     if (channelId) {
+      // console.log('join channel ', channelId);
       socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, { channelId: channelId });
     }
 
     return () => {
-      console.log('Leaving channel ', channelId);
+      // console.log('Leaving channel ', channelId);
       socket.emit(CHANNEL_ACTION.CHANNEL_LEAVE, { channelId: channelId });
     }
   }, [channelId])

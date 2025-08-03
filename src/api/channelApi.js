@@ -17,3 +17,5 @@ export const createChannelApi = (body) => channelApi.post("/", body);
 export const getChannelByGroupIdApi = (groupId) => channelApi.get(`/${groupId}`);
 export const updateChannelApi = (channelId, body) => channelApi.patch(`/${channelId}`, body);
 export const deleteChannelApi = (id) => channelApi.delete(`/${id}`);
+
+export const getMyChannelAPI = () => channelApi.get("/my");
