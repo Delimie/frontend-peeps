@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import WelcomePeeps from "./WelcomePeeps";
 import ChatSocket from "./ChatSocket";
 import Appointment from "./Appointment";
-import DebtSum from "../DebtSummaryPage/DebtSummary";
+import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.constant";
+import { socket } from "../../socket/socket";
 import Management from "./Management";
 import DebtSummary from "./DebtSummary";
 
@@ -16,6 +17,13 @@ function MainContainer() {
       navigate(`/peeps/${groupId}/`, { replace: true });
     }
   }, [groupId, channelId, navigate]);
+
+
+  useEffect(() => {
+    if (groupId) {
+      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
+    }
+  }, [groupId])
 
   if (!groupId) {
     return (
@@ -31,9 +39,9 @@ function MainContainer() {
   else if (channelId === "appointment") Content = <Appointment />;
   else if (channelId === "management") Content = <Management />;
   else Content = <ChatSocket />;
-
+  
   return (
-    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF]">
+    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
       {Content}
     </div>
   );

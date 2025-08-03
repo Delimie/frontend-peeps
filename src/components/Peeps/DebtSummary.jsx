@@ -2,7 +2,9 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
+import useGroupStore from "../../stores/groupStore";
 import Avatar from "../avatar";
+import BillSummaryCard from "./BillSummaryCard";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -18,6 +20,8 @@ function DebtSummary() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
+  const currentGroup = useGroupStore((state) => state.currentGroup);
+  const [showAllBills, setShowAllBills] = useState(false);
 
   return (
     <div className="flex flex-col">
@@ -30,14 +34,23 @@ function DebtSummary() {
             >
               Create Group's Bill
             </button>
-            <button className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
-              Show All Bills
+            <button
+              className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+              onClick={() => setShowAllBills(true)}
+              disabled={showAllBills}
+            >
+              Show All Group Bills
             </button>
           </div>
-          <button className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
+          <button
+            className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+            onClick={() => setShowAllBills(false)}
+            disabled={!showAllBills}
+          >
             Check your bills
           </button>
         </div>
+
         <div className="flex items-center justify-between">
           <h1 className="text-4xl pt-2 pl-2 font-mitr text-[#5C4B51] tracking-wide">
             {user.name}'s Debt Summary
@@ -51,41 +64,45 @@ function DebtSummary() {
         </div>
       </div>
 
-      <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
-        <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
-          <div className="text-center text-2xl font-mitr text-[#5C4B51]">
-            To Pay
+      {showAllBills ? (
+        <BillSummaryCard onClose={() => setShowAllBills(false)} />
+      ) : (
+        <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
+          <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
+            <div className="text-center text-2xl font-mitr text-[#5C4B51]">
+              To Pay
+            </div>
+            <div className="text-center text-2xl font-mitr text-[#5C4B51]">
+              To Receive
+            </div>
           </div>
-          <div className="text-center text-2xl font-mitr text-[#5C4B51]">
-            To Receive
-          </div>
+          {debts.map((item, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
+            >
+              <Avatar size={65} />
+              <span className="text-[#5C4B51] font-semibold text-xl itim">
+                {item.name}
+              </span>
+              <span
+                className={`text-center font-bold text-xl itim ${
+                  item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
+                }`}
+              >
+                {item.toPay}
+              </span>
+              <span
+                className={`text-center font-bold text-xl itim ${
+                  item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+                }`}
+              >
+                {item.toReceive}
+              </span>
+            </div>
+          ))}
         </div>
-        {debts.map((item, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
-          >
-            <Avatar size={65} />
-            <span className="text-[#5C4B51] font-semibold text-xl itim">
-              {item.name}
-            </span>
-            <span
-              className={`text-center font-bold text-xl itim ${
-                item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
-              }`}
-            >
-              {item.toPay}
-            </span>
-            <span
-              className={`text-center font-bold text-xl itim ${
-                item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
-              }`}
-            >
-              {item.toReceive}
-            </span>
-          </div>
-        ))}
-      </div>
+      )}
 
       {/* Select Recipient Modal */}
       {isSelectRecipientModalOpen && (
@@ -137,6 +154,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
+          // groupId={currentGroup?.id}
         />
       )}
 

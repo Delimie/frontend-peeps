@@ -29,3 +29,5 @@ export const getUsersInGroupApi = (groupId) =>
 
 export const getGroupSummaryApi = (groupId) =>
   groupApi.get(`/${groupId}/summary`);
+
+export const getMyGroupsAPI = () => groupApi.get("/my");
