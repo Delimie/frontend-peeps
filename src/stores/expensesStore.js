@@ -17,6 +17,7 @@ const useExpenseStore = create((set, get) => ({
     set({ loading: true });
     const resp = await createExpenseApi(body);
     const newExpense = { ...resp.data.result, user };
+    console.log(resp.data)
     set((state) => ({
       loading: false,
       expenses: [newExpense, ...state.expenses]
@@ -27,6 +28,7 @@ const useExpenseStore = create((set, get) => ({
   //ดึงรายการทั้งหมดในกลุ่ม
   getExpensesByGroup: async (groupId) => {
     const resp = await getExpensesByGroupIdApi(groupId);
+    console.log(resp.data)
     set({ expenses: resp.data.result });
     return resp;
   },

@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
+import useGroupStore from "../../stores/groupStore";
 import Avatar from "../avatar";
 
 const debts = [
@@ -13,11 +14,11 @@ const debts = [
 ];
 
 function DebtSummary() {
-  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] =
-    useState(false);
+  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
+  const currentGroup = useGroupStore(state => state.currentGroup)
 
   return (
     <div className="flex flex-col">
@@ -70,16 +71,14 @@ function DebtSummary() {
               {item.name}
             </span>
             <span
-              className={`text-center font-bold text-xl itim ${
-                item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
-              }`}
+              className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
+                }`}
             >
               {item.toPay}
             </span>
             <span
-              className={`text-center font-bold text-xl itim ${
-                item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
-              }`}
+              className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+                }`}
             >
               {item.toReceive}
             </span>
@@ -137,6 +136,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
+        // groupId={currentGroup?.id}
         />
       )}
 
