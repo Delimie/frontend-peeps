@@ -2,6 +2,8 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
+import useGroupStore from "../../stores/groupStore";
+import Avatar from "../avatar";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -12,11 +14,11 @@ const debts = [
 ];
 
 function DebtSummary() {
-  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] =
-    useState(false);
+  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
+  const currentGroup = useGroupStore(state => state.currentGroup)
 
   return (
     <div className="flex flex-col">
@@ -62,29 +64,21 @@ function DebtSummary() {
         {debts.map((item, index) => (
           <div
             key={index}
-            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-2 rounded-xl shadow-sm border border-[#FFE066] bg-white"
+            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
           >
-            <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-[#8CBEB2] bg-[#F2EBBF] flex items-center justify-center">
-              <img
-                src={item.avatar}
-                alt={item.name}
-                className="object-cover w-full h-full"
-              />
-            </div>
+            <Avatar size={65} />
             <span className="text-[#5C4B51] font-semibold text-xl itim">
               {item.name}
             </span>
             <span
-              className={`text-center font-bold text-xl itim ${
-                item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
-              }`}
+              className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
+                }`}
             >
               {item.toPay}
             </span>
             <span
-              className={`text-center font-bold text-xl itim ${
-                item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
-              }`}
+              className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+                }`}
             >
               {item.toReceive}
             </span>
@@ -142,9 +136,10 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
+        // groupId={currentGroup?.id}
         />
       )}
-  
+
       {isPaymentModalOpen && (
         <div className="fixed inset-0 bg-[#5C4B51]/40 flex items-center justify-center z-50">
           <div className="bg-white w-[420px] p-7 rounded-2xl shadow-2xl border-2 border-[#8CBEB2] relative">
