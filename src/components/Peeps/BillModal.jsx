@@ -7,6 +7,7 @@ import useAuthStore from "../../stores/authStore";
 import { useForm } from "react-hook-form";
 import useSplitStore from "../../stores/splitsStore";
 import useGroupStore from "../../stores/groupStore";
+import { useParams } from "react-router-dom";
 
 const members = [
   { name: "Allie", avatar: "./mockProfilePic2.jpg" },
@@ -15,17 +16,19 @@ const members = [
 ];
 
 function BillModal({ open, onClose }) {
+  const { groupId } = useParams()
   const token = useAuthStore(state => state.token)
   const user = useAuthStore(state => state.user)
   const createExpense = useExpenseStore(state => state.createExpense)
   const createSplit = useSplitStore(state => state.createSplit)
-  // const getUsersInGroup = useGroupStore(state => state.getUsersInGroup)
   const groupUsers = useGroupStore(state => state.groupUsers)
   const { register, handleSubmit, formState, reset, setValue, watch } = useForm()
   const { isSubmitting, errors } = formState
-  // console.log(groupUsers)
+  // console.log(user)
   const billName = watch('title')
   const total = watch('amount')
+
+  const currentGroupUsers = groupUsers.filter(u => u.id !== user.id);
 
   const [step, setStep] = useState(1);
 
@@ -40,8 +43,8 @@ function BillModal({ open, onClose }) {
         title: data.title,
         amount: Number(data.amount),
         receiptImage: "fake.jpg",
-        groupId: 1,
-        userId: 3,
+        groupId: Number(groupId),
+        userId: user.id,
         date: today.toISOString().split("T")[0]
       }
       console.log("[CREATE DATA]", expenseData)
@@ -61,7 +64,7 @@ function BillModal({ open, onClose }) {
       console.log(result.data.expense.id)
       const expenseId = result.data.expense.id
       setCreatedExpenseId(expenseId);
-      const splitData = groupUsers.map((user, i) => ({
+      const splitData = currentGroupUsers.map((user, i) => ({
         userId: user.id,
         amount: Number(splits[i]),
         status: "UNPAID",
@@ -85,10 +88,10 @@ function BillModal({ open, onClose }) {
 
   //ให้หารให้ลงตัวก่อน
   useEffect(() => {
-    console.log(groupUsers.map(g => g.name))
-    console.log(groupUsers.map(g => g.id))
+    // console.log(groupUsers.map(g => g.name))
+    // console.log(groupUsers.map(g => g.id))
     if (!total || Number(total) <= 0) {
-      setSplits(groupUsers.map(() => ""));
+      setSplits(currentGroupUsers.map(() => ""));
       return;
     }
     const share = Math.floor(Number(total) / groupUsers.length);
@@ -184,7 +187,7 @@ function BillModal({ open, onClose }) {
 
             {/*div แยกพวก user */}
             <div className="max-h-50 overflow-y-auto mb-7">
-              {groupUsers.map((el, i) => (
+              {currentGroupUsers.map((el, i) => (
                 <div
                   key={el.id}
                   className="flex items-center justify-between gap-3 mb-3 mr-2"
@@ -274,7 +277,7 @@ function BillModal({ open, onClose }) {
               </button>
             </div>
             <div className="max-h-32 overflow-y-auto mb-2">
-              {groupUsers.map(
+              {currentGroupUsers.map(
                 (el, i) =>
                   !el.paid && (
                     <div
@@ -354,7 +357,7 @@ function BillModal({ open, onClose }) {
                       return;
                     }
 
-                    const splitData = groupUsers.map((user, i) => ({
+                    const splitData = currentGroupUsers.map((user, i) => ({
                       userId: user.id,
                       amount: Number(splits[i]),
                       status: "UNPAID",
