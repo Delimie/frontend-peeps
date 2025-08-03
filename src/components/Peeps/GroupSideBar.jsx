@@ -4,23 +4,27 @@ import useAuthStore from "../../stores/authStore";
 import Avatar from "../avatar";
 import Modal from "../Modal";
 import useGroupStore from "../../stores/groupStore";
+import useChannelStore from "../../stores/channelStore";
 
 const groupList = [
-  { id: "g1", name: "Peeps" },
-  { id: "g2", name: "ฮือออ" },
-  { id: "g3", name: "แงงง" },
+  { id: 1, name: "Peeps" },
+  { id: 2, name: "ฮือออ" },
+  { id: 3, name: "แงงง" },
 ];
 
 function SideBarGroup() {
   const params = useParams();
   const navigate = useNavigate();
-  const currentGroup = params.groupId || groupList[0].id;
+  const currentGroup = Number(params.groupId) || groupList[0].id;
   const user = useAuthStore((state) => state.user);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
 
+  const channels = useChannelStore(state => state.channels);
+
   const handleChangeGroup = (groupId) => {
-    navigate(`/peeps/${groupId}`);
+    const firstChannel = (channels.find(el => el.groupId === Number(groupId))).channelList[0].channelId;
+    navigate(`/peeps/${groupId}/${firstChannel}`);
   };
 
   return (
@@ -39,7 +43,7 @@ function SideBarGroup() {
             <button
               key={g.id}
               onClick={() => handleChangeGroup(g.id)}
-              className={`px-3 py-2 rounded-lg text-left font-medium
+              className={`px-3 py-2 rounded-lg text-left font-medium flex justify-between items-center
               ${
                 currentGroup === g.id
                   ? "bg-[#8CBEB2] text-white shadow"
@@ -48,6 +52,7 @@ function SideBarGroup() {
             `}
             >
               {g.name}
+              <div className="badge badge-sm bg-red-400 border-none text-white">+99</div>
             </button>
           ))}
         </div>

@@ -1,29 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 import { UserPlus } from "lucide-react";
 import useGroupStore from "../../stores/groupStore";
-
-const channelList = [
-  { id: "1", name: "General" },
-  { id: "channel2", name: "คุยเล่น" },
-  { id: "channel3", name: "นัดเที่ยว" },
-];
-
-const memberList = [
-  { name: "Allie", avatar: "./mockProfilePic2.jpg" },
-  { name: "Auu", avatar: "./mockProfilePic3.jpg" },
-  { name: "Dew", avatar: "./mockProfilePic1.jpg" },
-  { name: "Gao", avatar: "./mockProfilePic2.jpg" },
-  { name: "1", avatar: "./mockProfilePic2.jpg" },
-  { name: "Ploy", avatar: "./mockProfilePic2.jpg" },
-];
+import useChannelStore from "../../stores/channelStore";
 
 function MainSideBar() {
-  const {groupId , channelId} = useParams();
+  const { groupId, channelId } = useParams();
   const navigate = useNavigate();
   const currentGroup = groupId
-  const currentChannel = channelId || channelList[0].id;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userIdInput, setUserIdInput] = useState("");
   const [isMemberOpen, setIsMemberOpen] = useState(false);
@@ -34,15 +19,39 @@ function MainSideBar() {
   const groupUsers = useGroupStore((state) => state.groupUsers);
   const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
 
+
+  // Not attaching channels yet
+  const channels = useChannelStore((state) => state.channels);
+  const createChannel = useChannelStore((state) => state.createChannel);
+  const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
+  const updateChannel = useChannelStore((state) => state.updateChannel);
+  const deleteChannel = useChannelStore((state) => state.deleteChannel);
+
+  const channelList = useMemo(() => {
+    const listOutChannel = channels.find(el => el.groupId === Number(groupId));
+    return listOutChannel?.channelList ?? [];
+  }, [channels,groupId]);
+  const currentChannel = channelId || channelList[0].channelId;
+
+  const memberList = useMemo(()=>{
+   return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
+    { name: "Auu", avatar: "./mockProfilePic3.jpg" },
+    { name: "Dew", avatar: "./mockProfilePic1.jpg" },
+    { name: "Gao", avatar: "./mockProfilePic2.jpg" },
+    { name: "1", avatar: "./mockProfilePic2.jpg" },
+    { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
+  },[])
+
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
     if (!isMemberOpen && currentGroup) {
-      await getUsersInGroup(currentGroup); 
+      await getUsersInGroup(currentGroup);
     }
   };
 
   const handleChangeChannel = (chId) => {
     if (!currentGroup) return;
+    console.log('navigate');
     navigate(`/peeps/${currentGroup}/${chId}`);
   };
 
@@ -52,6 +61,11 @@ function MainSideBar() {
     setIsAddModalOpen(false);
     setUserIdInput("");
   };
+
+  useEffect(() => {
+    console.log('run find channels');
+    // getChannelByGroupId(groupId);
+  }, [groupId]);
 
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] min-h-full shadow-lg rounded-l-3xl">
@@ -66,9 +80,8 @@ function MainSideBar() {
           >
             <span>Members</span>
             <span
-              className={`transition-transform ${
-                isMemberOpen ? "rotate-90" : ""
-              }`}
+              className={`transition-transform ${isMemberOpen ? "rotate-90" : ""
+                }`}
             >
               🧀
             </span>
@@ -113,17 +126,17 @@ function MainSideBar() {
         <div className="flex flex-col gap-1">
           {channelList.map((ch) => (
             <button
-              key={ch.id}
-              onClick={() => handleChangeChannel(ch.id)}
-              className={`px-3 py-2 rounded-xl text-left font-medium
-      ${
-        currentChannel === ch.id
-          ? "bg-[#8CBEB2] text-white shadow"
-          : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-      }
+              key={ch.channelId}
+              onClick={() => handleChangeChannel(ch.channelId)}
+              className={`px-3 py-2 rounded-xl text-left font-medium  flex justify-between items-center
+      ${currentChannel === ch.channelId
+                  ? "bg-[#8CBEB2] text-white shadow"
+                  : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+                }
     `}
             >
               # {ch.name}
+              {(ch.unreadNoti>0) && <div className="badge badge-sm bg-red-400 border-none text-white">{ch.unreadNoti>= 100? '+99' : ch.unreadNoti}</div>}
             </button>
           ))}
         </div>
@@ -187,12 +200,17 @@ function MainSideBar() {
                   setUserIdInput("");
                 }}
                 className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
-              >
+                >
                 Cancel
               </button>
               <button
                 type="submit"
                 className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
+                onClick={() => {
+                  setIsAddModalOpen(false);
+                  addUserToGroup(groupId, userIdInput);
+                  setUserIdInput("");
+                }}
                 disabled={!userIdInput.trim()}
               >
                 Add
@@ -219,6 +237,7 @@ function MainSideBar() {
           disabled={!channelName.trim()}
           onClick={() => {
             setIsAddChannelModalOpen(false);
+            createChannel({ name: channelName, type: "TEXT", groupId: groupId })
             setChannelName("");
           }}
         >

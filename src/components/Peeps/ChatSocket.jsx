@@ -1,6 +1,6 @@
 import { SendHorizontal, UserIcon } from "lucide-react";
 import ChatBubble from "./ChatBubble";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { userTyping } from "../../socket/handlers/chatHandler";
 import { socket } from "../../socket/socket";
 import { CHANNEL_ACTION, CHAT_ACTION } from "../../shared/constants/socket.constant";
@@ -14,8 +14,11 @@ const messages = [
   { user: "Baymax", text: "Good Morning", time: "10:10" },
   { user: "Snoopy", text: "Hi! 🙋‍♂️", time: "12:45", footer: "Seen by 2" },
 ];
+
 function ChatSocket() {
-  const { groupId, menu } = useParams();
+  const { groupId, channelId } = useParams();
+  const scrollToEndRef = useRef(null);
+
   const user = useAuthStore(state => state.user);
   const userList = useUserListStore(state => state.userList);
 
@@ -62,15 +65,15 @@ function ChatSocket() {
 
   // Socket useEffect : handle Change Channel
   useEffect(() => {
-    if (menu) {
-      socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, { channelId: menu });
+    if (channelId) {
+      socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, { channelId: channelId });
     }
 
     return () => {
-      console.log('Try to leave ', menu);
-      socket.emit(CHANNEL_ACTION.CHANNEL_LEAVE, { channelId: menu });
+      console.log('Leaving channel ', channelId);
+      socket.emit(CHANNEL_ACTION.CHANNEL_LEAVE, { channelId: channelId });
     }
-  }, [menu])
+  }, [channelId])
 
   // Socket useEffect : setIsTyping
   useEffect(() => {
@@ -85,13 +88,21 @@ function ChatSocket() {
   // Socket useEffect : chat status
   useEffect(() => {
     if (isTyping) {
-      userTyping({ status: isTyping, channelId: menu });
+      userTyping({ status: isTyping, channelId: channelId });
       return;
     }
-    userTyping({ status: isTyping, channelId: menu });
+    userTyping({ status: isTyping, channelId: channelId });
   }, [isTyping]);
 
-  // For handle ChatSocket function---------------------------------
+  // For handle ChatSocket function---------------------------------------------------------------------------------------
+  const scrollToBottom = () => {
+    scrollToEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }
+  // Scrolltobottom use effect
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
+
   const hdlSendMessage = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -101,7 +112,7 @@ function ChatSocket() {
       const data = {
         content: messageInput,
         userId: useAuthStore.getState().user.id,
-        channelId: menu,
+        channelId: channelId,
         groupId: groupId,
         file: null, // PUT IT HERE FOR MULTER OPERATION LATER
       }
@@ -112,7 +123,7 @@ function ChatSocket() {
     }
     return;
   }
-  //----------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------------------------
 
   return (
     <>
@@ -120,16 +131,18 @@ function ChatSocket() {
         # Channel Name
       </div>
       <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
-        {chats.map((el, idx) => ( el.channelId === parseInt(menu) &&
+        {chats.map((el, idx) => (el.channelId === parseInt(channelId) &&
           <ChatBubble
             key={el.id}
             userName={el.userId === user.id ? user.name : userList.find((element) => element.id === el.id)?.name}
             createdAt={el.createdAt}
             content={el.content}
+            img = {el.userId === user.id ? user.name : userList.find((element) => element.id === el.id)?.profileImage}
             footer={null}
             position={el.userId === user.id ? "end" : "start"}
           />
         ))}
+        <div ref={scrollToEndRef} />
       </div>
       {
         memberTyping.length > 0 ?
