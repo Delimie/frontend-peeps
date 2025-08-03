@@ -5,45 +5,44 @@ import Avatar from "../avatar";
 import Modal from "../Modal";
 import useGroupStore from "../../stores/groupStore";
 import { useForm } from "react-hook-form";
-import Swal from 'sweetalert2';
-
-// const groupList = [
-//   { id: "g1", name: "Peeps" },
-//   { id: "g2", name: "ฮือออ" },
-//   { id: "g3", name: "แงงง" },
-// ];
+import Swal from "sweetalert2";
+import { MessageCircleHeart } from "lucide-react";
 
 function SideBarGroup() {
   const params = useParams();
+  const { groupId } = useParams();
   const navigate = useNavigate();
   const { groups, getMyGroups, loading, error, createGroup } = useGroupStore();
-  const currentGroup = params.groupId || (groups && groups.length > 0 ? groups[0].id : null);
-  const token = useAuthStore(state => state.token)
+  // const currentGroup = params.groupId || (groups && groups.length > 0 ? groups[0].id : null);
+  const currentGroup =
+    groupId || (groups && groups.length > 0 ? groups[0].id.toString() : null);
+  const token = useAuthStore((state) => state.token);
   // const createGroup = useGroupStore(state => state.createGroup)
-  const { register, handleSubmit, formState, reset } = useForm()
-  const { isSubmitting, errors } = formState
+  const { register, handleSubmit, formState, reset } = useForm();
+  const { isSubmitting, errors } = formState;
   const user = useAuthStore((state) => state.user);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   // const [groupName, setGroupName] = useState("");
   // console.log(getMyGroups)
 
-  useEffect(() => {
-    getMyGroups();
-  }, []);
-
   const handleChangeGroup = (groupId) => {
+    console.log("Clicked group id: ", groupId);
     navigate(`/peeps/${groupId}`);
   };
+
+  useEffect(() => {
+    getMyGroups();
+  }, [groupId]);
 
   const onSubmit = async (data) => {
     try {
       const resp = await createGroup({ name: data.name });
       const newGroup = resp.group;
       await Swal.fire({
-        icon: 'success',
-        title: 'Group Created!',
+        icon: "success",
+        title: "Group Created!",
         text: `Group "${newGroup.name}" has been created successfully.`,
-        confirmButtonColor: '#8CBEB2'
+        confirmButtonColor: "#8CBEB2",
       });
       navigate(`/peeps/${newGroup.id}`);
       reset();
@@ -51,17 +50,17 @@ function SideBarGroup() {
     } catch (error) {
       console.log(error);
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Failed to create group. Please try again.',
-        confirmButtonColor: '#F3B562'
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to create group. Please try again.",
+        confirmButtonColor: "#F3B562",
       });
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center mt-4">
-      <Avatar />
+      <Avatar size={120} />
       {/* <span className="mt-5 font-semibold text-lg">Welcome!</span> */}
       <span className="mt-5 font-semibold text-lg">Hello {user.name} !</span>
       <div className="bg-[#fffcee] mt-4 flex flex-col gap-2 py-6 px-3 w-[160px] h-fit rounded-l-2xl">
@@ -72,21 +71,25 @@ function SideBarGroup() {
           + Create Group
         </button>
         <div className="flex flex-col">
-          <h3 className="w-full text-center text-[#5C4B51] font-semibold text-sm bg-[#F7F3D7] py-2 rounded-lg">
+          <h3 className="w-full text-center mb-2 text-[#5C4B51] font-semibold text-sm bg-[#F7F3D7] py-2 rounded-lg">
             My Groups
           </h3>
           {groups.map((g) => (
             <button
               key={g.id}
               onClick={() => handleChangeGroup(g.id)}
-              className={`px-3 py-2 rounded-lg text-left font-medium
-              ${currentGroup === g.id
-                  ? "bg-[#8CBEB2] text-white shadow"
-                  : "text-[#5C4B51] hover:bg-[#FFE066]"
-                }
-            `}
+              className={`px-3 py-2 rounded-lg text-left font-medium overflow-hidden relative  cursor-pointer
+      ${
+        currentGroup === g.id.toString()
+          ? "bg-[#8CBEB2] text-white shadow"
+          : "text-[#5C4B51] slide-hover-btn"
+      }
+    `}
             >
-              {g.name}
+              <span className="flex gap-2">
+                {" "}
+                <MessageCircleHeart /> {g.name}
+              </span>
             </button>
           ))}
         </div>
@@ -118,10 +121,10 @@ function SideBarGroup() {
               // disabled={!groupName.trim()}
               type="submit"
               disabled={isSubmitting}
-            // onClick={() => {
-            //   setIsCreateGroupModalOpen(false);
-            //   // setGroupName("");
-            // }}
+              // onClick={() => {
+              //   setIsCreateGroupModalOpen(false);
+              //   // setGroupName("");
+              // }}
             >
               Create
             </button>

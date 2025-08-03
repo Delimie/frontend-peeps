@@ -4,7 +4,7 @@ import { swalAlertConfirm } from "../../utils/swalAlert";
 import { toast } from "react-toastify";
 import useGroupStore from "../../stores/groupStore";
 
-function Management({ isOwner = true }) {
+function Management({ isOwner = true, groupId }) {
   const groupUsers = useGroupStore((state) => state.groupUsers);
   const currentGroup = useGroupStore((state) => state.currentGroup);
   const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
@@ -13,10 +13,11 @@ function Management({ isOwner = true }) {
 
   console.log(currentGroup)
 
-  // 1. Fetch users in group (ใช้ groupId จริง)
 useEffect(() => {
-  getUsersInGroup(7); // สมมติ group id จริง = 7
-}, []);
+  if (currentGroup) {
+    getUsersInGroup(currentGroup);
+  }
+}, [currentGroup]);
 
   useEffect(() => {
     console.log("groupUsers: ", getUsersInGroup);

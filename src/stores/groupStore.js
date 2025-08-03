@@ -33,10 +33,10 @@ const useGroupStore = create(
       createGroup: async (body) => {
         set({ loading: true });
         try {
-          const resp = await createGroupApi(body);  
+          const resp = await createGroupApi(body);
           await get().getMyGroups();
           set({ loading: false });
-          return resp.data; 
+          return resp.data;
         } catch (err) {
           set({ loading: false, error: err.message || "Failed to create group" });
           throw err;
@@ -53,13 +53,14 @@ const useGroupStore = create(
       getUsersInGroup: async (groupId) => {
         set({ loading: true });
         const resp = await getUsersInGroupApi(groupId);
-        console.log("members", resp.data.message.members);
-        set({ groupUsers: resp.data.message.members, loading: false });
+        console.log("API Response Members:", resp.data.message.members);  
+        set({ groupUsers: resp.data.message.members, loading: false });  
         return resp;
       },
 
-      addUserToGroup: async (groupId, userId, role = "USER") => {
-        const resp = await addUserToGroupApi(groupId, { userId, role });
+      addUserToGroup: async (groupId, userId = null, role = "USER", userName = null) => {
+        const body = userId ? { userId, role } : { userName, role };
+        const resp = await addUserToGroupApi(groupId, body);
         await get().getUsersInGroup(groupId);
         await get().getGroupById(groupId);
         return resp;
