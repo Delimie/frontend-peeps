@@ -9,17 +9,13 @@ import { useParams } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
 import useUserListStore from "../../stores/userListStore";
 
-const currentUser = "Snoopy";
-const messages = [
-  { user: "Baymax", text: "Good Morning", time: "10:10" },
-  { user: "Snoopy", text: "Hi! 🙋‍♂️", time: "12:45", footer: "Seen by 2" },
-];
-
 function ChatSocket() {
-  const { groupId, channelId } = useParams();
+  const params = useParams();
+  const groupId = Number(params.groupId), channelId = Number(params.channelId);
   const scrollToEndRef = useRef(null);
 
   const user = useAuthStore(state => state.user);
+  const users = useAuthStore(state => state.users);
   const userList = useUserListStore(state => state.userList);
 
   const memberTyping = useChatStore(state => state.memberTyping);
@@ -27,6 +23,7 @@ function ChatSocket() {
 
   const chats = useChatStore(state => state.chats);
   const sendMessage = useChatStore(state => state.sendMessage);
+  const getChatByChannelId = useChatStore(state => state.getChatByChannelId);
   const [messageInput, setMessageInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
@@ -65,6 +62,9 @@ function ChatSocket() {
 
   // Socket useEffect : handle Change Channel
   useEffect(() => {
+
+    getChatByChannelId(channelId);
+
     if (channelId) {
       // console.log('join channel ', channelId);
       socket.emit(CHANNEL_ACTION.CHANNEL_JOIN, { channelId: channelId });
@@ -135,10 +135,10 @@ function ChatSocket() {
         {chats.map((el, idx) => (el.channelId === parseInt(channelId) &&
           <ChatBubble
             key={el.id}
-            userName={el.userId === user.id ? user.name : userList.find((element) => element.id === el.id)?.name}
+            userName={el.userId === user.id ? users[0].name : users.find((element) => element.id === el.userId)?.name}
             createdAt={el.createdAt}
             content={el.content}
-            img = {el.userId === user.id ? user.name : userList.find((element) => element.id === el.id)?.profileImage}
+            img = {el.userId === user.id ? users[0]?.profileImage : users.find((element) => element.id === el.userId)?.profileImage}
             footer={null}
             position={el.userId === user.id ? "end" : "start"}
           />

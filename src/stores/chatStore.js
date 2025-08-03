@@ -4,45 +4,51 @@ import { socket } from "../socket/socket";
 import { CHAT_ACTION, CHAT_EVENT } from "../shared/constants/socket.constant";
 import useAuthStore from "./authStore";
 import useUserListStore from "./userListStore";
+import { getChatByChannelIdApi } from "../api/chatApi";
 
 const useChatStore = create(
   persist(
     (set, get) => ({
       chats: [
-        {
-          id: 1,
-          userId: 1,
-          content: "Hello Hey",
-          createdAt: 'dayjs',
-          updatedAt: 'dayjs',
-          channelId: 1,
-          attachment: {
-            id: 5,
-            url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
-            type: "image/png",
-            name: "dog.png",
-            size: "1234kbps",
-            messageId: 1
-          }
-        },
-        {
-          id: 2,
-          userId: 2,
-          content: "Hello I'm Luffy",
-          createdAt: 'dayjs',
-          updatedAt: 'dayjs',
-          channelId: 1,
-          attachment: {
-            id: 3,
-            url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
-            type: "image/png",
-            name: "dog.png",
-            size: "1234kbps",
-            messageId: 1
-          }
-        }
+        // {
+        //   id: 1,
+        //   userId: 1,
+        //   content: "Hello Hey",
+        //   createdAt: 'dayjs',
+        //   updatedAt: 'dayjs',
+        //   channelId: 1,
+        //   attachment: {
+        //     id: 5,
+        //     url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
+        //     type: "image/png",
+        //     name: "dog.png",
+        //     size: "1234kbps",
+        //     messageId: 1
+        //   }
+        // },
+        // {
+        //   id: 2,
+        //   userId: 2,
+        //   content: "Hello I'm Luffy",
+        //   createdAt: 'dayjs',
+        //   updatedAt: 'dayjs',
+        //   channelId: 1,
+        //   attachment: {
+        //     id: 3,
+        //     url: "https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Golden-Retriever.jpg?v=1645179525",
+        //     type: "image/png",
+        //     name: "dog.png",
+        //     size: "1234kbps",
+        //     messageId: 1
+        //   }
+        // }
       ],
       memberTyping : [],
+      getChatByChannelId : async (channelId) =>{
+        const response = await getChatByChannelIdApi(Number(channelId));
+        const newChats = response.data.result;
+        set({chats : [...newChats]});
+      },
       updateMemberTyping : (data) =>{
         if(!data)return;
         const {userId, userName, status} = data;

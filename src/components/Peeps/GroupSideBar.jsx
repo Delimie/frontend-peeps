@@ -8,17 +8,11 @@ import useChannelStore from "../../stores/channelStore";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 
-const groupList = [
-  { id: 1, name: "Peeps" },
-  { id: 2, name: "ฮือออ" },
-  { id: 3, name: "แงงง" },
-];
-
 function SideBarGroup() {
   const params = useParams();
   const navigate = useNavigate();
 
-  const currentGroup = Number(params.groupId) || groupList[0].id;
+  const currentGroup = Number(params.groupId) // || groupList[0].id;
   const { groups, getMyGroups, loading, error, createGroup } = useGroupStore();
   const token = useAuthStore(state => state.token)
   const { register, handleSubmit, formState, reset } = useForm()

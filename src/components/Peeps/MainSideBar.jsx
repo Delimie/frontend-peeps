@@ -219,55 +219,48 @@ function MainSideBar() {
         </button>
       </div>
 
-      {
-        isAddModalOpen && (
-          <Modal
-            open={isAddModalOpen}
-            onClose={() => {
-              setIsAddModalOpen(false);
-              setUserNameInput("");
-            }}
-          >
-            <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
-              Add Member
-            </h2>
-            <form onSubmit={handleAddMember} className="flex flex-col gap-3">
-              <input
-                type="text"
-                value={userNameInput}
-                onChange={(e) => setUserNameInput(e.target.value)}
-                placeholder="Enter user Name"
-                className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
-                autoFocus
-              />
-              <div className="flex justify-end gap-2 mt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    setUserNameInput("");
-                  }}
-                  className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    addUserToGroup(groupId, userIdInput);
-                    setUserIdInput("");
-                  }}
-                  disabled={!userIdInput.trim()}
-                >
-                  Add
-                </button>
-              </div>
-            </form>
-          </Modal>
-        )
-      }
+      {isAddModalOpen && (
+        <Modal
+          open={isAddModalOpen}
+          onClose={() => {
+            setIsAddModalOpen(false);
+            setUserNameInput("");
+          }}
+        >
+          <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
+            Add Member
+          </h2>
+          <form onSubmit={handleAddMember} className="flex flex-col gap-3">
+            <input
+              type="text"
+              value={userNameInput}
+              onChange={(e) => setUserNameInput(e.target.value)}
+              placeholder="Enter user Name"
+              className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2 mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAddModalOpen(false);
+                  setUserNameInput("");
+                }}
+                className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
+                disabled={!userNameInput.trim()}
+              >
+                Add
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
       <Modal
         open={isAddChannelModalOpen}
