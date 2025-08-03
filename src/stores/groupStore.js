@@ -40,8 +40,8 @@ const useGroupStore = create(
       getUsersInGroup: async (groupId) => {
         set({ loading: true });
         const resp = await getUsersInGroupApi(groupId);
-        console.log(resp)
-        set({ groupUsers: resp.data.members, loading: false });
+        // console.log(resp.data.message.members)
+        set({ groupUsers: resp.data.message.members, loading: false });
         return resp;
       },
 

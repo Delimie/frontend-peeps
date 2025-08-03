@@ -5,6 +5,8 @@ import { swalAlert } from "../../utils/swalAlert";
 import useExpenseStore from "../../stores/expensesStore";
 import useAuthStore from "../../stores/authStore";
 import { useForm } from "react-hook-form";
+import useSplitStore from "../../stores/splitsStore";
+import useGroupStore from "../../stores/groupStore";
 
 const members = [
   { name: "Allie", avatar: "./mockProfilePic2.jpg" },
@@ -12,31 +14,40 @@ const members = [
   { name: "Allie ร่างแยก", avatar: "./mockProfilePic1.jpg" },
 ];
 
-function BillModal({ open, onClose, groupId }) {
+function BillModal({ open, onClose }) {
   const token = useAuthStore(state => state.token)
   const user = useAuthStore(state => state.user)
   const createExpense = useExpenseStore(state => state.createExpense)
+  const createSplit = useSplitStore(state => state.createSplit)
+  // const getUsersInGroup = useGroupStore(state => state.getUsersInGroup)
+  const groupUsers = useGroupStore(state => state.groupUsers)
   const { register, handleSubmit, formState, reset, setValue, watch } = useForm()
   const { isSubmitting, errors } = formState
-  // console.log(token)
+  // console.log(groupUsers)
   const billName = watch('title')
   const total = watch('amount')
 
   const [step, setStep] = useState(1);
 
+  const [createdExpenseId, setCreatedExpenseId] = useState(null);
+  const [createData, setCreateData] = useState(null);
+
   const onSubmit = async (data) => {
     try {
-      const createData = {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const expenseData = {
         title: data.title,
         amount: Number(data.amount),
         receiptImage: "fake.jpg",
         groupId: 1,
         userId: 3,
-        date: data.date || new Date().toISOString().split("T")[0]
+        date: today.toISOString().split("T")[0]
       }
-      console.log("[CREATE DATA]", createData)
-      const result = await createExpense(createData, token)
-      console.log(result)
+      console.log("[CREATE DATA]", expenseData)
+      // const result = await createExpense(createData, token)
+      // console.log(result)
+      setCreateData(expenseData)
       alert("Assigned success")
       setStep(2)
     } catch (error) {
@@ -44,27 +55,50 @@ function BillModal({ open, onClose, groupId }) {
     }
   }
 
+  const onSubmitSplit = async () => {
+    try {
+      const result = await createExpense(createData, token);
+      console.log(result.data.expense.id)
+      const expenseId = result.data.expense.id
+      setCreatedExpenseId(expenseId);
+      const splitData = groupUsers.map((user, i) => ({
+        userId: user.id,
+        amount: Number(splits[i]),
+        status: "UNPAID",
+      }));
+      for (let s of splitData) {
+        await createSplit(expenseId, s, token);
+      }
+      alert("Assigned success");
+      setStep(3);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // สำหรับข้อมูลบิล
   // const [billName, setBillName] = useState("");
   // const [total, setTotal] = useState("");
 
   // จำนวนเงินแต่ละคน
-  const [splits, setSplits] = useState(members.map(() => ""));
+  const [splits, setSplits] = useState(groupUsers.map(() => ""));
 
   //ให้หารให้ลงตัวก่อน
   useEffect(() => {
+    console.log(groupUsers.map(g => g.name))
+    console.log(groupUsers.map(g => g.id))
     if (!total || Number(total) <= 0) {
-      setSplits(members.map(() => ""));
+      setSplits(groupUsers.map(() => ""));
       return;
     }
-    const share = Math.floor(Number(total) / members.length);
-    const remain = Number(total) - share * members.length;
-    let arr = Array(members.length).fill(share);
+    const share = Math.floor(Number(total) / groupUsers.length);
+    const remain = Number(total) - share * groupUsers.length;
+    let arr = Array(groupUsers.length).fill(share);
     for (let i = 0; i < remain; i++) {
       arr[i] += 1;
     }
     setSplits(arr.map(String));
-  }, [total, members.length]);
+  }, [total, groupUsers.length]);
 
   if (!open) return null;
 
@@ -135,7 +169,7 @@ function BillModal({ open, onClose, groupId }) {
 
         {/* STEP 2: ฟอร์มแบ่งเงินแต่ละคน */}
         {step === 2 && (
-          <>
+          <form onSubmit={handleSubmit(onSubmitSplit)}>
             <div className="text-[1.6rem] font-bold mb-3 text-[#222]">
               Bill Management
             </div>
@@ -150,19 +184,19 @@ function BillModal({ open, onClose, groupId }) {
 
             {/*div แยกพวก user */}
             <div className="max-h-50 overflow-y-auto mb-7">
-              {members.map((m, i) => (
+              {groupUsers.map((el, i) => (
                 <div
-                  key={i}
+                  key={el.id}
                   className="flex items-center justify-between gap-3 mb-3 mr-2"
                 >
                   {/* กลุ่ม avatar + name */}
                   <div className="flex items-center gap-2 min-w-0">
-                      <Avatar size={40}/>
+                    <Avatar size={40} />
                     <span
                       className="text-[#222] font-semibold truncate"
                       style={{ width: 150 }}
                     >
-                      {m.name}
+                      {el.name}
                     </span>
                   </div>
                   {/* กลุ่ม input + ฿ */}
@@ -178,6 +212,7 @@ function BillModal({ open, onClose, groupId }) {
                         newSplits[i] = e.target.value;
                         setSplits(newSplits);
                       }}
+                    // {...register("amount")}
                     />
                     <span className="text-[#222] text-base">฿</span>
                   </div>
@@ -195,12 +230,13 @@ function BillModal({ open, onClose, groupId }) {
               </button>
               <button
                 className="w-1/2 rounded-full px-5 py-2 bg-[#98C5B8] text-white font-semibold text-lg shadow hover:brightness-105 transition"
-                onClick={() => setStep(3)}
+                // onClick={() => setStep(3)}
+                type="submit"
               >
                 Save
               </button>
             </div>
-          </>
+          </form>
         )}
 
         {step === 3 && (
@@ -238,20 +274,20 @@ function BillModal({ open, onClose, groupId }) {
               </button>
             </div>
             <div className="max-h-32 overflow-y-auto mb-2">
-              {members.map(
-                (m, i) =>
-                  !m.paid && (
+              {groupUsers.map(
+                (el, i) =>
+                  !el.paid && (
                     <div
-                      key={i}
+                      key={el.id}
                       className="flex items-center justify-between gap-3 mb-2"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                          <Avatar size={40} />
+                        <Avatar size={40} />
                         <span
                           className="text-[#F06060] font-semibold truncate"
                           style={{ width: 120 }}
                         >
-                          {m.name}
+                          {el.name}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -268,18 +304,18 @@ function BillModal({ open, onClose, groupId }) {
             {/* Paid */}
             <div className="font-bold text-[#111] mb-1 mt-3">Paid:</div>
             <div>
-              {members.map(
-                (m, i) =>
-                  m.paid && (
+              {groupUsers.map(
+                (el, i) =>
+                  el.paid && (
                     <div
-                      key={i}
+                      key={el.id}
                       className="flex items-center justify-between gap-3 mb-2"
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center">
                           <img
-                            src={m.avatar}
-                            alt={m.name}
+                            src={el.avatar}
+                            alt={el.name}
                             className="w-full h-full rounded-full object-cover"
                           />
                         </div>
@@ -287,7 +323,7 @@ function BillModal({ open, onClose, groupId }) {
                           className="text-[#98C5B8] font-semibold truncate"
                           style={{ width: 120 }}
                         >
-                          {m.name}
+                          {el.name}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -311,9 +347,29 @@ function BillModal({ open, onClose, groupId }) {
               </button>
               <button
                 className="w-1/2 rounded-full px-5 py-2 bg-[#98C5B8] text-white font-semibold text-lg shadow hover:brightness-105 transition"
-                onClick={() => {
-                  swalAlert("success", "Group bill has created");
-                  onClose();
+                onClick={async () => {
+                  try {
+                    if (!createdExpenseId) {
+                      console.error("Missing expenseId");
+                      return;
+                    }
+
+                    const splitData = groupUsers.map((user, i) => ({
+                      userId: user.id,
+                      amount: Number(splits[i]),
+                      status: "UNPAID",
+                    }));
+
+                    for (const s of splitData) {
+                      await createSplit(createdExpenseId, s, token);
+                    }
+
+                    swalAlert("success", "Group bill has been created");
+                    onClose();
+                  } catch (err) {
+                    console.error("Failed to create expense splits:", err);
+                    swalAlert("error", "Something went wrong");
+                  }
                 }}
               >
                 Confirm
