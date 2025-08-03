@@ -3,6 +3,8 @@
 @plugin "daisyui" {
   themes: light --default;
 }
+
+
 body {
   background: #F2EBBF ;
   color: #5C4B51
