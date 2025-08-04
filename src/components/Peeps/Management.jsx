@@ -1,27 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Trash2, UserPlus, UserMinus, Crown } from "lucide-react";
 import { swalAlertConfirm } from "../../utils/swalAlert";
 import { toast } from "react-toastify";
 import useGroupStore from "../../stores/groupStore";
+import { useParams } from "react-router-dom";
 
-function Management({ isOwner = true, groupId }) {
-  const groupUsers = useGroupStore((state) => state.groupUsers);
-  const currentGroup = useGroupStore((state) => state.currentGroup);
+function Management({ isOwner = true }) {
+  const { groupId } = useParams();
+  const [groupDetail, setGroupDetail] = useState(null);
+  const [groupUsers, setGroupUsers] = useState([]);
+  const getGroupById = useGroupStore((state) => state.getGroupById);
   const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
-  const addUserToGroup = useGroupStore((state)=>state.addUserToGroup)
-  const removeUserFromGroup = useGroupStore((state)=>state.removeUserFromGroup)
-
-  console.log(currentGroup)
-
-useEffect(() => {
-  if (currentGroup) {
-    getUsersInGroup(currentGroup);
-  }
-}, [currentGroup]);
+  const removeUserFromGroup = useGroupStore((state) => state.removeUserFromGroup);
 
   useEffect(() => {
-    console.log("groupUsers: ", getUsersInGroup);
-  }, [getUsersInGroup]);
+    if (groupId) {
+      getGroupById(groupId).then((resp) => setGroupDetail(resp.data?.result));
+      getUsersInGroup(groupId).then((resp) => setGroupUsers(resp.data?.message?.members ?? []));
+    }
+  }, [groupId, getGroupById, getUsersInGroup]);
+
 
 const handleDeleteMember = async (userId) => {
   const result = await swalAlertConfirm(
@@ -30,10 +28,13 @@ const handleDeleteMember = async (userId) => {
   );
   if (result.isConfirmed) {
     try {
-      await removeUserFromGroup(currentGroup, userId);
-      toast.success("ลบสมาชิกในกลุ่มแล้ว");
+      await removeUserFromGroup(groupId, userId);
+      await getUsersInGroup(groupId); 
+      toast.success("เตะชาวบ้านออกจากกลุ่มแล้ว");
     } catch (err) {
-      toast.error("ลบสมาชิกไม่สำเร็จ: " + (err?.response?.data?.message || err.message));
+      toast.error(
+        "ลบสมาชิกไม่สำเร็จ: " + (err?.response?.data?.message || err.message)
+      );
     }
   }
 };
@@ -74,7 +75,9 @@ const handleDeleteMember = async (userId) => {
                 <div className="w-8 h-8 bg-[#8CBEB2] rounded-full flex items-center justify-center text-white font-bold">
                   {(u.name || u.email || "U").charAt(0).toUpperCase()}
                 </div>
-                <span className="font-medium text-[#5C4B51]">{u.name || u.email || "Unknown"}</span>
+                <span className="font-medium text-[#5C4B51]">
+                  {u.name || u.email || "Unknown"}
+                </span>
                 {(u.role === "ADMIN" || u.role === "ADMIN") && (
                   <span className="ml-2 text-xs flex items-center text-[#F3B562] font-bold">
                     <Crown className="w-4 h-4 mr-1" /> Owner
@@ -82,7 +85,7 @@ const handleDeleteMember = async (userId) => {
                 )}
               </div>
               <div className="flex gap-2">
-                {isOwner && (u.role !== "ADMIN" && u.role !== "ADMIN") && (
+                {isOwner && u.role !== "ADMIN" && u.role !== "ADMIN" && (
                   <button
                     className="text-[#F06060] hover:bg-rose-100 p-1 rounded transition"
                     onClick={() => handleDeleteMember(u.id)}

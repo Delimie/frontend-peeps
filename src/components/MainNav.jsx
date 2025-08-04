@@ -35,7 +35,7 @@ function MainNav() {
         <Link to="/peeps" className={NavBarStyle}>
           Peeps!
         </Link>
-          <img src="./Peeps_Logo.png" className="w-12" />
+        <img src="/Peeps_Logo.png" className="w-12"/>
         <Link to="/pricing" className={NavBarStyle}>
           Pricing
         </Link>
@@ -167,10 +167,13 @@ function MainNav() {
                 }}
                 className="text-left bg-white text-md hover:text-[#de9227] transition hover:scale-105"
               >
-                <span className="flex gap-3"><LogIn size={22}/>Logout </span>
+                <span className="flex gap-3">
+                  <LogIn size={22} />
+                  Logout{" "}
+                </span>
               </button>
             </>
-          )} 
+          )}
         </nav>
       </div>
     </div>

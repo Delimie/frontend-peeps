@@ -39,7 +39,8 @@ function MainSideBar() {
     if (!users.length) {
       getAllUsers();
     }
-  }, [getAllUsers, users.length]);
+    getUsersInGroup(groupId)
+  }, [getAllUsers, users.length, groupId]);
 
   const channels = useChannelStore((state) => state.channels);
   const createChannel = useChannelStore((state) => state.createChannel);
