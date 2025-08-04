@@ -1,9 +1,11 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
 import useGroupStore from "../../stores/groupStore";
 import Avatar from "../avatar";
+import useDebtTransactionStore from "../../stores/deptTransactionStore";
+import { useParams } from "react-router-dom";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -14,11 +16,57 @@ const debts = [
 ];
 
 function DebtSummary() {
+  const { groupId } = useParams()
+  const getTransactionById = useDebtTransactionStore(state => state.getTransactionById)
   const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
   const currentGroup = useGroupStore(state => state.currentGroup)
+  const [transactions, setTransactions] = useState([]);
+
+  const fetchTransactions = async () => {
+    const result = await getTransactionById(groupId);
+    const res = result.data.result
+    console.log(res)
+    setTransactions(res)
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [groupId]);
+
+  const buildDebts = () => {
+    const userId = user?.id;
+    const userMap = new Map(
+      currentGroup?.users?.map((u) => [u.id, { name: u.name, avatar: u.avatar || "/default-avatar.png" }])
+    );
+
+    const summaryMap = new Map();
+
+    transactions.forEach((tx) => {
+      if (tx.payerId === userId) {
+        const existing = summaryMap.get(tx.receiverId) || { toPay: 0, toReceive: 0 };
+        summaryMap.set(tx.receiverId, { ...existing, toPay: existing.toPay + tx.amount });
+      } else if (tx.receiverId === userId) {
+        const existing = summaryMap.get(tx.payerId) || { toPay: 0, toReceive: 0 };
+        summaryMap.set(tx.payerId, { ...existing, toReceive: existing.toReceive + tx.amount });
+      }
+    });
+
+    const result = Array.from(summaryMap.entries()).map(([id, value]) => {
+      const userInfo = userMap.get(id) || { name: `User ${id}`, avatar: "/default-avatar.png" };
+      return {
+        name: userInfo.name,
+        avatar: userInfo.avatar,
+        toPay: value.toPay,
+        toReceive: value.toReceive,
+      };
+    });
+
+    return result;
+  };
+
 
   return (
     <div className="flex flex-col">
@@ -31,14 +79,23 @@ function DebtSummary() {
             >
               Create Group's Bill
             </button>
-            <button className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
-              Show All Bills
+            <button
+              className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+              onClick={() => setShowAllBills(true)}
+              // disabled={showAllBills}
+            >
+              Show All Group Bills
             </button>
           </div>
-          <button className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
+          <button
+            className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+            onClick={() => setShowAllBills(false)}
+            // disabled={!showAllBills}
+          >
             Check your bills
           </button>
         </div>
+
         <div className="flex items-center justify-between">
           <h1 className="text-4xl pt-2 pl-2 font-mitr text-[#5C4B51] tracking-wide">
             {user.name}'s Debt Summary
@@ -61,7 +118,7 @@ function DebtSummary() {
             To Receive
           </div>
         </div>
-        {debts.map((item, index) => (
+        {buildDebts().map((item, index) => (
           <div
             key={index}
             className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
@@ -73,18 +130,20 @@ function DebtSummary() {
             <span
               className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
                 }`}
-            >
-              {item.toPay}
-            </span>
-            <span
-              className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+              >
+                {item.toPay}
+              </span>
+              <span
+                className={`text-center font-bold text-xl itim ${
+                  item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
                 }`}
-            >
-              {item.toReceive}
-            </span>
-          </div>
-        ))}
-      </div>
+              >
+                {item.toReceive}
+              </span>
+            </div>
+          ))}
+        </div>
+      
 
       {/* Select Recipient Modal */}
       {isSelectRecipientModalOpen && (
@@ -99,7 +158,7 @@ function DebtSummary() {
             <h1 className="text-3xl pb-5 font-mitr text-[#5C4B51] text-center">
               Select Recipient
             </h1>
-            {debts
+            {buildDebts()
               .filter((item) => item.toPay > 0)
               .map((item, index) => (
                 <div
@@ -136,7 +195,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
-        // groupId={currentGroup?.id}
+          // groupId={currentGroup?.id}
         />
       )}
 

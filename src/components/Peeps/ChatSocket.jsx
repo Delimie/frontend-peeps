@@ -3,7 +3,10 @@ import ChatBubble from "./ChatBubble";
 import { useEffect, useState } from "react";
 import { userTyping } from "../../socket/handlers/chatHandler";
 import { socket } from "../../socket/socket";
-import { CHANNEL_ACTION, CHAT_ACTION } from "../../shared/constants/socket.constant";
+import {
+  CHANNEL_ACTION,
+  CHAT_ACTION,
+} from "../../shared/constants/socket.constant";
 import useChatStore from "../../stores/chatStore";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
@@ -16,15 +19,15 @@ const messages = [
 ];
 function ChatSocket() {
   const { groupId, menu } = useParams();
-  const user = useAuthStore(state => state.user);
-  const userList = useUserListStore(state => state.userList);
+  const user = useAuthStore((state) => state.user);
+  const userList = useUserListStore((state) => state.userList);
 
-  const memberTyping = useChatStore(state => state.memberTyping);
-  const updateMemberTyping = useChatStore(state => state.updateMemberTyping);
+  const memberTyping = useChatStore((state) => state.memberTyping);
+  const updateMemberTyping = useChatStore((state) => state.updateMemberTyping);
 
-  const chats = useChatStore(state => state.chats);
-  const sendMessage = useChatStore(state => state.sendMessage);
-  const [messageInput, setMessageInput] = useState('');
+  const chats = useChatStore((state) => state.chats);
+  const sendMessage = useChatStore((state) => state.sendMessage);
+  const [messageInput, setMessageInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
   // Socket useEffect : start
@@ -45,18 +48,18 @@ function ChatSocket() {
       updateMemberTyping(data);
     });
 
-    socket.on('connect_error', (err) => {
-      console.error('Connection error:', err.message, 'Error code :');
+    socket.on("connect_error", (err) => {
+      console.error("Connection error:", err.message, "Error code :");
       console.log(err);
     });
 
-    useChatStore.getState().listenToMessage()
+    useChatStore.getState().listenToMessage();
 
     return () => {
       socket.off(CHAT_ACTION.CHAT_SYNC);
       socket.off(CHAT_ACTION.CHAT_TYPING);
 
-      useChatStore.getState().stopListenToMessage()
+      useChatStore.getState().stopListenToMessage();
     };
   }, []);
 
@@ -67,10 +70,10 @@ function ChatSocket() {
     }
 
     return () => {
-      console.log('Try to leave ', menu);
+      console.log("Try to leave ", menu);
       socket.emit(CHANNEL_ACTION.CHANNEL_LEAVE, { channelId: menu });
-    }
-  }, [menu])
+    };
+  }, [menu]);
 
   // Socket useEffect : setIsTyping
   useEffect(() => {
@@ -79,7 +82,6 @@ function ChatSocket() {
       return;
     }
     setIsTyping(true);
-
   }, [messageInput]);
 
   // Socket useEffect : chat status
@@ -104,14 +106,14 @@ function ChatSocket() {
         channelId: menu,
         groupId: groupId,
         file: null, // PUT IT HERE FOR MULTER OPERATION LATER
-      }
+      };
 
       sendMessage(data);
-      setMessageInput('');
+      setMessageInput("");
       return;
     }
     return;
-  }
+  };
   //----------------------------------------------------------------
 
   return (
@@ -119,26 +121,36 @@ function ChatSocket() {
       <div className="text-2xl font-bold mb-2 text-[#8CBEB2]">
         # Channel Name
       </div>
-      <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
-        {chats.map((el, idx) => ( el.channelId === parseInt(menu) &&
-          <ChatBubble
-            key={el.id}
-            userName={el.userId === user.id ? user.name : userList.find((element) => element.id === el.id)?.name}
-            createdAt={el.createdAt}
-            content={el.content}
-            footer={null}
-            position={el.userId === user.id ? "end" : "start"}
-          />
-        ))}
+      <div
+        className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2 overflow-y-auto min-h-0"
+        style={{ maxHeight: "80vh" }}
+      >
+        {chats.map(
+          (el, idx) =>
+            el.channelId === parseInt(menu) && (
+              <ChatBubble
+                key={el.id}
+                userName={
+                  el.userId === user.id
+                    ? user.name
+                    : userList.find((element) => element.id === el.id)?.name
+                }
+                createdAt={el.createdAt}
+                content={el.content}
+                footer={null}
+                position={el.userId === user.id ? "end" : "start"}
+              />
+            )
+        )}
       </div>
-      {
-        memberTyping.length > 0 ?
-          (<div className="font-semibold inline-block">
-            {memberTyping.map((member, index) => <span key={index}>{`${member.userName} `}</span>)}
-            <span>is typing...</span>
-          </div>)
-          : null
-      }
+      {memberTyping.length > 0 ? (
+        <div className="font-semibold inline-block">
+          {memberTyping.map((member, index) => (
+            <span key={index}>{`${member.userName} `}</span>
+          ))}
+          <span>is typing...</span>
+        </div>
+      ) : null}
       <form className="flex gap-2">
         <input
           type="text"

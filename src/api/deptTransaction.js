@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const debtTransactionApi = axios.create({
-  baseURL: "http://localhost:8000/debt-transaction",
+  baseURL: "http://localhost:8000/debts",
 });
 
 debtTransactionApi.interceptors.request.use((config) => {
@@ -12,12 +12,12 @@ debtTransactionApi.interceptors.request.use((config) => {
 });
 
 // Create transaction
-export const createDebtTransactionApi = (body) =>
-  debtTransactionApi.post("/", body);
+// export const createDebtTransactionApi = (body) =>
+//   debtTransactionApi.post("/", body);
 
 // Get transaction by ID
-export const getDebtTransactionByIdApi = (id) =>
-  debtTransactionApi.get(`/${id}`);
+export const getDebtTransactionByIdApi = (groupId) =>
+  debtTransactionApi.get(`/groups/${groupId}/debt-summary`);
 
 // Get all transactions for a user
 export const getUserDebtTransactionsApi = (userId) =>

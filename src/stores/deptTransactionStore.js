@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import {
-  createDebtTransactionApi,
+  // createDebtTransactionApi,
   getDebtTransactionByIdApi,
   getUserDebtTransactionsApi,
   confirmDebtTransactionApi,
@@ -12,18 +12,19 @@ const useDebtTransactionStore = create((set, get) => ({
   loading: false,
 
   //สร้าง transaction ใหม่
-  createTransaction: async (body) => {
-    set({ loading: true });
-    const resp = await createDebtTransactionApi(body);
-    // Optionally: รีเฟรชรายการของ user หลังสร้าง
-    set({ loading: false });
-    return resp;
-  },
+  // createTransaction: async (body) => {
+  //   set({ loading: true });
+  //   const resp = await createDebtTransactionApi(body);
+  //   // Optionally: รีเฟรชรายการของ user หลังสร้าง
+  //   set({ loading: false });
+  //   return resp;
+  // },
 
   //ดึงธุรกรรมด้วย ID
-  getTransactionById: async (id) => {
+  getTransactionById: async (groupId) => {
     set({ loading: true });
-    const resp = await getDebtTransactionByIdApi(id);
+    const resp = await getDebtTransactionByIdApi(groupId);
+    // console.log(resp)
     set({ currentTransaction: resp.data.result, loading: false });
     return resp;
   },
