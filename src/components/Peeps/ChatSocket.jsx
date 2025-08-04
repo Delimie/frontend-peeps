@@ -137,7 +137,7 @@ function ChatSocket() {
   return (
     <>
       <div className="text-2xl font-bold mb-2 text-[#8CBEB2]">
-        {"# "+currentChannel.name ||"Channel Name"}
+        {"# "+currentChannel?.name ||"Channel Name"}
       </div>
       <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
         {chats.map((el, idx) => (el.channelId === parseInt(channelId) &&

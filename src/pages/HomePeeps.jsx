@@ -2,12 +2,28 @@ import { useEffect } from "react";
 import SideBarGroup from "../components/Peeps/GroupSideBar";
 import MainContainer from "../components/Peeps/MainContainer";
 import useGroupStore from "../stores/groupStore";
+import { socket } from "../socket/socket";
 
 function HomePeeps() {
-  
+
   const { getMyGroups } = useGroupStore();
   useEffect(() => {
     getMyGroups();
+  }, []);
+
+  // Connect Socket
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+
+    socket.on('connect_error', (err) => {
+      console.error('Connection error:', err.message, 'Error code :');
+      console.log(err);
+    });
+
+    return () => {
+      socket.off('connect_error');
+      socket.disconnect();
+    };
   }, []);
 
   return (

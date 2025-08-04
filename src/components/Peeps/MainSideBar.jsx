@@ -6,6 +6,8 @@ import useGroupStore from "../../stores/groupStore";
 import useChannelStore from "../../stores/channelStore";
 import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
+import { GROUP_ACTION } from "../../shared/constants/socket.constant";
+import { socket } from "../../socket/socket";
 
 function MainSideBar() {
   const { groupId, channelId } = useParams();
@@ -118,10 +120,35 @@ function MainSideBar() {
     setCurrentGroupById(Number(groupId));
   }, [groupId]);
 
+  // Listen for user who join the group
+  useEffect(() => {
+    
+    socket.on(GROUP_ACTION.GROUP_JOIN, (data) => {
+      console.log(data.message);
+      if (data.user) {
+        console.log(data.user);
+        useGroupStore.getState().updateGroupUsers(data.user);
+      }
+    });
+
+    socket.on(GROUP_ACTION.GROUP_LEAVE, (data) => {
+      console.log(data.message);
+      if (data.user) {
+        console.log(data.user);
+        useGroupStore.getState().updateGroupUsers(data.user);
+      }
+    });
+
+      return () => {
+        socket.off(GROUP_ACTION.GROUP_JOIN);
+        socket.off(GROUP_ACTION.GROUP_LEAVE);
+      }
+  }, []);
+
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] max-h-[90vh] shadow-lg rounded-l-3xl overflow-y-auto">
       <div>
-        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">{currentSelectedGroup.name || "Group Name"}</h2>
+        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">{currentSelectedGroup?.name || "Group Name"}</h2>
 
         {/* Member Card Dropdown */}
         <div className="mb-3">
@@ -145,12 +172,13 @@ function MainSideBar() {
                     key={member.id}
                     className="flex items-center gap-3 px-2 py-1 hover:bg-[#F2EBBF] rounded-lg transition cursor-pointer"
                   >
-                    <span>
+                    <span className="relative">
                       <img
                         src={member.profileImage}
                         alt="profile"
                         className="rounded-full w-8 h-8 object-cover border border-[#8CBEB2]"
                       />
+                      <div aria-label="status" className={`status status-${member.onlineStatus === "ONLINE" ? "accent" : "neutral"} absolute translate-x-1/2 translate-y-1/2 bottom-1/8 right-1/4`}></div>
                     </span>
                     <span className="text-sm text-[#5C4B51] itim">
                       {member.name}

@@ -48,6 +48,10 @@ function SideBarGroup() {
         text: `Group "${newGroup.name}" has been created successfully.`,
         confirmButtonColor: "#8CBEB2",
       });
+
+      // Emit to join new created group ID
+      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId : newGroup.id });
+
       await handleChangeGroup(Number(newGroup.id));
       reset();
       setIsCreateGroupModalOpen(false);

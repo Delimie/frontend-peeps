@@ -64,7 +64,7 @@ const useGroupStore = create(
         // console.log(resp.data.message.members)
         // set({ groupUsers: resp.data.message.members, loading: false });
         console.log("API Response Members:", resp.data.message.members);
-        set({ groupUsers: resp.data.message.members, loading: false });
+        set({ groupUsers: [...resp.data.message.members], loading: false });
         return resp;
       },
 
@@ -99,6 +99,10 @@ const useGroupStore = create(
         const currentGroup = (get().groups).find( group => group.id === Number(groupId) )
         set({ currentGroup: currentGroup });
       },
+      updateGroupUsers : async (userData) =>{
+        const newGroupUsers = get().groupUsers.map((user) => user.id === userData.id ? userData : user);
+        set({groupUsers : [...newGroupUsers]});
+      }
     }),
     { name: "group-storage" }
   )
