@@ -79,14 +79,23 @@ function DebtSummary() {
             >
               Create Group's Bill
             </button>
-            <button className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
-              Show All Bills
+            <button
+              className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+              onClick={() => setShowAllBills(true)}
+              // disabled={showAllBills}
+            >
+              Show All Group Bills
             </button>
           </div>
-          <button className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition">
+          <button
+            className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
+            onClick={() => setShowAllBills(false)}
+            // disabled={!showAllBills}
+          >
             Check your bills
           </button>
         </div>
+
         <div className="flex items-center justify-between">
           <h1 className="text-4xl pt-2 pl-2 font-mitr text-[#5C4B51] tracking-wide">
             {user.name}'s Debt Summary
@@ -121,18 +130,20 @@ function DebtSummary() {
             <span
               className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
                 }`}
-            >
-              {item.toPay}
-            </span>
-            <span
-              className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+              >
+                {item.toPay}
+              </span>
+              <span
+                className={`text-center font-bold text-xl itim ${
+                  item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
                 }`}
-            >
-              {item.toReceive}
-            </span>
-          </div>
-        ))}
-      </div>
+              >
+                {item.toReceive}
+              </span>
+            </div>
+          ))}
+        </div>
+      
 
       {/* Select Recipient Modal */}
       {isSelectRecipientModalOpen && (
@@ -184,7 +195,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
-        // groupId={currentGroup?.id}
+          // groupId={currentGroup?.id}
         />
       )}
 

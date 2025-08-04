@@ -14,7 +14,7 @@ function MainContainer() {
 
   useEffect(() => {
     if (groupId && !channelId) {
-      navigate(`/peeps/${groupId}/${channelId}`, { replace: true });
+      navigate(`/peeps/${groupId}/`, { replace: true });
     }
   }, [groupId, channelId, navigate]);
 
@@ -34,14 +34,14 @@ function MainContainer() {
   }
 
   let Content;
-  if (channelId === `chat`) Content = <ChatSocket />;
+  if (channelId === `channel1`) Content = <ChatSocket />;
   else if (channelId === "bill") Content = <DebtSummary />;
   else if (channelId === "appointment") Content = <Appointment />;
   else if (channelId === "management") Content = <Management />;
   else Content = <ChatSocket />;
   
   return (
-    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF]">
+    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
       {Content}
     </div>
   );

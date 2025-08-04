@@ -17,7 +17,6 @@ function MainNav() {
   return (
     <div className="fixed top-0 left-0 w-full grid grid-cols-3 items-center bg-[#F2EBBF] px-8 py-2 h-20 z-50">
       <div className="flex gap-2 items-center">
-        <img src="./Peeps_Logo.png" className="w-12" />
         <Link to="/" className="font-extrabold tracking-wider text-2xl">
           <span className="text-[#ef6060]">
             P
@@ -36,6 +35,7 @@ function MainNav() {
         <Link to="/peeps" className={NavBarStyle}>
           Peeps!
         </Link>
+          <img src="./Peeps_Logo.png" className="w-12" />
         <Link to="/pricing" className={NavBarStyle}>
           Pricing
         </Link>
@@ -47,7 +47,7 @@ function MainNav() {
           onMouseEnter={() => setDropdownOpen(true)}
           onMouseLeave={() => setDropdownOpen(false)}
         >
-          <button
+          {/* <button
             className={NavBarStyle + " flex items-center gap-1 cursor-pointer"}
           >
             Feature
@@ -82,7 +82,7 @@ function MainNav() {
                 ทดสอบจ้า
               </Link>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
