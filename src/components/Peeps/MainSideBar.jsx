@@ -1,18 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
-import { UserPlus } from "lucide-react";
+import { Pencil, SquarePen, UserPlus } from "lucide-react";
 import useGroupStore from "../../stores/groupStore";
 import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
 
-const channelList = [
-  { id: "1", name: "General" },
-  { id: "channel2", name: "คุยเล่น" },
-  { id: "channel3", name: "นัดเที่ยว" },
-];
+// const channelList = [
+//   { id: "1", name: "General" },
+//   { id: "channel2", name: "คุยเล่น" },
+//   { id: "channel3", name: "นัดเที่ยว" },
+// ];
 
 function MainSideBar() {
+  //ม็อคข้อมูลเก่า
+  const [channels, setChannels] = useState([
+    { id: "1", name: "General" },
+    { id: "channel2", name: "คุยเล่น" },
+    { id: "channel3", name: "นัดเที่ยว" },
+  ]);
+
   const { groupId, channelId } = useParams();
   const navigate = useNavigate();
   const currentGroup = groupId;
@@ -29,6 +36,12 @@ function MainSideBar() {
   const addUserToGroup = useGroupStore((state) => state.addUserToGroup);
   const getAllUsers = useAuthStore((state) => state.getAllUsers);
   const users = useAuthStore((state) => state.users);
+
+  //เพิ่มพวก channel ค่ะ
+
+  const [isEditChannelModalOpen, setIsEditChannelModalOpen] = useState(false);
+  const [editingChannelId, setEditingChannelId] = useState(null);
+  const [editingChannelName, setEditingChannelName] = useState("");
 
   useEffect(() => {
     if (!users.length) {
@@ -164,20 +177,33 @@ function MainSideBar() {
           </button>
         </div>
         <div className="flex flex-col gap-1">
-          {channelList.map((ch) => (
-            <button
-              key={ch.id}
-              onClick={() => handleChangeChannel(ch.id)}
-              className={`px-3 py-2 rounded-xl text-left font-medium
-      ${
-        currentChannel === ch.id
-          ? "bg-[#8CBEB2] text-white shadow"
-          : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-      }
-    `}
-            >
-              # {ch.name}
-            </button>
+          {channels.map((ch) => (
+            <div key={ch.id} className="flex items-center gap-2 group">
+              <button
+                onClick={() => handleChangeChannel(ch.id)}
+                className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2
+          ${
+            currentChannel === ch.id
+              ? "bg-[#8CBEB2] text-white shadow"
+              : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+          }
+        `}
+              >
+                # {ch.name}
+                <span
+                  className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation(); // ไม่ให้กดเปลี่ยนแชลแนล
+                    setEditingChannelId(ch.id);
+                    setEditingChannelName(ch.name);
+                    setIsEditChannelModalOpen(true);
+                  }}
+                  title="Edit channel"
+                >
+                  <SquarePen size={18}/>
+                </span>
+              </button>
+            </div>
           ))}
         </div>
       </div>
@@ -277,6 +303,55 @@ function MainSideBar() {
         >
           Add
         </button>
+      </Modal>
+
+      <Modal
+        open={isEditChannelModalOpen}
+        onClose={() => {
+          setIsEditChannelModalOpen(false);
+          setEditingChannelId(null);
+          setEditingChannelName("");
+        }}
+      >
+        <h2 className="text-xl font-bold text-[#5C4B51] mb-5">Edit Channel</h2>
+        <input
+          type="text"
+          placeholder="Change channel name"
+          value={editingChannelName}
+          onChange={(e) => setEditingChannelName(e.target.value)}
+          className="w-full mb-4 px-3 py-2 rounded-lg bg-[#F7F3D7] border-none outline-none placeholder:text-[#B7A969] text-[#5C4B51] font-medium"
+          autoFocus
+        />
+        <div className="flex gap-2">
+          <button
+            className="flex-1 rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
+            disabled={!editingChannelName.trim()}
+            onClick={() => {
+              setChannels((prev) =>
+                prev.map((c) =>
+                  c.id === editingChannelId
+                    ? { ...c, name: editingChannelName }
+                    : c
+                )
+              );
+              setIsEditChannelModalOpen(false);
+              setEditingChannelId(null);
+              setEditingChannelName("");
+            }}
+          >
+            Save
+          </button>
+          <button
+            className="flex-1 rounded-full px-5 py-2 bg-[#F3B562] text-white font-semibold text-lg shadow hover:brightness-105 transition"
+            onClick={() => {
+              setIsEditChannelModalOpen(false);
+              setEditingChannelId(null);
+              setEditingChannelName("");
+            }}
+          >
+            Cancel
+          </button>
+        </div>
       </Modal>
     </div>
   );
