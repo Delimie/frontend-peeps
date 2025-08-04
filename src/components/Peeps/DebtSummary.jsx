@@ -6,6 +6,7 @@ import useGroupStore from "../../stores/groupStore";
 import Avatar from "../avatar";
 import useDebtTransactionStore from "../../stores/deptTransactionStore";
 import { useParams } from "react-router-dom";
+import BillSummaryCard from "./BillSummaryCard";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -13,6 +14,31 @@ const debts = [
   { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
   { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
   { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
+];
+
+const mockBills = [
+  {
+    title: "Eat Am Are",
+    total: 666,
+    unpaid: [
+      { name: "Allie", amount: 333 },
+      { name: "Auu", amount: 333 }
+    ],
+    paid: [
+      { name: "1", amount: 333 }
+    ]
+  },
+  {
+    title: "Bonchon",
+    total: 900,
+    unpaid: [
+      { name: "Allie", amount: 300 },
+      { name: "Gao", amount: 300 }
+    ],
+    paid: [
+      { name: "1", amount: 300 }
+    ]
+  }
 ];
 
 function DebtSummary() {
@@ -24,6 +50,7 @@ function DebtSummary() {
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
   const currentGroup = useGroupStore(state => state.currentGroup)
   const [transactions, setTransactions] = useState([]);
+  const [showAllBills, setShowAllBills] = useState(false);
 
   const fetchTransactions = async () => {
     const result = await getTransactionById(groupId);
@@ -82,7 +109,7 @@ function DebtSummary() {
             <button
               className="px-4 py-2 bg-[#FFE066] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
               onClick={() => setShowAllBills(true)}
-              // disabled={showAllBills}
+              disabled={showAllBills}
             >
               Show All Group Bills
             </button>
@@ -90,7 +117,7 @@ function DebtSummary() {
           <button
             className="px-4 py-2 bg-[#F3B562] text-[#5C4B51] font-bold rounded-lg shadow hover:bg-[#8CBEB2] hover:text-white transition"
             onClick={() => setShowAllBills(false)}
-            // disabled={!showAllBills}
+            disabled={!showAllBills}
           >
             Check your bills
           </button>
@@ -109,27 +136,28 @@ function DebtSummary() {
         </div>
       </div>
 
-      <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
-        <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
-          <div className="text-center text-2xl font-mitr text-[#5C4B51]">
-            To Pay
+   {!showAllBills && (
+        <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
+          <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
+            <div className="text-center text-2xl font-mitr text-[#5C4B51]">
+              To Pay
+            </div>
+            <div className="text-center text-2xl font-mitr text-[#5C4B51]">
+              To Receive
+            </div>
           </div>
-          <div className="text-center text-2xl font-mitr text-[#5C4B51]">
-            To Receive
-          </div>
-        </div>
-        {buildDebts().map((item, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
-          >
-            <Avatar size={65} />
-            <span className="text-[#5C4B51] font-semibold text-xl itim">
-              {item.name}
-            </span>
-            <span
-              className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
-                }`}
+          {buildDebts().map((item, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
+            >
+              <Avatar size={65} />
+              <span className="text-[#5C4B51] font-semibold text-xl itim">
+                {item.name}
+              </span>
+              <span
+                className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
+                  }`}
               >
                 {item.toPay}
               </span>
@@ -143,6 +171,17 @@ function DebtSummary() {
             </div>
           ))}
         </div>
+      )}
+
+      {/* เงื่อนไขโชว์การ์ดบิล */}
+      {showAllBills && (
+        <div className="flex flex-wrap gap-6 mt-8">
+          {mockBills.map((bill, idx) => (
+            <BillSummaryCard key={idx} data={bill} />
+          ))}
+        </div>
+      )}
+
       
 
       {/* Select Recipient Modal */}
