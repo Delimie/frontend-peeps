@@ -47,7 +47,8 @@ function MainSideBar() {
     if (!users.length) {
       getAllUsers();
     }
-  }, [getAllUsers, users.length]);
+    getUsersInGroup(groupId)
+  }, [getAllUsers, users.length, groupId]);
 
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
@@ -117,9 +118,8 @@ function MainSideBar() {
           >
             <span>Members</span>
             <span
-              className={`transition-transform ${
-                isMemberOpen ? "rotate-90" : ""
-              }`}
+              className={`transition-transform ${isMemberOpen ? "rotate-90" : ""
+                }`}
             >
               🧀
             </span>
@@ -182,11 +182,10 @@ function MainSideBar() {
               <button
                 onClick={() => handleChangeChannel(ch.id)}
                 className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2
-          ${
-            currentChannel === ch.id
-              ? "bg-[#8CBEB2] text-white shadow"
-              : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-          }
+          ${currentChannel === ch.id
+                    ? "bg-[#8CBEB2] text-white shadow"
+                    : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+                  }
         `}
               >
                 # {ch.name}
@@ -200,7 +199,7 @@ function MainSideBar() {
                   }}
                   title="Edit channel"
                 >
-                  <SquarePen size={18}/>
+                  <SquarePen size={18} />
                 </span>
               </button>
             </div>
