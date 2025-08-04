@@ -24,10 +24,6 @@ function SideBarGroup() {
   // const [groupName, setGroupName] = useState("");
   // console.log(getMyGroups)
 
-  useEffect(() => {
-    getMyGroups();
-  }, []);
-
   const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
 
   const channels = useChannelStore(state => state.channels);

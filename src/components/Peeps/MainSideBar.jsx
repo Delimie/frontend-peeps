@@ -21,6 +21,8 @@ function MainSideBar() {
   const [channelName, setChannelName] = useState("");
 
   //store
+  const currentSelectedGroup = useGroupStore(state => state.currentGroup);
+  const setCurrentGroupById = useGroupStore(state => state.setCurrentGroupById);
   const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
   const groupUsers = useGroupStore((state) => state.groupUsers);
   const addUserToGroup = useGroupStore((state) => state.addUserToGroup);
@@ -39,7 +41,6 @@ function MainSideBar() {
     }
   }, [getAllUsers, users.length]);
 
-  // Not attaching channels yet
   const channels = useChannelStore((state) => state.channels);
   const createChannel = useChannelStore((state) => state.createChannel);
   const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
@@ -113,12 +114,13 @@ function MainSideBar() {
   //Fetch Channel by Group Id
   useEffect(() => {
     getChannelByGroupId(Number(groupId));
+    setCurrentGroupById(Number(groupId));
   }, [groupId]);
 
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] max-h-[90vh] shadow-lg rounded-l-3xl overflow-y-auto">
       <div>
-        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">Group Name</h2>
+        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">{currentSelectedGroup.name || "Group Name"}</h2>
 
         {/* Member Card Dropdown */}
         <div className="mb-3">
@@ -128,9 +130,8 @@ function MainSideBar() {
           >
             <span>Members</span>
             <span
-              className={`transition-transform ${
-                isMemberOpen ? "rotate-90" : ""
-              }`}
+              className={`transition-transform ${isMemberOpen ? "rotate-90" : ""
+                }`}
             >
               🧀
             </span>
@@ -189,52 +190,39 @@ function MainSideBar() {
           </button>
         </div>
         <div className="flex flex-col gap-1">
-<<<<<<< HEAD
-          {channels.map((ch) => (
-            <div key={ch.id} className="flex items-center gap-2 group">
-              <button
-                onClick={() => handleChangeChannel(ch.id)}
-                className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2
-          ${
-            currentChannel === ch.id
-              ? "bg-[#8CBEB2] text-white shadow"
-              : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-          }
+          {
+            channelList.map((ch) => (
+
+              <div key={ch.channelId} className="flex items-center gap-2 group">
+                <button
+                  onClick={() => handleChangeChannel(ch.channelId)}
+                  className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2 justify-between
+          ${currentChannel === ch.channelId
+                      ? "bg-[#8CBEB2] text-white shadow"
+                      : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+                    }
         `}
-              >
-                # {ch.name}
-                <span
-                  className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  onClick={(e) => {
-                    e.stopPropagation(); // ไม่ให้กดเปลี่ยนแชลแนล
-                    setEditingChannelId(ch.id);
-                    setEditingChannelName(ch.name);
-                    setIsEditChannelModalOpen(true);
-                  }}
-                  title="Edit channel"
                 >
-                  <SquarePen size={18}/>
-                </span>
-              </button>
-            </div>
-=======
-          {channelList.map((ch) => (
-            <button
-              key={ch.channelId}
-              onClick={() => handleChangeChannel(ch.channelId)}
-              className={`px-3 py-2 rounded-xl text-left font-medium  flex justify-between items-center
-      ${currentChannel === ch.channelId
-                  ? "bg-[#8CBEB2] text-white shadow"
-                  : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-                }
-    `}
-            >
-              # {ch.name}
-              {(ch.unreadNoti > 0) && <div className="badge badge-sm bg-red-400 border-none text-white">{ch.unreadNoti >= 100 ? '+99' : ch.unreadNoti}</div>}
-            </button>
->>>>>>> origin/feature/socket-io-client
-          ))}
-        </div>
+                  # {ch.name}
+                  <span
+                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    onClick={(e) => {
+                      e.stopPropagation(); // ไม่ให้กดเปลี่ยนแชลแนล
+                      setEditingChannelId(ch.channelId);
+                      setEditingChannelName(ch.name);
+                      setIsEditChannelModalOpen(true);
+                    }}
+                    title="Edit channel"
+                  >
+                    <SquarePen size={18} />
+                  </span>
+                  {(ch.unreadNoti > 0) && <div className="badge badge-sm bg-red-400 border-none text-white">{ch.unreadNoti >= 100 ? '+99' : ch.unreadNoti}</div>}
+
+                </button>
+              </div>
+            ))
+          }
+        </div >
       </div >
       <div className="flex-1"></div>
       {/* Group functions */}
@@ -267,48 +255,50 @@ function MainSideBar() {
         </button>
       </div>
 
-      {isAddModalOpen && (
-        <Modal
-          open={isAddModalOpen}
-          onClose={() => {
-            setIsAddModalOpen(false);
-            setUserNameInput("");
-          }}
-        >
-          <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
-            Add Member
-          </h2>
-          <form onSubmit={handleAddMember} className="flex flex-col gap-3">
-            <input
-              type="text"
-              value={userNameInput}
-              onChange={(e) => setUserNameInput(e.target.value)}
-              placeholder="Enter user Name"
-              className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
-              autoFocus
-            />
-            <div className="flex justify-end gap-2 mt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAddModalOpen(false);
-                  setUserNameInput("");
-                }}
-                className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
-                disabled={!userNameInput.trim()}
-              >
-                Add
-              </button>
-            </div>
-          </form>
-        </Modal>
-      )}
+      {
+        isAddModalOpen && (
+          <Modal
+            open={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setUserNameInput("");
+            }}
+          >
+            <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
+              Add Member
+            </h2>
+            <form onSubmit={handleAddMember} className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={userNameInput}
+                onChange={(e) => setUserNameInput(e.target.value)}
+                placeholder="Enter user Name"
+                className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
+                autoFocus
+              />
+              <div className="flex justify-end gap-2 mt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    setUserNameInput("");
+                  }}
+                  className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
+                  disabled={!userNameInput.trim()}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </Modal>
+        )
+      }
 
       <Modal
         open={isAddChannelModalOpen}
@@ -336,7 +326,6 @@ function MainSideBar() {
           Add
         </button>
       </Modal>
-<<<<<<< HEAD
 
       <Modal
         open={isEditChannelModalOpen}
@@ -386,10 +375,7 @@ function MainSideBar() {
           </button>
         </div>
       </Modal>
-    </div>
-=======
     </div >
->>>>>>> origin/feature/socket-io-client
   );
 }
 

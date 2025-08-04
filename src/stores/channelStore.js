@@ -45,19 +45,9 @@ const useChannelStore = create(
                     return;
                 }
             },
-            // WORK IN PROGRESS
-            getMyGroups: async () => {
-                set({ loading: true, error: null });
-                try {
-                    const res = await getMyGroupsAPI();
-                    set({ groups: res.data.result, loading: false });
-                } catch (err) {
-                    set({ error: err.message || "Failed to fetch groups", loading: false });
-                }
-            },
             getChannelByGroupId: async (groupId) => {
                 try {
-                    const newChannels =  get().channels.map((el)=> el);
+                    const newChannels = get().channels.map((el) => el);
                     set({ loading: true });
                     const resp = await getChannelByGroupIdApi(Number(groupId));
                     console.log(resp.data.message);
@@ -68,18 +58,18 @@ const useChannelStore = create(
                     };
 
                     const existingIndex = newChannels.findIndex(el => el.groupId === newChannelList.groupId);
-                    
+
                     // If find existing groupId to modify
-                    if(existingIndex !== -1){
+                    if (existingIndex !== -1) {
                         // console.log(`This groupId ${groupId} has already exited`);
-                        newChannels.splice(existingIndex,1, newChannelList);
-                        set({channels: [...newChannels], loading: false})
+                        newChannels.splice(existingIndex, 1, newChannelList);
+                        set({ channels: [...newChannels], loading: false })
                         return resp;
                     }
                     // If find existing groupId to modify
 
                     // If groupId is new 
-                    set({ channels: [...newChannels, {...newChannelList} ], loading: false })
+                    set({ channels: [...newChannels, { ...newChannelList }], loading: false })
                     return resp;
 
                 } catch (error) {
@@ -104,7 +94,11 @@ const useChannelStore = create(
                 }));
                 return resp;
             },
-            setCurrentChannel: (channel) => set({ currentChannel: channel }),
+            setCurrentChannelById: (groupId,channelId) => {
+                const currentChannelList = get().channels.find( ch => ch.groupId === Number(groupId)).channelList;
+                const currentChannel = currentChannelList.find( ch => ch.channelId === Number(channelId));
+                set({ currentChannel: currentChannel });
+            },
             unreadNotiIncrease: (channelId) => {
                 const listOutChannel = get().channels.find(el => el.groupId === Number(groupId));
             },

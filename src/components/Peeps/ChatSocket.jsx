@@ -11,6 +11,7 @@ import useChatStore from "../../stores/chatStore";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
 import useUserListStore from "../../stores/userListStore";
+import useChannelStore from "../../stores/channelStore";
 
 function ChatSocket() {
   const params = useParams();
@@ -29,6 +30,8 @@ function ChatSocket() {
   const getChatByChannelId = useChatStore(state => state.getChatByChannelId);
   const [messageInput, setMessageInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  const { setCurrentChannelById, currentChannel } = useChannelStore();
 
   // Socket useEffect : start
   useEffect(() => {
@@ -67,6 +70,8 @@ function ChatSocket() {
   useEffect(() => {
 
     getChatByChannelId(channelId);
+    setCurrentChannelById(groupId, channelId);
+
 
     if (channelId) {
       // console.log('join channel ', channelId);
@@ -132,7 +137,7 @@ function ChatSocket() {
   return (
     <>
       <div className="text-2xl font-bold mb-2 text-[#8CBEB2]">
-        # Channel Name
+        {"# "+currentChannel.name ||"Channel Name"}
       </div>
       <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
         {chats.map((el, idx) => (el.channelId === parseInt(channelId) &&
@@ -141,7 +146,7 @@ function ChatSocket() {
             userName={el.userId === user.id ? users[0].name : users.find((element) => element.id === el.userId)?.name}
             createdAt={el.createdAt}
             content={el.content}
-            img = {el.userId === user.id ? users[0]?.profileImage : users.find((element) => element.id === el.userId)?.profileImage}
+            img={el.userId === user.id ? users[0]?.profileImage : users.find((element) => element.id === el.userId)?.profileImage}
             footer={null}
             position={el.userId === user.id ? "end" : "start"}
           />
