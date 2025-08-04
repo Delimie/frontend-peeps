@@ -6,7 +6,7 @@ const useUserListStore = create(
     (set, get) => ({
       userList: [
         {
-          id: 1,
+          id: 2,
           name: 'GODROGER',
           profileImage: 'https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/04/roger-optc-1.jpg'
         },

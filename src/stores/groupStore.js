@@ -10,6 +10,7 @@ import {
   getUsersInGroupApi,
   getMyGroupsAPI,
 } from "../api/groupApi";
+import useChannelStore from "./channelStore";
 
 const useGroupStore = create(
   persist(
@@ -25,6 +26,10 @@ const useGroupStore = create(
         try {
           const res = await getMyGroupsAPI();
           set({ groups: res.data.result, loading: false });
+
+          for(let eachGroup of get().groups){
+            await useChannelStore().getState().getChannelByGroupId(Number(eachGroup.id));
+          }
         } catch (err) {
           set({ error: err.message || "Failed to fetch groups", loading: false });
         }

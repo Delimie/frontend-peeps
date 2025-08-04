@@ -1,29 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 import { Pencil, SquarePen, UserPlus } from "lucide-react";
 import useGroupStore from "../../stores/groupStore";
+import useChannelStore from "../../stores/channelStore";
 import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
 
-// const channelList = [
-//   { id: "1", name: "General" },
-//   { id: "channel2", name: "คุยเล่น" },
-//   { id: "channel3", name: "นัดเที่ยว" },
-// ];
-
 function MainSideBar() {
-  //ม็อคข้อมูลเก่า
-  const [channels, setChannels] = useState([
-    { id: "1", name: "General" },
-    { id: "channel2", name: "คุยเล่น" },
-    { id: "channel3", name: "นัดเที่ยว" },
-  ]);
-
   const { groupId, channelId } = useParams();
   const navigate = useNavigate();
+
   const currentGroup = groupId;
-  const currentChannel = channelId;
+  // const currentChannel = channelId;
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userNameInput, setUserNameInput] = useState("");
   const [isMemberOpen, setIsMemberOpen] = useState(false);
@@ -48,6 +38,24 @@ function MainSideBar() {
       getAllUsers();
     }
   }, [getAllUsers, users.length]);
+
+  // Not attaching channels yet
+  const channels = useChannelStore((state) => state.channels);
+  const createChannel = useChannelStore((state) => state.createChannel);
+  const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
+  const updateChannel = useChannelStore((state) => state.updateChannel);
+  const deleteChannel = useChannelStore((state) => state.deleteChannel);
+
+  const currentChannel = channelId || channelList[0].channelId;
+
+  const memberList = useMemo(() => {
+    return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
+    { name: "Auu", avatar: "./mockProfilePic3.jpg" },
+    { name: "Dew", avatar: "./mockProfilePic1.jpg" },
+    { name: "Gao", avatar: "./mockProfilePic2.jpg" },
+    { name: "1", avatar: "./mockProfilePic2.jpg" },
+    { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
+  }, [])
 
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
@@ -97,12 +105,15 @@ function MainSideBar() {
     }
   };
 
-  // const handleAddMember = (e) => {
-  //   e.preventDefault();
-  //   alert("Added user: " + userIdInput);
-  //   setIsAddModalOpen(false);
-  //   setUserIdInput("");
-  // };
+  const channelList = useMemo(() => {
+    const listOutChannel = channels.find(el => el.groupId === Number(groupId));
+    return listOutChannel?.channelList ?? [];
+  }, [channels]);
+
+  //Fetch Channel by Group Id
+  useEffect(() => {
+    getChannelByGroupId(Number(groupId));
+  }, [groupId]);
 
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] max-h-[90vh] shadow-lg rounded-l-3xl overflow-y-auto">
@@ -151,8 +162,9 @@ function MainSideBar() {
               )}
             </div>
           )}
-        </div>
-        <div className="flex gap-5">
+
+        </div >
+        <div className="flex gap-2">
           <UserPlus className="text-[#8CBEB2]" />
           <button
             className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm w-full"
@@ -161,12 +173,12 @@ function MainSideBar() {
             + Add Member
           </button>
         </div>
-      </div>
+      </div >
 
       <hr className="border-gray-300" />
 
       {/* Channel list */}
-      <div>
+      < div >
         <div className="flex items-center justify-between mb-1">
           <span className="text-[#5C4B51] font-semibold">Channels</span>
           <button
@@ -177,6 +189,7 @@ function MainSideBar() {
           </button>
         </div>
         <div className="flex flex-col gap-1">
+<<<<<<< HEAD
           {channels.map((ch) => (
             <div key={ch.id} className="flex items-center gap-2 group">
               <button
@@ -204,9 +217,25 @@ function MainSideBar() {
                 </span>
               </button>
             </div>
+=======
+          {channelList.map((ch) => (
+            <button
+              key={ch.channelId}
+              onClick={() => handleChangeChannel(ch.channelId)}
+              className={`px-3 py-2 rounded-xl text-left font-medium  flex justify-between items-center
+      ${currentChannel === ch.channelId
+                  ? "bg-[#8CBEB2] text-white shadow"
+                  : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+                }
+    `}
+            >
+              # {ch.name}
+              {(ch.unreadNoti > 0) && <div className="badge badge-sm bg-red-400 border-none text-white">{ch.unreadNoti >= 100 ? '+99' : ch.unreadNoti}</div>}
+            </button>
+>>>>>>> origin/feature/socket-io-client
           ))}
         </div>
-      </div>
+      </div >
       <div className="flex-1"></div>
       {/* Group functions */}
       <div className="mt-8 flex flex-col justify-end gap-2 text-md">
@@ -296,14 +325,18 @@ function MainSideBar() {
         <button
           className="w-full rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
           disabled={!channelName.trim()}
-          onClick={() => {
+          onClick={async () => {
             setIsAddChannelModalOpen(false);
+            const response = await createChannel({ name: channelName, type: "TEXT", groupId: Number(groupId) });
             setChannelName("");
+            // console.log('response is',response,' ',response.id);
+            if (response) handleChangeChannel(response.id);
           }}
         >
           Add
         </button>
       </Modal>
+<<<<<<< HEAD
 
       <Modal
         open={isEditChannelModalOpen}
@@ -354,6 +387,9 @@ function MainSideBar() {
         </div>
       </Modal>
     </div>
+=======
+    </div >
+>>>>>>> origin/feature/socket-io-client
   );
 }
 
