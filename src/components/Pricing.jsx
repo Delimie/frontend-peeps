@@ -10,7 +10,7 @@ function Pricing() {
     }
   };
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F2EBBF] py-12">
+    <div className="flex flex-col items-center">
       <h1 className="text-5xl font-extrabold mb-10 text-[#5C4B51] tracking-wide">
         Choose Your Plan
       </h1>
