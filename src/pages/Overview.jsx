@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-// import { useState } from "react";
 import DebtSum from "../components/DebtSummaryPage/DebtSummary";
 import RightSide from "../components/DebtSummaryPage/RightSide";
 

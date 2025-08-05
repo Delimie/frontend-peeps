@@ -1,17 +1,18 @@
-import React from "react";
+import useAuthStore from "../stores/authStore"
 
-function Avatar({ avatar, size = 100 }) {
+function Avatar({ size = 100, previewUrl }) {
+  const user = useAuthStore((state) => state.user);
+
+  const displayImage = previewUrl || user?.profileImage || null
+
   return (
-    <div
-      className="w-[80px] h-[80px] rounded-full border-3 border-white shadow-lg flex items-center justify-center bg-[#ffed90] overflow-hidden"
-      style={{
-        width: size,
-        height: size,
-      }}
+     <div
+      className="rounded-full border-2 border-white bg-[#ffed90] overflow-hidden cursor-pointer flex items-center justify-center"
+      style={{ width: size, height: size }}
     >
-      {avatar ? (
+      {displayImage ? (
         <img
-          src={avatar}
+          src={displayImage}
           alt="avatar"
           className="w-full h-full object-cover rounded-full"
           draggable={false}

@@ -1,25 +1,39 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 
+const debts = [
+  { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
+  {
+    name: "Allie",
+    toPay: 0,
+    toReceive: 150,
+    avatar: "./mockProfilePic2.jpg",
+  },
+  { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
+  { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
+  { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
+];
+
 function DebtSum() {
-  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] = useState(false);
+  const [isSelectRecipientModalOpen, setIsSelectRecipientModalOpen] =
+    useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const debts = [
-    { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-    {
-      name: "Allie",
-      toPay: 0,
-      toReceive: 150,
-      avatar: "./mockProfilePic2.jpg",
-    },
-    { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
-    { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-    { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
-  ];
-
   return (
-    <div className="bg-white h-6/7 w-2/5 min-w-[570px] rounded-4xl shadow-[5px_5px_5px_1px_rgba(0,_0,_0,_0.1)] overflow-y-auto">
+    <div>
+      <div className="flex justify-between gap-2">
+        <div className="flex gap-6">
+        <button className="p-2 bg-amber-200 rounded-md">
+          Create Group's Bill
+        </button>
+        <button className="p-2 bg-amber-300 rounded-md">
+          Blah blah blah
+        </button>
+          </div>
+        <button className="p-2 bg-amber-200 rounded-md">
+          Check your bills
+        </button>
+      </div>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl pt-8 pl-10">Debt Summary</h1>
         <div className="pt-8 pr-14">
