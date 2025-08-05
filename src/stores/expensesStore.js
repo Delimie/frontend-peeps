@@ -20,7 +20,7 @@ const useExpenseStore = create((set, get) => ({
     console.log(resp.data)
     set((state) => ({
       loading: false,
-      expenses: [newExpense, ...state.expenses]
+      expenses: [newExpense, ...(state.expenses || [])]
     }));
     return resp;
   },
