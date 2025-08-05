@@ -1,29 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 import { Pencil, SquarePen, UserPlus } from "lucide-react";
 import useGroupStore from "../../stores/groupStore";
+import useChannelStore from "../../stores/channelStore";
 import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
-
-// const channelList = [
-//   { id: "1", name: "General" },
-//   { id: "channel2", name: "คุยเล่น" },
-//   { id: "channel3", name: "นัดเที่ยว" },
-// ];
+import { GROUP_ACTION } from "../../shared/constants/socket.constant";
+import { socket } from "../../socket/socket";
 
 function MainSideBar() {
-  //ม็อคข้อมูลเก่า
-  const [channels, setChannels] = useState([
-    { id: "1", name: "General" },
-    { id: "channel2", name: "คุยเล่น" },
-    { id: "channel3", name: "นัดเที่ยว" },
-  ]);
-
   const { groupId, channelId } = useParams();
   const navigate = useNavigate();
+
   const currentGroup = groupId;
-  const currentChannel = channelId;
+  // const currentChannel = channelId;
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userNameInput, setUserNameInput] = useState("");
   const [isMemberOpen, setIsMemberOpen] = useState(false);
@@ -31,6 +23,8 @@ function MainSideBar() {
   const [channelName, setChannelName] = useState("");
 
   //store
+  const currentSelectedGroup = useGroupStore(state => state.currentGroup);
+  const setCurrentGroupById = useGroupStore(state => state.setCurrentGroupById);
   const getUsersInGroup = useGroupStore((state) => state.getUsersInGroup);
   const groupUsers = useGroupStore((state) => state.groupUsers);
   const addUserToGroup = useGroupStore((state) => state.addUserToGroup);
@@ -49,6 +43,23 @@ function MainSideBar() {
     }
     getUsersInGroup(groupId)
   }, [getAllUsers, users.length, groupId]);
+
+  const channels = useChannelStore((state) => state.channels);
+  const createChannel = useChannelStore((state) => state.createChannel);
+  const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
+  const updateChannel = useChannelStore((state) => state.updateChannel);
+  const deleteChannel = useChannelStore((state) => state.deleteChannel);
+
+  const currentChannel = channelId || channelList[0].channelId;
+
+  const memberList = useMemo(() => {
+    return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
+    { name: "Auu", avatar: "./mockProfilePic3.jpg" },
+    { name: "Dew", avatar: "./mockProfilePic1.jpg" },
+    { name: "Gao", avatar: "./mockProfilePic2.jpg" },
+    { name: "1", avatar: "./mockProfilePic2.jpg" },
+    { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
+  }, [])
 
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
@@ -98,17 +109,46 @@ function MainSideBar() {
     }
   };
 
-  // const handleAddMember = (e) => {
-  //   e.preventDefault();
-  //   alert("Added user: " + userIdInput);
-  //   setIsAddModalOpen(false);
-  //   setUserIdInput("");
-  // };
+  const channelList = useMemo(() => {
+    const listOutChannel = channels.find(el => el.groupId === Number(groupId));
+    return listOutChannel?.channelList ?? [];
+  }, [channels]);
+
+  //Fetch Channel by Group Id
+  useEffect(() => {
+    getChannelByGroupId(Number(groupId));
+    setCurrentGroupById(Number(groupId));
+  }, [groupId]);
+
+  // Listen for user who join the group
+  useEffect(() => {
+    
+    socket.on(GROUP_ACTION.GROUP_JOIN, (data) => {
+      console.log(data.message);
+      if (data.user) {
+        console.log(data.user);
+        useGroupStore.getState().updateGroupUsers(data.user);
+      }
+    });
+
+    socket.on(GROUP_ACTION.GROUP_LEAVE, (data) => {
+      console.log(data.message);
+      if (data.user) {
+        console.log(data.user);
+        useGroupStore.getState().updateGroupUsers(data.user);
+      }
+    });
+
+      return () => {
+        socket.off(GROUP_ACTION.GROUP_JOIN);
+        socket.off(GROUP_ACTION.GROUP_LEAVE);
+      }
+  }, []);
 
   return (
     <div className="bg-white flex flex-col gap-6 py-6 mt-4 mb-4 px-4 w-[220px] max-h-[90vh] shadow-lg rounded-l-3xl overflow-y-auto">
       <div>
-        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">Group Name</h2>
+        <h2 className="text-lg font-bold text-[#5C4B51] mb-1">{currentSelectedGroup?.name || "Group Name"}</h2>
 
         {/* Member Card Dropdown */}
         <div className="mb-3">
@@ -132,12 +172,13 @@ function MainSideBar() {
                     key={member.id}
                     className="flex items-center gap-3 px-2 py-1 hover:bg-[#F2EBBF] rounded-lg transition cursor-pointer"
                   >
-                    <span>
+                    <span className="relative">
                       <img
                         src={member.profileImage}
                         alt="profile"
                         className="rounded-full w-8 h-8 object-cover border border-[#8CBEB2]"
                       />
+                      <div aria-label="status" className={`status ${member.onlineStatus === "ONLINE" ? "status-accent" : "status-neutral"} absolute translate-x-1/2 translate-y-1/2 bottom-1/8 right-1/4`}></div>
                     </span>
                     <span className="text-sm text-[#5C4B51] itim">
                       {member.name}
@@ -151,8 +192,9 @@ function MainSideBar() {
               )}
             </div>
           )}
-        </div>
-        <div className="flex gap-5">
+
+        </div >
+        <div className="flex gap-2">
           <UserPlus className="text-[#8CBEB2]" />
           <button
             className="bg-[#8CBEB2] text-white px-2 py-1 rounded hover:bg-[#FFE066] text-sm w-full"
@@ -161,12 +203,12 @@ function MainSideBar() {
             + Add Member
           </button>
         </div>
-      </div>
+      </div >
 
       <hr className="border-gray-300" />
 
       {/* Channel list */}
-      <div>
+      < div >
         <div className="flex items-center justify-between mb-1">
           <span className="text-[#5C4B51] font-semibold">Channels</span>
           <button
@@ -177,35 +219,40 @@ function MainSideBar() {
           </button>
         </div>
         <div className="flex flex-col gap-1">
-          {channels.map((ch) => (
-            <div key={ch.id} className="flex items-center gap-2 group">
-              <button
-                onClick={() => handleChangeChannel(ch.id)}
-                className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2
-          ${currentChannel === ch.id
-                    ? "bg-[#8CBEB2] text-white shadow"
-                    : "text-[#5C4B51] hover:bg-[#F2EBBF]"
-                  }
+          {
+            channelList.map((ch) => (
+
+              <div key={ch.channelId} className="flex items-center gap-2 group">
+                <button
+                  onClick={() => handleChangeChannel(ch.channelId)}
+                  className={`px-3 py-2 rounded-xl text-left font-medium flex-1 flex items-center gap-2 justify-between
+          ${currentChannel === ch.channelId
+                      ? "bg-[#8CBEB2] text-white shadow"
+                      : "text-[#5C4B51] hover:bg-[#F2EBBF]"
+                    }
         `}
-              >
-                # {ch.name}
-                <span
-                  className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  onClick={(e) => {
-                    e.stopPropagation(); // ไม่ให้กดเปลี่ยนแชลแนล
-                    setEditingChannelId(ch.id);
-                    setEditingChannelName(ch.name);
-                    setIsEditChannelModalOpen(true);
-                  }}
-                  title="Edit channel"
                 >
-                  <SquarePen size={18} />
-                </span>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+                  # {ch.name}
+                  <span
+                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    onClick={(e) => {
+                      e.stopPropagation(); // ไม่ให้กดเปลี่ยนแชลแนล
+                      setEditingChannelId(ch.channelId);
+                      setEditingChannelName(ch.name);
+                      setIsEditChannelModalOpen(true);
+                    }}
+                    title="Edit channel"
+                  >
+                    <SquarePen size={18} />
+                  </span>
+                  {(ch.unreadNoti > 0) && <div className="badge badge-sm bg-red-400 border-none text-white">{ch.unreadNoti >= 100 ? '+99' : ch.unreadNoti}</div>}
+
+                </button>
+              </div>
+            ))
+          }
+        </div >
+      </div >
       <div className="flex-1"></div>
       {/* Group functions */}
       <div className="mt-8 flex flex-col justify-end gap-2 text-md">
@@ -237,48 +284,50 @@ function MainSideBar() {
         </button>
       </div>
 
-      {isAddModalOpen && (
-        <Modal
-          open={isAddModalOpen}
-          onClose={() => {
-            setIsAddModalOpen(false);
-            setUserNameInput("");
-          }}
-        >
-          <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
-            Add Member
-          </h2>
-          <form onSubmit={handleAddMember} className="flex flex-col gap-3">
-            <input
-              type="text"
-              value={userNameInput}
-              onChange={(e) => setUserNameInput(e.target.value)}
-              placeholder="Enter user Name"
-              className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
-              autoFocus
-            />
-            <div className="flex justify-end gap-2 mt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAddModalOpen(false);
-                  setUserNameInput("");
-                }}
-                className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
-                disabled={!userNameInput.trim()}
-              >
-                Add
-              </button>
-            </div>
-          </form>
-        </Modal>
-      )}
+      {
+        isAddModalOpen && (
+          <Modal
+            open={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setUserNameInput("");
+            }}
+          >
+            <h2 className="text-xl font-semibold text-[#5C4B51] mb-2 text-center">
+              Add Member
+            </h2>
+            <form onSubmit={handleAddMember} className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={userNameInput}
+                onChange={(e) => setUserNameInput(e.target.value)}
+                placeholder="Enter user Name"
+                className="w-full border border-[#8CBEB2] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#8CBEB2]"
+                autoFocus
+              />
+              <div className="flex justify-end gap-2 mt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    setUserNameInput("");
+                  }}
+                  className="text-[#8CBEB2] hover:text-[#F3B562] px-3 py-1"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#8CBEB2] text-white px-4 py-1 rounded hover:bg-[#F3B562]"
+                  disabled={!userNameInput.trim()}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </Modal>
+        )
+      }
 
       <Modal
         open={isAddChannelModalOpen}
@@ -295,9 +344,12 @@ function MainSideBar() {
         <button
           className="w-full rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
           disabled={!channelName.trim()}
-          onClick={() => {
+          onClick={async () => {
             setIsAddChannelModalOpen(false);
+            const response = await createChannel({ name: channelName, type: "TEXT", groupId: Number(groupId) });
             setChannelName("");
+            // console.log('response is',response,' ',response.id);
+            if (response) handleChangeChannel(response.id);
           }}
         >
           Add
@@ -352,7 +404,7 @@ function MainSideBar() {
           </button>
         </div>
       </Modal>
-    </div>
+    </div >
   );
 }
 
