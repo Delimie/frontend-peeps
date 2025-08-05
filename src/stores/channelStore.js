@@ -6,12 +6,15 @@ import {
     getChannelByGroupIdApi,
     updateChannelApi
 } from "../api/channelApi";
+import { socket } from "../socket/socket";
+import { CHANNEL_ACTION } from "../shared/constants/socket.constant";
 
 
 const useChannelStore = create(
     persist(
         (set, get) => ({
             channels: [
+                // Channels data format
                 // { groupId: 1, channelList: [{ channelId: 1, name: 'Welcome#1', type: 'TEXT', unreadNoti: 0 }, { channelId: 2, name: 'Welcome#2', type: 'TEXT', unreadNoti: 2 }] },
                 // { groupId: 2, channelList: [{ channelId: 3, name: 'This is just for chat', type: 'TEXT', unreadNoti: 5 }, { channelId: 4, name: 'Welcome#4', type: 'TEXT', unreadNoti: 0 }] },
                 // { groupId: 3, channelList: [{ channelId: 5, name: 'Welcome#5', type: 'TEXT', unreadNoti: 0 }, { channelId: 6, name: 'Welcome#6', type: 'TEXT', unreadNoti: 120 }] },
@@ -50,7 +53,7 @@ const useChannelStore = create(
                     const newChannels = get().channels.map((el) => el);
                     set({ loading: true });
                     const resp = await getChannelByGroupIdApi(Number(groupId));
-                    console.log(resp.data.message);
+                    // console.log(resp.data.message);
 
                     const newChannelList = {
                         groupId: parseInt(groupId),
@@ -81,11 +84,29 @@ const useChannelStore = create(
                 try {
                     // const {name} = body;
                     const resp = await updateChannelApi(channelId, body);
-                    return resp;
+                    const updatedChannel = resp.data.result;
+
+                    const newChannels = get().updateChannelsName(updatedChannel);
+
+                    // console.log('newChannels ',newChannels);
+
+                    //Socket Emit to annouced updated channel name
+                    socket.emit(CHANNEL_ACTION.CHANNEL_UPDATE, { message: 'Emit to update channel Name', data : updatedChannel });
+
+                    return newChannels;
                 } catch (error) {
                     console.log(error.message)
                     return;
                 }
+            },
+            updateChannelsName: (channelData) => {
+                const channelListByGroupId = get().channels.find(el => el.groupId === channelData.groupId);
+                if(!channelListByGroupId) console.warn('No ChannelList in group id', channelData.groupId);
+                const createNewUpdatedChannelList = channelListByGroupId.channelList.map(channel => channel.channelId === channelData.id ? { ...channel, name: channelData.name } : channel);
+                const newChannels = get().channels.map(el => el.groupId === channelListByGroupId.groupId ? { ...el, channelList: createNewUpdatedChannelList } : el);
+
+                set({ channels: newChannels });
+                return newChannels
             },
             deleteChannel: async (channelId) => {
                 const resp = await deleteChannelApi(channelId);
@@ -94,9 +115,9 @@ const useChannelStore = create(
                 }));
                 return resp;
             },
-            setCurrentChannelById: (groupId,channelId) => {
-                const currentChannelList = get().channels.find( ch => ch.groupId === Number(groupId)).channelList;
-                const currentChannel = currentChannelList.find( ch => ch.channelId === Number(channelId));
+            setCurrentChannelById: (groupId, channelId) => {
+                const currentChannelList = get().channels.find(ch => ch.groupId === Number(groupId)).channelList;
+                const currentChannel = currentChannelList.find(ch => ch.channelId === Number(channelId));
                 set({ currentChannel: currentChannel });
             },
             unreadNotiIncrease: (channelId) => {

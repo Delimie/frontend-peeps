@@ -27,7 +27,7 @@ export default function TimeAgo({ date }) {
     <span>
       {isRecent
         ? target.from(now)
-        : target.format('YYYY-MM-DD HH:mm')} {/* or use LLL for localized */}
+        : target.format('YYYY-MM-DD HH:mm')}
     </span>
   );
 }
