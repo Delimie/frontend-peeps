@@ -69,9 +69,9 @@ function BillModal({ open, onClose }) {
         amount: Number(splits[i]),
         status: "UNPAID",
       }));
-      for (let s of splitData) {
-        await createSplit(expenseId, s, token);
-      }
+      // for (let s of splitData) {
+      //   await createSplit(expenseId, s, token);
+      // }
       alert("Assigned success");
       setStep(3);
     } catch (error) {

@@ -7,6 +7,7 @@ import Avatar from "../avatar";
 import useDebtTransactionStore from "../../stores/deptTransactionStore";
 import { useParams } from "react-router-dom";
 import BillSummaryCard from "./BillSummaryCard";
+import useExpenseStore from "../../stores/expensesStore";
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -51,6 +52,13 @@ function DebtSummary() {
   const currentGroup = useGroupStore(state => state.currentGroup)
   const [transactions, setTransactions] = useState([]);
   const [showAllBills, setShowAllBills] = useState(false);
+  const getExpensesByGroup = useExpenseStore(state => state.getExpensesByGroup)
+  const [expenses, setExpenses] = useState([]);
+  const [transformed, setTransformed] = useState([]);
+
+  // if (setShowAllBills === true) {
+  //   navigate(`/peeps/${groupId}/`);
+  // }
 
   const fetchTransactions = async () => {
     const result = await getTransactionById(groupId);
@@ -59,9 +67,41 @@ function DebtSummary() {
     setTransactions(res)
   };
 
+  const fetchExpense = async () => {
+    const result = await getExpensesByGroup(groupId);
+    console.log("Raw result:", result);
+    const res = result.data
+    console.log("Expenses:", res);
+    setExpenses(res);
+  };
+
   useEffect(() => {
-    fetchTransactions();
+    fetchTransactions()
+    fetchExpense()
   }, [groupId]);
+
+  useEffect(() => {
+    const result = expenses.map((expense) => {
+      const payerId = expense.groupUser.user.id
+      const payerName = expense.groupUser.user.name
+
+      const splits = expense.expenseSplit.map((split) => ({
+        userId: split.user.id,
+        userName: split.user.name,
+        amount: split.amount,
+        status: split.status,
+      }))
+
+      return {
+        title: expense.title,
+        total: expense.amount,
+        paidBy: { id: payerId, name: payerName },
+        splits,
+      }
+    })
+
+    setTransformed(result)
+  }, [expenses])
 
   const buildDebts = () => {
     const userId = user?.id;
@@ -92,6 +132,33 @@ function DebtSummary() {
     });
 
     return result;
+  };
+
+  const transformExpenses = (expenses) => {
+    const currentUserId = user?.id;
+
+    return expenses.map(expense => {
+      const unpaid = [];
+      const paid = [];
+
+      expense.expenseSplit
+        .filter(split => split.user.id === currentUserId || expense.groupUser.user.id === currentUserId)
+        .forEach(split => {
+          const person = { name: split.user.name, amount: split.amount };
+          if (split.status === "UNPAID") {
+            unpaid.push(person);
+          } else {
+            paid.push(person);
+          }
+        });
+
+      return {
+        title: expense.title,
+        total: expense.amount,
+        unpaid,
+        paid,
+      };
+    });
   };
 
 
@@ -136,9 +203,10 @@ function DebtSummary() {
         </div>
       </div>
 
-   {!showAllBills && (
+      {!showAllBills && (
         <div className="w-full bg-white rounded-2xl shadow-lg px-8 py-6 border border-[#F3B562]">
           <div className="grid grid-cols-[1fr_2fr_2fr_2fr] text-lg text-[#5C4B51] font-semibold mb-5 px-2">
+          <div></div><div></div>
             <div className="text-center text-2xl font-mitr text-[#5C4B51]">
               To Pay
             </div>
@@ -162,9 +230,8 @@ function DebtSummary() {
                 {item.toPay}
               </span>
               <span
-                className={`text-center font-bold text-xl itim ${
-                  item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
-                }`}
+                className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+                  }`}
               >
                 {item.toReceive}
               </span>
@@ -174,15 +241,13 @@ function DebtSummary() {
       )}
 
       {/* เงื่อนไขโชว์การ์ดบิล */}
-      {showAllBills && (
+      {showAllBills && expenses && Array.isArray(expenses) && (
         <div className="flex flex-wrap gap-6 mt-8">
-          {mockBills.map((bill, idx) => (
+          {transformExpenses(expenses).map((bill, idx) => (
             <BillSummaryCard key={idx} data={bill} />
           ))}
         </div>
       )}
-
-      
 
       {/* Select Recipient Modal */}
       {isSelectRecipientModalOpen && (
@@ -234,7 +299,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
-          // groupId={currentGroup?.id}
+        // groupId={currentGroup?.id}
         />
       )}
 
