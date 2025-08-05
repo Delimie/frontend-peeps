@@ -1,3 +1,4 @@
+import TimeAgo from "../ChatComponent/TimeAgo";
 
 function ChatBubble({ userName, createdAt, content, position, img, footer }) {
   return (
@@ -9,7 +10,7 @@ function ChatBubble({ userName, createdAt, content, position, img, footer }) {
       </div>
       <div className="chat-header">
         {userName}
-        <time className="text-xs opacity-50 ml-2">{createdAt}</time>
+        <time className="text-xs opacity-50 ml-2">{<TimeAgo date={createdAt} />}</time>
       </div>
       <div
         className={`chat-bubble rounded-xl ${
