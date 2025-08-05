@@ -1,10 +1,14 @@
-import { useState } from "react";
 import Baymax from "../assets/ProfilePic/Baymax.jpg";
 import Snoopy from "../assets/ProfilePic/Snoopy.jpg";
 import Spiderman from "../assets/ProfilePic/spiderman.jpg";
 import Spongebob from "../assets/ProfilePic/Spongebob.jpg";
 import Sidebar from "../components/ChatComponent/Sidebar";
 import ChatRoom from "../components/ChatComponent/ChatRoom";
+import { useEffect, useState } from "react";
+import { socket } from "../socket/socket";
+import { CHAT_ACTION } from "../shared/constants/socket.constant";
+import useAuthStore from "../stores/authStore";
+import { userTyping } from "../socket/handlers/chatHandler.js";
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -13,13 +17,15 @@ function Peeps() {
   const [newRoomName, setNewRoomName] = useState("");
   const [roomToDelete, setRoomToDelete] = useState(null);
 
+  const token = useAuthStore(state => state.token);
+
   const createRoom = () => {
     if (newRoomName.trim() === "") return;
     setRooms([...rooms, newRoomName]);
     setNewRoomName("");
     setIsCreateModalOpen(false);
   };
-
+  
   const removeRoom = (index) => {
     const updated = [...rooms];
     updated.splice(index, 1);

@@ -1,11 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
+import Landing from "../pages/Landing";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Layout from "../layouts/Layout";
 import Peeps from "../pages/Peeps";
 import NewRegister from "../pages/NewRegister";
-import Pricing from "../pages/Pricing";
 import Payment from "../pages/Payment";
 import BubbleBox from "../components/BubbleBox";
 import About from "../pages/About";
@@ -16,13 +15,14 @@ import DisplaySet from "../pages/authUser/DisplaySet";
 import TestPeeps from "../pages/TestAddGroup";
 import Overview from "../pages/Overview";
 import HomePeeps from "../pages/HomePeeps";
+import PricingPage from "../pages/PricingPage";
 
 function AppRouter() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<Landing />} />
           <Route path="peeps2" element={<Peeps />} />
 
           <Route path="register" element={<Register />} />
@@ -38,13 +38,13 @@ function AppRouter() {
 
           {/* <Route element={<ProtectRouteUser />}> */}
           <Route path="profile" element={<Profile />} />
-          <Route path="pricing" element={<Pricing />} />
+          <Route path="pricing" element={<PricingPage />} />
           <Route path="payment" element={<Payment />} />
           <Route path="overview" element={<Overview />} />
 
           <Route path="peeps" element={<HomePeeps/>} />
           <Route path="peeps/:groupId" element={<TestPeeps />} />
-          <Route path="peeps/:groupId/:menu" element={<TestPeeps />} />
+          <Route path="peeps/:groupId/:channelId" element={<TestPeeps />} />
         </Route>
       </Routes>
     </>

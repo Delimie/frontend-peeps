@@ -8,7 +8,9 @@ import {
   removeUserFromGroupApi,
   updateGroupApi,
   getUsersInGroupApi,
+  getMyGroupsAPI,
 } from "../api/groupApi";
+import useChannelStore from "./channelStore";
 
 const useGroupStore = create(
   persist(
@@ -17,16 +19,36 @@ const useGroupStore = create(
       currentGroup: null,
       groupUsers: [],
       loading: false,
+      error: null,
 
-      createGroup: async (body, userId) => {
+      getMyGroups: async () => {
+        set({ loading: true, error: null });
+        try {
+          const res = await getMyGroupsAPI();
+          set({ groups: res.data.result, loading: false });
+
+          // const groups = [...get().groups];
+
+          for (let eachGroup of get().groups) {
+            // console.log(eachGroup);
+            await useChannelStore.getState().getChannelByGroupId(Number(eachGroup.id));
+          }
+        } catch (err) {
+          set({ error: err.message || "Failed to fetch groups", loading: false });
+        }
+      },
+
+      createGroup: async (body) => {
         set({ loading: true });
-        const resp = await createGroupApi(body);
-        const newGroup = resp.data.group;
-        set((state) => ({
-          loading: false,
-          groups: [newGroup, ...state.groups],
-        }));
-        return resp;
+        try {
+          const resp = await createGroupApi(body);
+          await get().getMyGroups();
+          set({ loading: false });
+          return resp.data;
+        } catch (err) {
+          set({ loading: false, error: err.message || "Failed to create group" });
+          throw err;
+        }
       },
 
       getGroupById: async (id) => {
@@ -39,12 +61,16 @@ const useGroupStore = create(
       getUsersInGroup: async (groupId) => {
         set({ loading: true });
         const resp = await getUsersInGroupApi(groupId);
-        set({ groupUsers: resp.data.message, loading: false });
+        // console.log(resp.data.message.members)
+        // set({ groupUsers: resp.data.message.members, loading: false });
+        console.log("API Response Members:", resp.data.message.members);
+        set({ groupUsers: [...resp.data.message.members], loading: false });
         return resp;
       },
 
-      addUserToGroup: async (groupId, userId, role = "USER") => {
-        const resp = await addUserToGroupApi(groupId, { userId, role });
+      addUserToGroup: async (groupId, userId = null, role = "USER", userName = null) => {
+        const body = userId ? { userId, role } : { userName, role };
+        const resp = await addUserToGroupApi(groupId, body);
         await get().getUsersInGroup(groupId);
         await get().getGroupById(groupId);
         return resp;
@@ -65,17 +91,20 @@ const useGroupStore = create(
 
       deleteGroup: async (id) => {
         const resp = await deleteGroupApi(id);
-        set((state) => ({
-          groups: state.groups.filter((g) => g.id !== id),
-        }));
+        await get().getMyGroups();
         return resp;
       },
 
-      setCurrentGroup: (group) => set({ currentGroup: group }),
+      setCurrentGroupById: (groupId) => {
+        const currentGroup = (get().groups).find( group => group.id === Number(groupId) )
+        set({ currentGroup: currentGroup });
+      },
+      updateGroupUsers : async (userData) =>{
+        const newGroupUsers = get().groupUsers.map((user) => user.id === userData.id ? userData : user);
+        set({groupUsers : [...newGroupUsers]});
+      }
     }),
-    {
-      name: "group-storage"
-    }
+    { name: "group-storage" }
   )
 );
 
