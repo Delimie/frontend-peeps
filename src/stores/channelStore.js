@@ -91,7 +91,7 @@ const useChannelStore = create(
                     // console.log('newChannels ',newChannels);
 
                     //Socket Emit to annouced updated channel name
-                    socket.emit(CHANNEL_ACTION.CHANNEL_UPDATE, { message: 'Emit to update channel Name', data : updatedChannel });
+                    socket.emit(CHANNEL_ACTION.CHANNEL_UPDATE, { message: 'Emit to update channel Name', data: updatedChannel });
 
                     return newChannels;
                 } catch (error) {
@@ -101,7 +101,7 @@ const useChannelStore = create(
             },
             updateChannelsName: (channelData) => {
                 const channelListByGroupId = get().channels.find(el => el.groupId === channelData.groupId);
-                if(!channelListByGroupId) console.warn('No ChannelList in group id', channelData.groupId);
+                if (!channelListByGroupId) console.warn('No ChannelList in group id', channelData.groupId);
                 const createNewUpdatedChannelList = channelListByGroupId.channelList.map(channel => channel.channelId === channelData.id ? { ...channel, name: channelData.name } : channel);
                 const newChannels = get().channels.map(el => el.groupId === channelListByGroupId.groupId ? { ...el, channelList: createNewUpdatedChannelList } : el);
 
@@ -120,8 +120,25 @@ const useChannelStore = create(
                 const currentChannel = currentChannelList.find(ch => ch.channelId === Number(channelId));
                 set({ currentChannel: currentChannel });
             },
-            unreadNotiIncrease: (channelId) => {
+            unreadNotiIncrease: (groupId, channelId) => {
                 const listOutChannel = get().channels.find(el => el.groupId === Number(groupId));
+                const updatedChannelNoti = listOutChannel.channelList.map((channel) => channel.channelId === Number(channelId) ? { ...channel, unreadNoti: channel.unreadNoti + 1 } : channel);
+                const newChannels = get().channels.map(el => el.groupId === listOutChannel.groupId ? { ...el, channelList: updatedChannelNoti } : el);
+
+                set({ channels: newChannels });
+            },
+            readNotiReset: (groupId, channelId) => {
+                // console.log(`Reset channelId : ${channelId} to 0`);
+                const listOutChannel = get().channels.find(el => el.groupId === Number(groupId));
+                const updatedChannelNoti = listOutChannel.channelList.map((channel) => channel.channelId === Number(channelId) ? { ...channel, unreadNoti: 0 } : channel);
+                const newChannels = get().channels.map(el => el.groupId === listOutChannel.groupId ? { ...el, channelList: updatedChannelNoti } : el);
+
+                set({ channels: newChannels });
+            },
+            getSumChannelUnread: (groupId) => {
+                const listOutChannel = get().channels.find(el => el.groupId === Number(groupId));
+                const sumUnread = listOutChannel.channelList.reduce((acc, channel)=> acc+channel.unreadNoti ,0);
+                return sumUnread;
             },
         }),
         {

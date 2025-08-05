@@ -44,7 +44,7 @@ function MainSideBar() {
     getUsersInGroup(groupId)
   }, [getAllUsers, users.length, groupId]);
 
-  const {channels, createChannel, getChannelByGroupId, updateChannel, updateChannelsName,deleteChannel} = useChannelStore();
+  const {channels, createChannel, getChannelByGroupId, updateChannel, updateChannelsName,deleteChannel, readNotiReset} = useChannelStore();
   // const channels = useChannelStore((state) => state.channels);
   // const createChannel = useChannelStore((state) => state.createChannel);
   // const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
@@ -62,6 +62,7 @@ function MainSideBar() {
 
   const handleChangeChannel = (chId) => {
     if (!currentGroup) return;
+    readNotiReset(Number(groupId), Number(chId))
     navigate(`/peeps/${currentGroup}/${chId}`);
   };
 

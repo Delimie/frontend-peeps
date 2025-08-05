@@ -8,6 +8,8 @@ import useChannelStore from "../../stores/channelStore";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { MessageCircleHeart } from "lucide-react";
+import { socket } from "../../socket/socket";
+import { GROUP_ACTION } from "../../shared/constants/socket.constant";
 
 function SideBarGroup() {
   const params = useParams();
@@ -38,6 +40,12 @@ function SideBarGroup() {
     getMyGroups();
   }, [groupId]);
 
+  const setUnReadNoti = useGroupStore(state => state.setUnReadNoti);
+  const unReadNoti = useGroupStore(state => state.unReadNoti);
+  useEffect(() => {
+    setUnReadNoti();
+  }, [channels]);
+
   const onSubmit = async (data) => {
     try {
       const resp = await createGroup({ name: data.name });
@@ -50,7 +58,7 @@ function SideBarGroup() {
       });
 
       // Emit to join new created group ID
-      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId : newGroup.id });
+      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId: newGroup.id });
 
       await handleChangeGroup(Number(newGroup.id));
       reset();
@@ -87,18 +95,17 @@ function SideBarGroup() {
               key={g.id}
               onClick={() => handleChangeGroup(g.id)}
               className={`px-3 py-2 rounded-lg text-left font-medium overflow-hidden relative  cursor-pointer flex justify-between items-center
-      ${
-        currentGroup === g.id.toString()
-          ? "bg-[#8CBEB2] text-white shadow"
-          : "text-[#5C4B51] slide-hover-btn"
-      }
+      ${currentGroup === g.id.toString()
+                  ? "bg-[#8CBEB2] text-white shadow"
+                  : "text-[#5C4B51] slide-hover-btn"
+                }
     `}
             >
               <span className="flex gap-2">
                 {" "}
                 <MessageCircleHeart /> {g.name}
               </span>
-              <div className="badge badge-sm bg-red-400 border-none text-white">+99</div>
+              {unReadNoti.find(el => el.groupId ===g.id).unReadNoti > 0 && <div className="badge badge-sm bg-red-400 border-none text-white">{unReadNoti.find(el => el.groupId ===g.id).unReadNoti}</div>}
             </button>
           ))}
         </div>
@@ -130,10 +137,10 @@ function SideBarGroup() {
               // disabled={!groupName.trim()}
               type="submit"
               disabled={isSubmitting}
-              // onClick={() => {
-              //   setIsCreateGroupModalOpen(false);
-              //   // setGroupName("");
-              // }}
+            // onClick={() => {
+            //   setIsCreateGroupModalOpen(false);
+            //   // setGroupName("");
+            // }}
             >
               Create
             </button>
