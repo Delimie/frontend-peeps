@@ -88,7 +88,7 @@ export function PeepsAnimation() {
       }}
 
     >
-      <h1 className="text-8xl"> <span className="text-[#ef6060]">
+      <h1 className="text-8xl z-1"> <span className="text-[#ef6060]">
             P
             <span className="text-[#e09935]">
               E<span className="text-[#85b5b5]">E</span>

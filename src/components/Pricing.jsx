@@ -11,11 +11,11 @@ function Pricing() {
   };
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-5xl mb-15 text-[#5C4B51] tracking-wide">
+      <h1 className="text-5xl mb-15 text-[#5C4B51] tracking-wide z-1">
         Choose Your Plan
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4 z-1">
         {/* Free */}
         <div className="rounded-2xl bg-white shadow-xl flex flex-col items-center p-8 border-1 border-[#F3B562] h-[330px] transition-all duration-200 hover:scale-105 hover:shadow-2xl cursor-pointer">
           <h2 className="text-2xl font-bold mb-2 text-[#5C4B51]">Free</h2>
