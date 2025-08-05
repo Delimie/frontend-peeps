@@ -29,4 +29,4 @@ export const deleteExpenseApi = (expenseId) =>
 
 // Get all expenses for a group
 export const getExpensesByGroupIdApi = (groupId) =>
-  expensesApi.get(`/groups/${groupId}/expenses`);
+  expensesApi.get(`/groups/${groupId}`);

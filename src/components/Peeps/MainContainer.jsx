@@ -18,10 +18,10 @@ function MainContainer() {
     }
   }, [groupId, channelId, navigate]);
 
-
+  // Use Effect to emit join group
   useEffect(() => {
     if (groupId) {
-      socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
+      // socket.emit(GROUP_ACTION.GROUP_JOIN, { groupId });
     }
   }, [groupId])
 
