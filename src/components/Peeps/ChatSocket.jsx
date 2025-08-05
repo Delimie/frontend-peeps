@@ -139,14 +139,14 @@ function ChatSocket() {
       <div className="text-2xl font-bold mb-2 text-[#8CBEB2]">
         {"# "+currentChannel?.name ||"Channel Name"}
       </div>
-      <div className="flex-1 border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
+      <div className="flex-1 h-full overflow-auto border border-[#EFEFEF] rounded-xl bg-[#F7FBFF] p-4 mb-4 flex flex-col gap-2">
         {chats.map((el, idx) => (el.channelId === parseInt(channelId) &&
           <ChatBubble
             key={el.id}
-            userName={el.userId === user.id ? users[0].name : users.find((element) => element.id === el.userId)?.name}
+            userName={el.userId === user.id ? user?.name : users.find((element) => element.id === el.userId)?.name}
             createdAt={el.createdAt}
             content={el.content}
-            img={el.userId === user.id ? users[0]?.profileImage : users.find((element) => element.id === el.userId)?.profileImage}
+            img={el.userId === user.id ? user?.profileImage : users.find((element) => element.id === el.userId)?.profileImage}
             footer={null}
             position={el.userId === user.id ? "end" : "start"}
           />
@@ -172,6 +172,10 @@ function ChatSocket() {
         />
         <button
           type="submit"
+          onClick={(e) =>{
+            e.key = 'Enter'
+            hdlSendMessage(e)
+          } }
           className="bg-[#F3B562] text-[#5C4B51] px-5 py-2 rounded-full hover:bg-[#8CBEB2] hover:text-white transition"
         >
           <SendHorizontal />
