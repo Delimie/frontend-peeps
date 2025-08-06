@@ -8,7 +8,6 @@ function Layout() {
     <div>
       <MainNav />
       <Outlet />
-      <Footer/>
     </div>
   );
 }

@@ -23,7 +23,7 @@ function FloatingShapes() {
         </svg>
       </div>
 
-      <div className="fixed top-2/4 left-10 w-32 h-32 animate-bounce z-0">
+      <div className="fixed top-2/5 left-10 w-32 h-32 animate-bounce z-0">
         <svg
           width="126"
           height="128"

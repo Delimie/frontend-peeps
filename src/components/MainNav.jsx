@@ -23,7 +23,7 @@ function MainNav() {
             <span className="text-[#e09935]">
               E<span className="text-[#85b5b5]">E</span>
             </span>
-            PS
+            P$
           </span>
         </Link>
       </div>
@@ -33,7 +33,7 @@ function MainNav() {
           Home
         </Link>
         <Link to="/peeps" className={NavBarStyle}>
-          Peeps!
+          PEEP$
         </Link>
         <img src="/Peeps_Logo.png" className="w-12"/>
         <Link to="/pricing" className={NavBarStyle}>
