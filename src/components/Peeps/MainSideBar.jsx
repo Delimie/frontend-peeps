@@ -8,6 +8,7 @@ import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
 import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.constant";
 import { socket } from "../../socket/socket";
+import { showLoginToast } from "../../utils/customToast";
 
 function MainSideBar() {
   const { groupId, channelId } = useParams();
@@ -44,7 +45,7 @@ function MainSideBar() {
     getUsersInGroup(groupId)
   }, [getAllUsers, users.length, groupId]);
 
-  const {channels, createChannel, getChannelByGroupId, updateChannel, updateChannelsName,deleteChannel, readNotiReset} = useChannelStore();
+  const { channels, createChannel, getChannelByGroupId, updateChannel, updateChannelsName, deleteChannel, readNotiReset } = useChannelStore();
   // const channels = useChannelStore((state) => state.channels);
   // const createChannel = useChannelStore((state) => state.createChannel);
   // const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
@@ -68,7 +69,7 @@ function MainSideBar() {
 
   const handleEditChannelName = () => {
     console.log('Change name emit');
-    updateChannel(Number(editingChannelId),{name : editingChannelName});
+    updateChannel(Number(editingChannelId), { name: editingChannelName });
     setIsEditChannelModalOpen(false);
     setEditingChannelId(null);
     setEditingChannelName("");
@@ -129,6 +130,11 @@ function MainSideBar() {
       if (data.user) {
         console.log(data.user);
         useGroupStore.getState().updateGroupUsers(data.user);
+
+        showLoginToast({
+          name: data.user.name,
+          profileImage: data.user.profileImage,
+        });
       }
     });
 
@@ -140,7 +146,7 @@ function MainSideBar() {
       }
     });
 
-    socket.on(CHANNEL_ACTION.CHANNEL_UPDATE, (data) =>{
+    socket.on(CHANNEL_ACTION.CHANNEL_UPDATE, (data) => {
       // const {message , updatedChannelName} = data;
       console.log(data.message);
       updateChannelsName(data.updatedChannelName);
