@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BillSummaryCard from "./BillSummaryCard";
 import useExpenseStore from "../../stores/expensesStore";
 import Swal from "sweetalert2";
+import numeral from 'numeral';
 
 const debts = [
   { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
@@ -283,14 +284,14 @@ function DebtSummary() {
                   item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
                 }`}
               >
-                {item.toPay}
+                {numeral(item.toPay).format('0,0.00')}฿
               </span>
               <span
                 className={`text-center font-bold text-xl itim ${
                   item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
                 }`}
               >
-                {item.toReceive}
+                {numeral(item.toReceive).format('0,0.00')}฿
               </span>
             </div>
           ))}
@@ -335,7 +336,7 @@ function DebtSummary() {
                     {item.name}
                   </span>
                   <span className="text-center font-bold text-2xl text-[#F06060] itim">
-                    {item.toPay}฿
+                    {numeral(item.toPay).format('0,0.00')}฿
                   </span>
                   <button
                     onClick={() => {
@@ -371,7 +372,7 @@ function DebtSummary() {
               <X size={24} />
             </button>
             <h1 className="text-3xl pb-5 font-mitr text-[#5C4B51] text-center">
-              Payment to {selectedRecipient.name}
+              You are paying {numeral(selectedRecipient.toPay).format('0,0.00')}฿ to {selectedRecipient.name}
             </h1>
             <div>
               <p className="text-2xl pb-5 itim text-[#5C4B51] text-center">
