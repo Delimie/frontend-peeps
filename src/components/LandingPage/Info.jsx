@@ -1,60 +1,71 @@
+import { Play } from "lucide-react";
+
 function Info() {
   return (
-    <div className="relative flex flex-col justify-center z-[-20] h-full">
-      <svg
-        className="w-full h-auto"
-        viewBox="0 0 1910 126"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M0 76.8327C39.0356 103.357 85.1203 124.374 157.973 124.374C356.931 124.374 356.931 54.4547 555.89 54.4547C754.848 54.4547 754.848 125.906 953.806 125.906C1152.77 125.906 1152.77 0 1351.72 0C1550.68 0 1550.68 121.481 1749.64 121.481C1824.55 121.481 1870.25 115.214 1910 107.4V126L0 125.906V76.8327Z"
-          fill="#F2EBBF"
-        />
-      </svg>
-
-      {/* Content */}
-      <div className="flex flex-col items-center justify-center w-full bg-[#F2EBBF] py-25">
-        <h1 className="text-6xl">Let's Peeps</h1>
-        <div className="flex px-30 items-center justify-center">
-          {/* Left */}
-          <div className="w-3/5 h-[100%] flex flex-col md:text-left">
-            <h2 className="text-5xl">Your always-with-you money chat</h2>
-            <p className="text-2xl leading-relaxed w-4/5 pt-5">
+    <div className="min-h-[500px] mt-20 relative z-0 w-full">
+      <div className="flex">
+        <div className="w-1/2 max-w-2xl mx-auto relative bg-card rounded-2xl shadow-lg">
+          <div className="aspect-video rounded-lg flex items-center justify-center">
+            <button className="w-20 h-20 bg-[#F2EBBF]/80 pl-1 rounded-full flex items-center justify-center hover:bg-foreground/90 transition-colors">
+              <Play className="w-15 h-15 text-background" fill="#8CBEB2" />
+            </button>
+          </div>
+        </div>
+        <div className="w-1/2 flex justify-center">
+          <div className="w-4/5 h-[100%] flex flex-col justify-center gap-5">
+            <h2 className="text-4xl font-bold">
+              Your always-with-you money chat
+            </h2>
+            <p className="text-xl leading-relaxed">
               Helping you manage group expenses easily and fairly with clear
               summaries, individual shares, and a full transfer history to keep
               everyone on the same page.
             </p>
-            <div className="pt-5">
+            <div>
               <button className="bg-[#8CBEB2] py-3 px-4 text-2xl text-white cursor-pointer rounded-4xl">
                 Try Now!
               </button>
             </div>
           </div>
-
-          {/* Right */}
-          <div className="bg-[#F2EBBF] w-2/4">
-            <img src="./Friends.png" alt="Friends" />
-          </div>
         </div>
       </div>
-
-      <svg
-        className="w-full h-auto"
-        viewBox="0 0 1910 126"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M1910 49.1673C1870.96 22.6431 1824.88 1.62598 1752.03 1.62598C1553.07 1.62598 1553.07 71.5454 1354.11 71.5454C1155.15 71.5454 1155.15 0.0943297 956.194 0.0943297C757.235 0.0943297 757.235 126 558.277 126C359.319 126 359.319 4.5186 160.36 4.5186C85.4546 4.5186 39.7543 10.7861 0 18.5997V-1.19209e-07L1910 0.0943297V49.1673Z"
-          fill="#F2EBBF"
-        />
-      </svg>
     </div>
+
+    // <div className="relative flex justify-center z-1 h-full py-10">
+    //   <div>
+    //     <div className="flex px-30 items-center justify-center">
+    //       {/* Left */}
+    //       <div className="container mx-auto px-6 ">
+    //         <div className="max-w-2xl">
+    //           <div className="relative bg-card border-2 border-border rounded-2xl p-8 shadow-lg">
+    //             <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+    //               <button className="w-20 h-20 bg-[#F2EBBF]/80 pl-1 rounded-full flex items-center justify-center hover:bg-foreground/90 transition-colors">
+    //                 <Play
+    //                   className="w-15 h-15 text-background"
+    //                   fill="#8CBEB2"
+    //                 />
+    //               </button>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //       {/* Right */}
+    //       <div className="w-3/5 h-[100%] flex flex-col md:text-left">
+    //         <h2 className="text-5xl">Your always-with-you money chat</h2>
+    //         <p className="text-2xl leading-relaxed w-4/5 pt-5">
+    //           Helping you manage group expenses easily and fairly with clear
+    //           summaries, individual shares, and a full transfer history to keep
+    //           everyone on the same page.
+    //         </p>
+    //         <div className="pt-5">
+    //           <button className="bg-[#8CBEB2] py-3 px-4 text-2xl text-white cursor-pointer rounded-4xl">
+    //             Try Now!
+    //           </button>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 export default Info;
