@@ -6,12 +6,14 @@ import { socket } from "../../socket/socket";
 import {
   CHANNEL_ACTION,
   CHAT_ACTION,
+  NOTI_ACTION,
 } from "../../shared/constants/socket.constant";
 import useChatStore from "../../stores/chatStore";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
 import useUserListStore from "../../stores/userListStore";
 import useChannelStore from "../../stores/channelStore";
+import dayjs from "dayjs";
 
 function ChatSocket() {
   const params = useParams();
@@ -56,9 +58,18 @@ function ChatSocket() {
       console.log(err);
     });
 
+    socket.on(NOTI_ACTION.NOTI_UPDATE, (data) =>{
+      const {groupId, channelId, userId, updateAt} = data;
+
+      console.log(`User ${userId} has send a message at channel Id ${channelId} at ${dayjs(updateAt).format('HH:mm:ss')}`);
+
+      useChannelStore.getState().unreadNotiIncrease(groupId, channelId);
+    });
+
     useChatStore.getState().listenToMessage();
 
     return () => {
+      socket.off(NOTI_ACTION.NOTI_UPDATE);
       socket.off(CHAT_ACTION.CHAT_SYNC);
       socket.off(CHAT_ACTION.CHAT_TYPING);
 

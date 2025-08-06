@@ -6,8 +6,9 @@ import useGroupStore from "../../stores/groupStore";
 import useChannelStore from "../../stores/channelStore";
 import useAuthStore from "../../stores/authStore";
 import Swal from "sweetalert2";
-import { GROUP_ACTION } from "../../shared/constants/socket.constant";
+import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.constant";
 import { socket } from "../../socket/socket";
+import { showLoginToast } from "../../utils/customToast";
 
 function MainSideBar() {
   const { groupId, channelId } = useParams();
@@ -44,22 +45,14 @@ function MainSideBar() {
     getUsersInGroup(groupId)
   }, [getAllUsers, users.length, groupId]);
 
-  const channels = useChannelStore((state) => state.channels);
-  const createChannel = useChannelStore((state) => state.createChannel);
-  const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
-  const updateChannel = useChannelStore((state) => state.updateChannel);
-  const deleteChannel = useChannelStore((state) => state.deleteChannel);
+  const { channels, createChannel, getChannelByGroupId, updateChannel, updateChannelsName, deleteChannel, readNotiReset } = useChannelStore();
+  // const channels = useChannelStore((state) => state.channels);
+  // const createChannel = useChannelStore((state) => state.createChannel);
+  // const getChannelByGroupId = useChannelStore((state) => state.getChannelByGroupId);
+  // const updateChannel = useChannelStore((state) => state.updateChannel);
+  // const deleteChannel = useChannelStore((state) => state.deleteChannel);
 
   const currentChannel = channelId || channelList[0].channelId;
-
-  const memberList = useMemo(() => {
-    return [{ name: "Allie", avatar: "./mockProfilePic2.jpg" },
-    { name: "Auu", avatar: "./mockProfilePic3.jpg" },
-    { name: "Dew", avatar: "./mockProfilePic1.jpg" },
-    { name: "Gao", avatar: "./mockProfilePic2.jpg" },
-    { name: "1", avatar: "./mockProfilePic2.jpg" },
-    { name: "Ploy", avatar: "./mockProfilePic2.jpg" },]
-  }, [])
 
   const handleOpenMembers = async () => {
     setIsMemberOpen((v) => !v);
@@ -70,7 +63,16 @@ function MainSideBar() {
 
   const handleChangeChannel = (chId) => {
     if (!currentGroup) return;
+    readNotiReset(Number(groupId), Number(chId))
     navigate(`/peeps/${currentGroup}/${chId}`);
+  };
+
+  const handleEditChannelName = () => {
+    console.log('Change name emit');
+    updateChannel(Number(editingChannelId), { name: editingChannelName });
+    setIsEditChannelModalOpen(false);
+    setEditingChannelId(null);
+    setEditingChannelName("");
   };
 
   const handleAddMember = async (e) => {
@@ -122,12 +124,17 @@ function MainSideBar() {
 
   // Listen for user who join the group
   useEffect(() => {
-    
+
     socket.on(GROUP_ACTION.GROUP_JOIN, (data) => {
       console.log(data.message);
       if (data.user) {
         console.log(data.user);
         useGroupStore.getState().updateGroupUsers(data.user);
+
+        showLoginToast({
+          name: data.user.name,
+          profileImage: data.user.profileImage,
+        });
       }
     });
 
@@ -139,10 +146,17 @@ function MainSideBar() {
       }
     });
 
-      return () => {
-        socket.off(GROUP_ACTION.GROUP_JOIN);
-        socket.off(GROUP_ACTION.GROUP_LEAVE);
-      }
+    socket.on(CHANNEL_ACTION.CHANNEL_UPDATE, (data) => {
+      // const {message , updatedChannelName} = data;
+      console.log(data.message);
+      updateChannelsName(data.updatedChannelName);
+    });
+
+    return () => {
+      socket.off(GROUP_ACTION.GROUP_JOIN);
+      socket.off(GROUP_ACTION.GROUP_LEAVE);
+      socket.off(CHANNEL_ACTION.CHANNEL_UPDATE);
+    }
   }, []);
 
   return (
@@ -377,18 +391,7 @@ function MainSideBar() {
           <button
             className="flex-1 rounded-full px-5 py-2 bg-[#8CBEB2] text-white font-semibold text-lg shadow hover:brightness-105 transition disabled:bg-gray-300"
             disabled={!editingChannelName.trim()}
-            onClick={() => {
-              setChannels((prev) =>
-                prev.map((c) =>
-                  c.id === editingChannelId
-                    ? { ...c, name: editingChannelName }
-                    : c
-                )
-              );
-              setIsEditChannelModalOpen(false);
-              setEditingChannelId(null);
-              setEditingChannelName("");
-            }}
+            onClick={handleEditChannelName}
           >
             Save
           </button>
