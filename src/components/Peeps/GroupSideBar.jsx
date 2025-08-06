@@ -105,7 +105,7 @@ function SideBarGroup() {
                 {" "}
                 <MessageCircleHeart /> {g.name}
               </span>
-              {unReadNoti.find(el => el.groupId ===g.id).unReadNoti > 0 && <div className="badge badge-sm bg-red-400 border-none text-white">{unReadNoti.find(el => el.groupId ===g.id).unReadNoti}</div>}
+              {unReadNoti.find(el => el.groupId ===g.id)?.unReadNoti > 0 && <div className="badge badge-sm bg-red-400 border-none text-white">{unReadNoti.find(el => el.groupId ===g.id).unReadNoti}</div>}
             </button>
           ))}
         </div>

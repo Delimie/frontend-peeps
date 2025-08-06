@@ -51,13 +51,27 @@ const useChannelStore = create(
             getChannelByGroupId: async (groupId) => {
                 try {
                     const newChannels = get().channels.map((el) => el);
+                    const channelListByGroupId = newChannels.find(el => el.groupId === Number(groupId))?.channelList;
+
+                    const findExistedNoti = (channelId, channelList) => {
+                        if(!channelList) return 0;
+                        const unreadNoti = channelList.find(el => el.channelId === Number(channelId))?.unreadNoti
+                        if(!unreadNoti) return 0;
+                        return unreadNoti;
+                    }
+
                     set({ loading: true });
                     const resp = await getChannelByGroupIdApi(Number(groupId));
                     // console.log(resp.data.message);
 
                     const newChannelList = {
                         groupId: parseInt(groupId),
-                        channelList: resp.data.result.map((el) => ({ channelId: el.id, name: el.name, type: el.type, unreadNoti: 0 }))
+                        channelList: resp.data.result.map((el) => ({
+                            channelId: el.id,
+                            name: el.name,
+                            type: el.type,
+                            unreadNoti:  findExistedNoti(el.id,channelListByGroupId) > 0 ? findExistedNoti(el.id,channelListByGroupId) : 0
+                        }))
                     };
 
                     const existingIndex = newChannels.findIndex(el => el.groupId === newChannelList.groupId);
@@ -137,7 +151,8 @@ const useChannelStore = create(
             },
             getSumChannelUnread: (groupId) => {
                 const listOutChannel = get().channels.find(el => el.groupId === Number(groupId));
-                const sumUnread = listOutChannel.channelList.reduce((acc, channel)=> acc+channel.unreadNoti ,0);
+                if(!listOutChannel) return 0;
+                const sumUnread = listOutChannel.channelList.reduce((acc, channel) => acc + channel.unreadNoti, 0);
                 return sumUnread;
             },
         }),
