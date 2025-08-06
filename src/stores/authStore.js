@@ -55,7 +55,7 @@ const useAuthStore = create(
         set({ isLoading: true });
         try {
           const res = await getAllUsersApi(token);
-           console.log("API getAllUsers response:", res.data.result);
+          console.log("API getAllUsers response:", res.data.result);
           set({ users: res.data.result, isLoading: false });
           return res;
         } catch (err) {
@@ -64,6 +64,16 @@ const useAuthStore = create(
           throw err;
         }
       },
+      loginGoogle: async (idToken) => {
+        try {
+          const res = await authApi.post("/google-login", idToken);
+          set({ token: res.data.token, user: res.data.user });
+          return res;
+        } catch (error) {
+          console.error("Google login error:", error.response?.data || error.message);
+          throw error;
+        }
+      }
     }),
     { name: "userStorage", storage: createJSONStorage(() => localStorage) }
   )
