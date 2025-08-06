@@ -9,6 +9,7 @@ import { socket } from "../socket/socket";
 import { CHAT_ACTION } from "../shared/constants/socket.constant";
 import useAuthStore from "../stores/authStore";
 import { userTyping } from "../socket/handlers/chatHandler.js";
+import FloatingShapes from "../components/LandingPage/FloatingShapes.jsx";
 
 function Peeps() {
   const [rooms, setRooms] = useState(["Room 1", "Room 2", "Room 3"]);
@@ -40,8 +41,10 @@ function Peeps() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F2EBBF] flex justify-center pt-20 pb-20">
+<div className="min-h-screen bg-[#F2EBBF] relative overflow-hidden flex justify-center pt-20 pb-20 z-[-10]">
+      
       <div className="flex items-center w-2/3 gap-5">
+      
         <Sidebar
           rooms={rooms}
           setRooms={setRooms}

@@ -1,9 +1,12 @@
-import React from 'react'
-
 function Footer() {
   return (
-    <div className='flex h-30 bg-amber-500'>Footer</div>
+    
+        <footer className="footer bg-white sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
+  <aside>
+    <p>Copyright © {new Date().getFullYear()} - All right reserved by PEEPS</p>
+  </aside>
+</footer>
+    
   )
 }
-
 export default Footer

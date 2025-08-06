@@ -15,7 +15,7 @@ function MainNav() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed top-0 left-0 w-full grid grid-cols-3 items-center bg-[#F2EBBF] px-8 py-2 h-20 z-50">
+    <div className="fixed top-0 left-0 w-full grid grid-cols-3 items-center bg-[#F2EBBF] px-8 py-2 h-20 z-10">
       <div className="flex gap-2 items-center">
         <Link to="/" className="font-extrabold tracking-wider text-2xl">
           <span className="text-[#ef6060]">
@@ -23,7 +23,7 @@ function MainNav() {
             <span className="text-[#e09935]">
               E<span className="text-[#85b5b5]">E</span>
             </span>
-            PS!
+            P$
           </span>
         </Link>
       </div>
@@ -33,7 +33,7 @@ function MainNav() {
           Home
         </Link>
         <Link to="/peeps" className={NavBarStyle}>
-          Peeps!
+          PEEP$
         </Link>
         <img src="/Peeps_Logo.png" className="w-12"/>
         <Link to="/pricing" className={NavBarStyle}>
