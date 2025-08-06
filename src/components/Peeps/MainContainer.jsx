@@ -41,7 +41,7 @@ function MainContainer() {
   else Content = <ChatSocket />;
   
   return (
-    <div className="flex-1 p-6 bg-[#fff] z-0 rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
+    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
       {Content}
     </div>
   );
