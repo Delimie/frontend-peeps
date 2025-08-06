@@ -67,7 +67,7 @@ function SideBarGroup() {
   };
 
   return (
-    <div className="flex flex-col items-center mt-4">
+    <div className="flex flex-col items-center mt-4 z-0">
       <Avatar size={120} />
       {/* <span className="mt-5 font-semibold text-lg">Welcome!</span> */}
       <span className="mt-5 font-semibold text-lg">Hello {user.name} !</span>
