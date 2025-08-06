@@ -4,6 +4,7 @@ import SideBarGroup from "../components/Peeps/GroupSideBar";
 import MainContainer from "../components/Peeps/MainContainer";
 import useGroupStore from "../stores/groupStore";
 import { socket } from "../socket/socket";
+import Footer from "../components/Footer";
 
 function HomePeeps() {
 

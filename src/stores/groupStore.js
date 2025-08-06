@@ -16,6 +16,7 @@ const useGroupStore = create(
   persist(
     (set, get) => ({
       groups: [],
+      unReadNoti : [],
       currentGroup: null,
       groupUsers: [],
       loading: false,
@@ -102,7 +103,12 @@ const useGroupStore = create(
       updateGroupUsers : async (userData) =>{
         const newGroupUsers = get().groupUsers.map((user) => user.id === userData.id ? userData : user);
         set({groupUsers : [...newGroupUsers]});
-      }
+      },
+      setUnReadNoti : (groupId) =>{
+        if(get().groups.length <= 0) return console.log('groups is empty');
+        const setGroupUnread = get().groups.map((gr) => ({groupId : gr.id, unReadNoti : useChannelStore.getState().getSumChannelUnread(gr.id)}));
+        set({unReadNoti : setGroupUnread});
+      },
     }),
     { name: "group-storage" }
   )
