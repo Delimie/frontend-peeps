@@ -1,7 +1,7 @@
 function FloatingShapes() {
   return (
     <div className="pointer-events-none">
-      <div className="fixed top-40 right-20 w-24 h-24 animate-bounce z-[-30]">
+      <div className="fixed top-30 right-5 w-24 h-24 animate-bounce z-0">
         <svg
           width="93"
           height="94"
@@ -23,7 +23,7 @@ function FloatingShapes() {
         </svg>
       </div>
 
-      <div className="fixed top-2/4 left-10 w-32 h-32 animate-bounce z-[-30]">
+      <div className="fixed top-2/4 left-10 w-32 h-32 animate-bounce z-0">
         <svg
           width="126"
           height="128"
@@ -38,7 +38,7 @@ function FloatingShapes() {
         </svg>
       </div>
 
-      <div className="fixed bottom-1/4 right-60 w-28 h-28 animate-bounce z-[-30]">
+      <div className="fixed bottom-1/6 right-40 w-28 h-28 animate-bounce z-0">
         <svg
           width="114"
           height="116"

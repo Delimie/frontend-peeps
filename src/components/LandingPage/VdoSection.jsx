@@ -2,8 +2,8 @@ import { Play } from "lucide-react";
 
 const VideoSection = () => {
   return (
-    <div className="w-full py-20">
-      <div className="container mx-auto px-6">
+
+      <div className="container mx-auto px-6 ">
         <div className="max-w-4xl mx-auto">
           <div className="relative bg-card border-2 border-border rounded-2xl p-8 shadow-lg">
             <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
@@ -15,7 +15,7 @@ const VideoSection = () => {
           </div>
         </div>
       </div>
-    </div>
+
   );
 };
 

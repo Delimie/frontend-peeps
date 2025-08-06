@@ -6,6 +6,7 @@ import { loginSchema } from "../validators/validator";
 import { toast } from "react-toastify";
 import { LogoAnimation } from "../components/Animation";
 import useAuthStore from "../stores/authStore";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const {
@@ -15,6 +16,7 @@ function Login() {
   } = useForm({ resolver: yupResolver(loginSchema), mode: "onSubmit" });
 
   const login = useAuthStore((state) => state.login);
+  const loginGoogle = useAuthStore(state => state.loginGoogle);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -29,11 +31,22 @@ function Login() {
     }
   };
 
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      // credentialResponse.credential คือ idToken จาก Google
+      const res = await loginGoogle({ idToken: credentialResponse.credential });
+      toast.success("Welcome with Google!");
+      navigate("/profile");
+    } catch (error) {
+      toast.error("Google login failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2EBBF]">
       <div className="flex flex-col items-center gap-3 w-full">
         <div className="flex flex-col items-center mb-5">
-          <LogoAnimation/>
+          <LogoAnimation />
         </div>
 
         <div className="w-[380px] mx-auto">
@@ -64,6 +77,13 @@ function Login() {
               LOG IN
             </button>
           </form>
+          {/* ปุ่ม Google Login */}
+          <div className="mt-5 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => toast.error("Google Login Failed")}
+            />
+          </div>
           <div className="mt-5 text-center text-[#258178] text-base">
             Don't have account?
             <Link

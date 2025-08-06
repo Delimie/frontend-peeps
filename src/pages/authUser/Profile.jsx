@@ -183,7 +183,7 @@ function Profile() {
                 </div>
                 <div>
                   <p className="font-bold">Birthdate :</p>
-                  <p>{user.birthDate.slice(0, 10)}</p>
+                  <p>{user.birthDate}</p>
                 </div>
               </div>
               <div className="flex gap-18">
