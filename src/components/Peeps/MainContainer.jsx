@@ -7,6 +7,7 @@ import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.cons
 import { socket } from "../../socket/socket";
 import Management from "./Management";
 import DebtSummary from "./DebtSummary";
+import FloatingShapes from "../LandingPage/FloatingShapes";
 
 function MainContainer() {
   const { groupId, channelId } = useParams();

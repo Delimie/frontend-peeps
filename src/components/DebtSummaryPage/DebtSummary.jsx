@@ -20,20 +20,8 @@ function DebtSum() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   return (
-    <div>
-      <div className="flex justify-between gap-2">
-        <div className="flex gap-6">
-        <button className="p-2 bg-amber-200 rounded-md">
-          Create Group's Bill
-        </button>
-        <button className="p-2 bg-amber-300 rounded-md">
-          Blah blah blah
-        </button>
-          </div>
-        <button className="p-2 bg-amber-200 rounded-md">
-          Check your bills
-        </button>
-      </div>
+    <div className="bg-white h-6/7 rounded-4xl overflow-y-auto">
+      
       <div className="flex items-center justify-between">
         <h1 className="text-4xl pt-8 pl-10">Debt Summary</h1>
         <div className="pt-8 pr-14">
@@ -90,7 +78,7 @@ function DebtSum() {
           <div className="bg-white w-1/3 min-w-[400px] p-6 rounded-xl shadow-lg relative">
             <button
               onClick={() => setIsSelectRecipientModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
             >
               <X size={20} />
             </button>
@@ -122,7 +110,7 @@ function DebtSum() {
                       setIsSelectRecipientModalOpen(false);
                       setIsPaymentModalOpen(true);
                     }}
-                    className="itim px-4 py-1 bg-[#F06060] hover:bg-[#F3B562] text-white rounded-4xl transition"
+                    className="itim px-4 py-1 bg-[#F06060] hover:bg-[#F3B562] text-white rounded-4xl transition cursor-pointer"
                   >
                     Pay
                   </button>
@@ -137,7 +125,7 @@ function DebtSum() {
           <div className="bg-white w-1/3 min-w-[400px] p-6 rounded-xl shadow-lg relative">
             <button
               onClick={() => setIsPaymentModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
             >
               <X size={20} />
             </button>
@@ -147,11 +135,15 @@ function DebtSum() {
             </div>
 
             <div>
-              <p className="text-2xl pb-5 itim">Account Details</p>
+              <div className="flex gap-2 items-end">
+              <div className="h-7 w-7 bg-[#8CBEB2] rounded-full"></div>
+              <p className="text-2xl itim">ธนาคารสีเขียว (นางสาวใจดี ปี๊ปปี๊ป)</p>
+              </div>
+              <p className="text-2xl pb-5 itim">6288274938</p>
             </div>
 
             <div className="flex gap-5 justify-center">
-              <button className="itim text-white hover:text-gray-800 px-5 py-1 rounded-4xl bg-[#8CBEB2] hover:bg-[#F2EBBF]">
+              <button className="itim text-white hover:text-gray-800 px-5 py-1 rounded-4xl bg-[#8CBEB2] hover:bg-[#F2EBBF] cursor-pointer">
                 Attach Receipt
               </button>
 
@@ -160,7 +152,7 @@ function DebtSum() {
                   setIsSelectRecipientModalOpen(true);
                   setIsPaymentModalOpen(false);
                 }}
-                className="itim text-white hover:text-gray-800 px-5 py-1 rounded-4xl bg-[#D9D9D9] hover:bg-[#F2EBBF]"
+                className="itim text-white hover:text-gray-800 px-5 py-1 rounded-4xl bg-[#D9D9D9] hover:bg-[#F2EBBF] cursor-pointer"
               >
                 Back
               </button>
