@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
 import useGroupStore from "../../stores/groupStore";
@@ -9,39 +9,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import BillSummaryCard from "./BillSummaryCard";
 import useExpenseStore from "../../stores/expensesStore";
 import Swal from "sweetalert2";
-
-const debts = [
-  { name: "1", toPay: 50, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-  { name: "Allie", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
-  { name: "Auu", toPay: 127, toReceive: 0, avatar: "./mockProfilePic3.jpg" },
-  { name: "Dew", toPay: 0, toReceive: 0, avatar: "./mockProfilePic1.jpg" },
-  { name: "Gao", toPay: 0, toReceive: 150, avatar: "./mockProfilePic2.jpg" },
-];
-
-const mockBills = [
-  {
-    title: "Eat Am Are",
-    total: 666,
-    unpaid: [
-      { name: "Allie", amount: 333 },
-      { name: "Auu", amount: 333 },
-    ],
-    paid: [{ name: "1", amount: 333 }],
-  },
-  {
-    title: "Bonchon",
-    total: 900,
-    unpaid: [
-      { name: "Allie", amount: 300 },
-      { name: "Gao", amount: 300 },
-    ],
-    paid: [{ name: "1", amount: 300 }],
-  },
-];
-
-const billOwnerQRCode = "https://example.com/qrcode.png";
+import numeral from "numeral";
 
 function DebtSummary() {
+  const fileInputRef = useRef(null);
   const { groupId } = useParams();
   const getTransactionById = useDebtTransactionStore(
     (state) => state.getTransactionById
@@ -66,25 +37,25 @@ function DebtSummary() {
   const navigate = useNavigate();
 
   const handleCreateBillClick = async () => {
-  if (!user.qrCode || user.qrCode === "") {
-    const result = await Swal.fire({
-      icon: 'warning',
-      title: 'QR Code not found!',
-      text: 'Please upload your QR Code in your profile before creating a bill.',
-      confirmButtonText: 'Go to Profile',
-      showCancelButton: true,
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#8CBEB2',
-      cancelButtonColor: '#F06060'
-    });
+    if (!user.qrCode || user.qrCode === "") {
+      const result = await Swal.fire({
+        icon: "warning",
+        title: "QR Code not found!",
+        text: "Please upload your QR Code in your profile before creating a bill.",
+        confirmButtonText: "Go to Profile",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#8CBEB2",
+        cancelButtonColor: "#F06060",
+      });
 
-    if (result.isConfirmed) {
-      navigate('/profile');
+      if (result.isConfirmed) {
+        navigate("/profile");
+      }
+    } else {
+      setIsBillModalOpen(true);
     }
-  } else {
-    setIsBillModalOpen(true);
-  }
-};
+  };
 
   // if (setShowAllBills === true) {
   //   navigate(`/peeps/${groupId}/`);
@@ -135,10 +106,15 @@ function DebtSummary() {
 
   const buildDebts = () => {
     const userId = user?.id;
+
     const userMap = new Map(
       currentGroup?.users?.map((u) => [
         u.id,
-        { name: u.name, avatar: u.avatar || "/default-avatar.png" },
+        {
+          name: u.name,
+          avatar: u.profileImage || "/default-avatar.png",
+          qrCode: u.qrCode || "",
+        },
       ])
     );
 
@@ -167,7 +143,7 @@ function DebtSummary() {
     });
 
     const result = Array.from(summaryMap.entries()).map(([id, value]) => {
-  const userInfo = groupUsers.find((u) => u.id === id) || {
+      const userInfo = groupUsers.find((u) => u.id === id) || {
         name: `User ${id}`,
         avatar: "/default-avatar.png",
         qrCode: "",
@@ -214,6 +190,65 @@ function DebtSummary() {
         paid,
       };
     });
+  };
+
+  const handleUploadClick = async () => {
+    if (!fileInputRef.current) return;
+
+    // เปิด file picker
+    fileInputRef.current.click();
+
+    // รอให้ user เลือกไฟล์
+    const file = await new Promise((resolve) => {
+      const handler = (e) => {
+        const selectedFile = e.target.files[0];
+        fileInputRef.current.removeEventListener("change", handler);
+        resolve(selectedFile);
+      };
+      fileInputRef.current.addEventListener("change", handler);
+    });
+
+    if (!file) return;
+
+    try {
+      const { uploadSlip, transactions } = useDebtTransactionStore.getState();
+
+      console.log("All transactions:", transactions);
+      console.log("payerId:", user.id);
+      console.log("receiverId:", selectedRecipient.id);
+      
+      // 🔍 หา transactionId ที่ตรงกับ selectedRecipient (และยังไม่จ่าย)
+      const unpaidTransaction = transactions.find(
+        (tx) =>
+          tx.payerId === user.id &&
+          tx.receiverId === selectedRecipient.id &&
+          tx.status === "UNPAID"
+      );
+
+      if (!unpaidTransaction) {
+        return Swal.fire({
+          icon: "error",
+          title: "Transaction not found",
+          text: "ไม่พบรายการที่ยังไม่จ่ายของผู้รับคนนี้",
+        });
+      }
+
+      const resp = await uploadSlip(unpaidTransaction.id, file, user.id);
+
+      Swal.fire({
+        icon: "success",
+        title: "อัปโหลดสลิปสำเร็จ!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "Please try again.",
+      });
+    }
   };
 
   return (
@@ -274,7 +309,11 @@ function DebtSummary() {
               key={index}
               className="grid grid-cols-[1fr_2fr_2fr_2fr] items-center gap-2 mb-4 px-3 py-1 rounded-xl shadow-sm border border-[#FFE066] bg-white"
             >
-              <Avatar size={65} />
+              <img
+                src={item.avatar}
+                alt="Avatar"
+                className="w-20 h-20 rounded-full object-cover border border-[#8CBEB2]"
+              />
               <span className="text-[#5C4B51] font-semibold text-xl itim">
                 {item.name}
               </span>
@@ -283,14 +322,14 @@ function DebtSummary() {
                   item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
                 }`}
               >
-                {item.toPay}
+                {numeral(item.toPay).format("0,0.00")}฿
               </span>
               <span
                 className={`text-center font-bold text-xl itim ${
                   item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
                 }`}
               >
-                {item.toReceive}
+                {numeral(item.toReceive).format("0,0.00")}฿
               </span>
             </div>
           ))}
@@ -335,7 +374,7 @@ function DebtSummary() {
                     {item.name}
                   </span>
                   <span className="text-center font-bold text-2xl text-[#F06060] itim">
-                    {item.toPay}฿
+                    {numeral(item.toPay).format("0,0.00")}฿
                   </span>
                   <button
                     onClick={() => {
@@ -371,7 +410,8 @@ function DebtSummary() {
               <X size={24} />
             </button>
             <h1 className="text-3xl pb-5 font-mitr text-[#5C4B51] text-center">
-              Payment to {selectedRecipient.name}
+              You are paying {numeral(selectedRecipient.toPay).format("0,0.00")}
+              ฿ to {selectedRecipient.name}
             </h1>
             <div>
               <p className="text-2xl pb-5 itim text-[#5C4B51] text-center">
@@ -386,9 +426,18 @@ function DebtSummary() {
               </div>
             </div>
             <div className="flex gap-5 justify-center">
-              <button className="itim text-white px-5 py-1 rounded-lg bg-[#8CBEB2] shadow hover:bg-[#F3B562] hover:text-[#5C4B51] transition">
+              <button
+                onClick={handleUploadClick}
+                className="itim text-white px-5 py-1 rounded-lg bg-[#8CBEB2] shadow hover:bg-[#F3B562] hover:text-[#5C4B51] transition"
+              >
                 Attach Receipt
               </button>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+              />
               <button
                 onClick={() => {
                   setIsSelectRecipientModalOpen(true);

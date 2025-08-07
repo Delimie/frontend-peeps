@@ -26,3 +26,19 @@ export const getUserDebtTransactionsApi = (userId) =>
 // Confirm a transaction
 export const confirmDebtTransactionApi = (transactionId) =>
   debtTransactionApi.patch(`/${transactionId}/confirm`);
+
+// Upload slip to a transaction
+export const uploadSlipApi = (transactionId, file) => {
+  const formData = new FormData();
+  formData.append("slip", file);
+
+  return debtTransactionApi.post(
+    `/transactions/${transactionId}/upload-slip`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
