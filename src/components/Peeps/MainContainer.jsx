@@ -7,6 +7,7 @@ import { CHANNEL_ACTION, GROUP_ACTION } from "../../shared/constants/socket.cons
 import { socket } from "../../socket/socket";
 import Management from "./Management";
 import DebtSummary from "./DebtSummary";
+import FloatingShapes from "../LandingPage/FloatingShapes";
 
 function MainContainer() {
   const { groupId, channelId } = useParams();
@@ -41,7 +42,7 @@ function MainContainer() {
   else Content = <ChatSocket />;
   
   return (
-    <div className="flex-1 p-6 bg-[#fff] rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
+    <div className="flex-1 p-6 bg-[#fff] z-0 rounded-2xl shadow-lg m-4 flex flex-col border border-[#F2EBBF] max-h-[90vh]">
       {Content}
     </div>
   );
