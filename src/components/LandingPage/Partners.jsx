@@ -2,7 +2,7 @@ function Partners() {
   return (
     <div className="min-h-screen relative z-0 w-full">
       <svg
-        className="w-full h-auto "
+        className="w-auto h-auto "
         viewBox="0 0 1910 126"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -15,13 +15,15 @@ function Partners() {
         />
       </svg>
 
-      <div className="flex justify-center gap-10 bg-[#F2EBBF] py-5">
+      <div className="flex justify-center gap-10 bg-[#F2EBBF] -my-0.5 py-5">
         <div className="w-1/2 flex justify-end">
-          <img src="./Friends.png" alt="Friends" className="w-3/5"/>
+          <img src="./Friends.png" alt="Friends" className="w-3/5" />
         </div>
         <div className="w-1/2">
           <div className="w-3/5 h-[100%] flex flex-col justify-center gap-4">
-            <h2 className="text-3xl font-bold">Thank You to All Our Partners</h2>
+            <h2 className="text-3xl font-bold">
+              Thank You to All Our Partners
+            </h2>
             <p className="text-l">
               We sincerely thank all our customers and partners for your trust
               and continued support. Your contribution has been a driving force
@@ -42,14 +44,21 @@ function Partners() {
         </div>
       </div>
 
-      <svg width="1910" height="126" viewBox="0 0 1910 126" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M1910 49.1673C1870.96 22.6431 1824.88 1.62598 1752.03 1.62598C1553.07 1.62598 1553.07 71.5454 1354.11 71.5454C1155.15 71.5454 1155.15 0.0943298 956.194 0.0943298C757.235 0.0943298 757.235 126 558.277 126C359.319 126 359.319 4.5186 160.36 4.5186C85.4546 4.5186 39.7543 10.7861 0 18.5997V0L1910 0.0943298V49.1673Z" fill="#F2EBBF"/>
-</svg>
-
-
+      <svg
+        width="auto"
+        height="auto"
+        viewBox="0 0 1910 126"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M1910 49.1673C1870.96 22.6431 1824.88 1.62598 1752.03 1.62598C1553.07 1.62598 1553.07 71.5454 1354.11 71.5454C1155.15 71.5454 1155.15 0.0943298 956.194 0.0943298C757.235 0.0943298 757.235 126 558.277 126C359.319 126 359.319 4.5186 160.36 4.5186C85.4546 4.5186 39.7543 10.7861 0 18.5997V0L1910 0.0943298V49.1673Z"
+          fill="#F2EBBF"
+        />
+      </svg>
     </div>
-
-
   );
 }
 export default Partners;

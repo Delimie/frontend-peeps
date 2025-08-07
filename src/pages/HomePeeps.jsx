@@ -31,7 +31,7 @@ function HomePeeps() {
   return (
     <div>
         <FloatingShapes/>
-    <div className="flex mx-auto w-4/5 mt-20 z-10 min-h-[calc(100vh-80px)]">
+    <div className="flex mx-auto w-4/5 mt-20 min-h-[calc(100vh-80px)]">
       <SideBarGroup />
       <MainContainer />
     </div>

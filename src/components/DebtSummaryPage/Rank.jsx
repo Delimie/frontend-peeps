@@ -7,7 +7,7 @@ function Rank() {
 
   return (
     <div className="bg-white h-full w-7/15 min-w-[250px] rounded-4xl shadow-[5px_5px_5px_1px_rgba(0,_0,_0,_0.1)] overflow-y-auto">
-      <h1 className="text-3xl pl-10 pt-8 text-[#5C4B51]">Rank</h1>
+      <h1 className="text-3xl pl-10 pt-5 text-[#5C4B51]">Rank</h1>
 
       <div className="grid grid-cols-[1fr_2fr_1fr_1fr_1fr] text-sm  items-center gap-5 mb-4 px-2 mx-6">
         <div></div>
