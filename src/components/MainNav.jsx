@@ -87,6 +87,7 @@ function MainNav() {
       </div>
 
       <div className="flex gap-2 justify-end">
+
         <button
           className="px-2 py-1 rounded-md cursor-pointer flex items-end"
           onClick={() => setOpen(true)}
@@ -144,7 +145,7 @@ function MainNav() {
                 href="#"
                 className=" bg-white text-md hover:text-[#de9227] transition hover:scale-105"
               >
-                Transactions
+                Transaction (Coming Soon)
               </a>
               <Link
                 to="/profile"
