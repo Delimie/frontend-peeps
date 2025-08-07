@@ -79,7 +79,10 @@ function MainSideBar() {
     e.preventDefault();
     if (!userNameInput.trim() || !currentGroup) return;
 
-    const user = users.find((u) => u.name === userNameInput);
+    await getAllUsers();
+    const freshUsers = useAuthStore.getState().users;
+
+    const user = freshUsers.find((u) => u.name === userNameInput);
     if (!user) {
       await Swal.fire({
         icon: "error",
