@@ -195,7 +195,7 @@ function MainSideBar() {
                         alt="profile"
                         className="rounded-full w-8 h-8 object-cover border border-[#8CBEB2]"
                       />
-                      <div aria-label="status" className={`status ${member.onlineStatus === "ONLINE" ? "status-accent" : "status-neutral"} absolute translate-x-1/2 translate-y-1/2 bottom-1/8 right-1/4`}></div>
+                      <div aria-label="status" className={`status ${member.onlineStatus === "ONLINE" ? "bg-green-300" : "bg-gray-700"} rounded-full absolute translate-x-1/2 translate-y-1/2 bottom-1/8 right-1/4`}></div>
                     </span>
                     <span className="text-sm text-[#5C4B51] itim">
                       {member.name}
