@@ -4,10 +4,6 @@ import FeatureCards from "../components/LandingPage/FeatureCards";
 import FloatingShapes from "../components/LandingPage/FloatingShapes";
 import Info from "../components/LandingPage/Info";
 import Partners from "../components/LandingPage/Partners";
-<<<<<<< HEAD
-import VideoSection from "../components/LandingPage/VdoSection";
-=======
->>>>>>> dev
 import Pricing from "../components/Pricing";
 
 function Home() {
