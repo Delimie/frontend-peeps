@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import useSplitStore from "../../stores/splitsStore";
 import useGroupStore from "../../stores/groupStore";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const members = [
   { name: "Allie", avatar: "./mockProfilePic2.jpg" },
@@ -51,7 +52,7 @@ function BillModal({ open, onClose }) {
       // const result = await createExpense(createData, token)
       // console.log(result)
       setCreateData(expenseData)
-      alert("Assigned success")
+      toast.success("Assigned success")
       setStep(2)
     } catch (error) {
       console.log(error)
@@ -72,7 +73,7 @@ function BillModal({ open, onClose }) {
       // for (let s of splitData) {
       //   await createSplit(expenseId, s, token);
       // }
-      alert("Assigned success");
+      toast.success("Assigned success");
       setStep(3);
     } catch (error) {
       console.log(error);

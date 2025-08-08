@@ -4,6 +4,7 @@ import {
   getDebtTransactionByIdApi,
   getUserDebtTransactionsApi,
   confirmDebtTransactionApi,
+  uploadSlipApi,
 } from "../api/deptTransaction";
 
 const useDebtTransactionStore = create((set, get) => ({
@@ -47,8 +48,19 @@ const useDebtTransactionStore = create((set, get) => ({
     return resp;
   },
 
+  // อัปโหลด Slip ให้กับ transaction
+  uploadSlip: async (transactionId, file, userId) => {
+    set({ loading: true });
+    const resp = await uploadSlipApi(transactionId, file);
+    // อัปเดตรายการธุรกรรมของ user หลังอัปโหลด slip สำเร็จ
+    if (userId) await get().getTransactionsByUser(userId);
+    set({ loading: false });
+    return resp;
+  },
+
   //ตั้งค่าธุรกรรมปัจจุบัน
-  setCurrentTransaction: (transaction) => set({ currentTransaction: transaction }),
+  setCurrentTransaction: (transaction) =>
+    set({ currentTransaction: transaction }),
 
   //เคลียร์ state
   clearTransactions: () => set({ transactions: [], currentTransaction: null }),

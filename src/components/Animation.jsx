@@ -15,7 +15,7 @@ export function LogoAnimation() {
       <div className="flex flex-col items-center">
       <img src="./Peeps_Logo.png" className="w-50 h-50 mb-1" alt="Peeps Logo" />
       <h1 className="text-5xl font-extrabold text-[#5c552e] tracking-wide drop-shadow-sm">
-            LET'S <span className="text-[#ef6060]">P<span className="text-[#e09935]">E<span className="text-[#85b5b5]">E</span></span>PS!</span>
+            LET'S <span className="text-[#ef6060]">P<span className="text-[#e09935]">E<span className="text-[#85b5b5]">E</span></span>P$</span>
           </h1></div>
     </motion.div>
   );
@@ -88,12 +88,12 @@ export function PeepsAnimation() {
       }}
 
     >
-      <h1 className="text-8xl z-1"> <span className="text-[#ef6060]">
+      <h1 className="text-8xl"> <span className="text-[#ef6060]">
             P
             <span className="text-[#e09935]">
               E<span className="text-[#85b5b5]">E</span>
             </span>
-            PS
+            P$
           </span></h1>
     </motion.div>
   );
