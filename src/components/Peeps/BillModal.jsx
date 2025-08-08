@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Avatar from "../avatar";
+import Avatar from "../Avatar";
 import { X } from "lucide-react";
 import { swalAlert } from "../../utils/swalAlert";
 import useExpenseStore from "../../stores/expensesStore";

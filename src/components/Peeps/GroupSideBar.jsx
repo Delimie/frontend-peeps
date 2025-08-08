@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
-import Avatar from "../avatar";
+import Avatar from "../Avatar";
 import Modal from "../Modal";
 import useGroupStore from "../../stores/groupStore";
 import useChannelStore from "../../stores/channelStore";

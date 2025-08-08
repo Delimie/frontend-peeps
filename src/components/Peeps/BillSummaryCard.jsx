@@ -1,5 +1,5 @@
 import React from "react";
-import Avatar from "../avatar";
+import Avatar from "../Avatar";
 
 function BillSummaryCard({ data }) {
   console.log(data)

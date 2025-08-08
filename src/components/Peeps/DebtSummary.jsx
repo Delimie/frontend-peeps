@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import BillModal from "./BillModal";
 import useGroupStore from "../../stores/groupStore";
-import Avatar from "../avatar";
+import Avatar from "../Avatar";
 import useDebtTransactionStore from "../../stores/deptTransactionStore";
 import { useNavigate, useParams } from "react-router-dom";
 import BillSummaryCard from "./BillSummaryCard";

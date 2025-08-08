@@ -3,7 +3,7 @@ import FeatureCards from "../components/LandingPage/FeatureCards";
 import FloatingShapes from "../components/LandingPage/FloatingShapes";
 import Info from "../components/LandingPage/Info";
 import Partners from "../components/LandingPage/Partners";
-import VideoSection from "../components/LandingPage/VdoSection.Jsx";
+import VideoSection from "../components/LandingPage/VdoSection";
 import Pricing from "../components/Pricing";
 
 function Home() {

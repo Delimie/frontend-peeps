@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Avatar from "../../components/avatar";
+import Avatar from "../../components/Avatar"
 import { EditIcon } from "../../assets/icon";
 import useAuthStore from "../../stores/authStore";
 import { toast } from "react-toastify";
