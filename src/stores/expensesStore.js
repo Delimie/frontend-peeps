@@ -28,7 +28,7 @@ const useExpenseStore = create((set, get) => ({
   //ดึงรายการทั้งหมดในกลุ่ม
   getExpensesByGroup: async (groupId) => {
     const resp = await getExpensesByGroupIdApi(groupId);
-    console.log(resp.data)
+    // console.log('Expenses with splits and debtTransactions:', JSON.stringify(resp, null, 2));
     set({ expenses: resp.data.result });
     return resp;
   },
