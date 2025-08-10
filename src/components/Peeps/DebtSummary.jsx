@@ -195,10 +195,8 @@ function DebtSummary() {
   const handleUploadClick = async () => {
     if (!fileInputRef.current) return;
 
-    // เปิด file picker
     fileInputRef.current.click();
 
-    // รอให้ user เลือกไฟล์
     const file = await new Promise((resolve) => {
       const handler = (e) => {
         const selectedFile = e.target.files[0];
@@ -211,19 +209,18 @@ function DebtSummary() {
     if (!file) return;
 
     try {
-      const { uploadSlip, transactions } = useDebtTransactionStore.getState();
+      const { uploadSlip } = useDebtTransactionStore.getState();
 
-      console.log("All transactions:", transactions);
-      console.log("payerId:", user.id);
-      console.log("receiverId:", selectedRecipient.id);
-      
-      // 🔍 หา transactionId ที่ตรงกับ selectedRecipient (และยังไม่จ่าย)
-      const unpaidTransaction = transactions.find(
-        (tx) =>
-          tx.payerId === user.id &&
-          tx.receiverId === selectedRecipient.id &&
-          tx.status === "UNPAID"
-      );
+      // หา unpaid transaction จาก expenses
+      const unpaidTransaction = expenses
+        .flatMap(expense => expense.expenseSplit)
+        .find(split => {
+          if (!split.debtTransaction) return false;
+          if (split.userId !== user.id) return false;
+          if (split.debtTransaction.receiverId !== selectedRecipient.id) return false;
+          if (!["UNPAID", "INPROGRESS"].includes(split.debtTransaction.status)) return false;
+          return true;
+        })?.debtTransaction;
 
       if (!unpaidTransaction) {
         return Swal.fire({
@@ -233,7 +230,19 @@ function DebtSummary() {
         });
       }
 
-      const resp = await uploadSlip(unpaidTransaction.id, file, user.id);
+      await uploadSlip(unpaidTransaction.id, file, user.id);
+
+      // รีเฟรชข้อมูล
+      await fetchTransactions();
+      await fetchExpense();
+
+      // ปิด modal จ่ายเงิน และเคลียร์ผู้รับ (เลือก)
+      setIsPaymentModalOpen(false);
+      setSelectedRecipient(null);
+      setShowAllBills(true);
+
+      // ซ่อนสรุปรายจ่ายโดยตั้งค่า showAllBills เป็น true (หรือจะเคลียร์ transactions/expenses)
+      setShowAllBills(true);
 
       Swal.fire({
         icon: "success",
@@ -318,16 +327,14 @@ function DebtSummary() {
                 {item.name}
               </span>
               <span
-                className={`text-center font-bold text-xl itim ${
-                  item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
-                }`}
+                className={`text-center font-bold text-xl itim ${item.toPay > 0 ? "text-[#F06060]" : "text-gray-300"
+                  }`}
               >
                 {numeral(item.toPay).format("0,0.00")}฿
               </span>
               <span
-                className={`text-center font-bold text-xl itim ${
-                  item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
-                }`}
+                className={`text-center font-bold text-xl itim ${item.toReceive > 0 ? "text-[#8CBEB2]" : "text-gray-300"
+                  }`}
               >
                 {numeral(item.toReceive).format("0,0.00")}฿
               </span>
@@ -396,7 +403,7 @@ function DebtSummary() {
         <BillModal
           open={isBillModalOpen}
           onClose={() => setIsBillModalOpen(false)}
-          // groupId={currentGroup?.id}
+        // groupId={currentGroup?.id}
         />
       )}
 

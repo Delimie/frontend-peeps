@@ -20,8 +20,8 @@ export const getDebtTransactionByIdApi = (groupId) =>
   debtTransactionApi.get(`/groups/${groupId}/debt-summary`);
 
 // Get all transactions for a user
-export const getUserDebtTransactionsApi = (userId) =>
-  debtTransactionApi.get(`/user/${userId}`);
+export const getUserDebtTransactionsApi = (groupId) =>
+  debtTransactionApi.get(`/groups/${groupId}/transactions`);
 
 // Confirm a transaction
 export const confirmDebtTransactionApi = (transactionId) =>
@@ -32,7 +32,7 @@ export const uploadSlipApi = (transactionId, file) => {
   const formData = new FormData();
   formData.append("slip", file);
 
-  return debtTransactionApi.post(
+  return debtTransactionApi.patch(
     `/transactions/${transactionId}/upload-slip`,
     formData,
     {

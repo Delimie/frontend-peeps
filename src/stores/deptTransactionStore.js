@@ -31,9 +31,9 @@ const useDebtTransactionStore = create((set, get) => ({
   },
 
   //ดึงธุรกรรมทั้งหมดของ user
-  getTransactionsByUser: async (userId) => {
+  getTransactionsByUser: async (groupId) => {
     set({ loading: true });
-    const resp = await getUserDebtTransactionsApi(userId);
+    const resp = await getUserDebtTransactionsApi(groupId);
     set({ transactions: resp.data.result, loading: false });
     return resp;
   },
