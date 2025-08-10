@@ -16,6 +16,7 @@ import TestPeeps from "../pages/TestAddGroup";
 import Overview from "../pages/Overview";
 import HomePeeps from "../pages/HomePeeps";
 import PricingPage from "../pages/PricingPage";
+import HelloTest from "../pages/HelloTest";
 
 function AppRouter() {
   return (
@@ -30,6 +31,7 @@ function AppRouter() {
           <Route path="newregister" element={<NewRegister />} />
           <Route path="about" element={<About />} />
           <Route path="bubble" element={<BubbleBox />} />
+          <Route path="hello" element={<HelloTest />} />
           {/* <Route path="*" element={<NotFound />} /> */}
 
           <Route path="PassSet" element={<PassSet />} />
