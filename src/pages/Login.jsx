@@ -76,14 +76,15 @@ function Login() {
             >
               LOG IN
             </button>
-          </form>
-          {/* ปุ่ม Google Login */}
-          <div className="mt-5 flex justify-center">
+          <div className="mt-2 flex justify-center w-full">
             <GoogleLogin
               onSuccess={handleGoogleLoginSuccess}
               onError={() => toast.error("Google Login Failed")}
+              className="w-full"
             />
           </div>
+          </form>
+          {/* ปุ่ม Google Login */}
           <div className="mt-5 text-center text-[#258178] text-base">
             Don't have account?
             <Link
