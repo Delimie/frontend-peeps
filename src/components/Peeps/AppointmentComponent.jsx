@@ -1,10 +1,10 @@
 // src/components/Plans/UpcomingPlans.jsx
-import { CalendarPlus2, MapPinIcon, Plus , Trash2 } from "lucide-react";
+import { CalendarPlus2, MapPinIcon, Plus, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import Modal from "../Modal";
 import { toast } from "react-toastify";
-import { swalAlert } from "../../utils/swalAlert";
+import { swalAlert, swalAlertConfirm } from "../../utils/swalAlert";
 
 const mockPlans = [
   // {
@@ -36,6 +36,8 @@ const mockPlans = [
   },
 ];
 
+const CURRENT_USER = { id: 999, name: "You", avatar: "/mockProfilePic2.jpg" };
+
 function MemberDots({ members, max = 4 }) {
   const shown = members.slice(0, max);
   const rest = Math.max(0, members.length - max);
@@ -63,10 +65,12 @@ function MemberDots({ members, max = 4 }) {
   );
 }
 
-function PlanCard({ plan, onView, onJoin, onDelete }) {
+function PlanCard({ plan, onView, onJoin, onDelete,joined  }) {
   const isRange = plan.startDate !== plan.endDate;
   const dateText = isRange
-    ? `${dayjs(plan.startDate).format("DD/MM/YYYY")} - ${dayjs(plan.endDate).format("DD/MM/YYYY")}`
+    ? `${dayjs(plan.startDate).format("DD/MM/YYYY")} - ${dayjs(
+        plan.endDate
+      ).format("DD/MM/YYYY")}`
     : dayjs(plan.startDate).format("DD/MM/YYYY");
 
   return (
@@ -83,16 +87,31 @@ function PlanCard({ plan, onView, onJoin, onDelete }) {
       <div className="min-w-0 flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-lg text-[#5C4B51] truncate">{plan.title}</h3>
+            <h3 className="font-bold text-lg text-[#5C4B51] truncate">
+              {plan.title}
+            </h3>
             <div className="flex items-center gap-1 text-[#B7A969] text-sm">
-              <MapPinIcon size={16} /> <span className="font-semibold">{plan.place}</span>
+              <MapPinIcon size={16} />{" "}
+              <span className="font-semibold">{plan.place}</span>
             </div>
           </div>
           <div className="text-[#5C4B51]/80 text-sm mt-1">{dateText}</div>
 
           <div className="mt-3 flex items-center gap-3">
-            <button onClick={() => onView?.(plan)} className="px-4 py-1.5 rounded-xl bg-[#F3B562] text-[#5C4B51] font-semibold hover:brightness-105">View</button>
-            <button onClick={() => onJoin?.(plan)} className="px-4 py-1.5 rounded-xl bg-[#8CBEB2] text-white font-semibold hover:brightness-105">Join</button>
+            <button
+              onClick={() => onView?.(plan)}
+              className="px-4 py-1.5 rounded-xl bg-[#F3B562] text-[#5C4B51] font-semibold hover:brightness-105 cursor-pointer"
+            >
+              View
+            </button>
+            <button
+              onClick={() => onJoin?.(plan)}
+              className={`px-4 py-1.5 rounded-xl font-semibold hover:brightness-105 cursor-pointer ${
+                joined ? "bg-[#F06060] text-white" : "bg-[#8CBEB2] text-white"
+              }`}
+            >
+              {joined ? "Cancel" : "Join"}
+            </button>
             <MemberDots members={plan.members} />
           </div>
         </div>
@@ -104,6 +123,8 @@ function PlanCard({ plan, onView, onJoin, onDelete }) {
 export default function UpcomingPlans() {
   const [plans, setPlans] = useState(mockPlans);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const [form, setForm] = useState({
     title: "",
     place: "",
@@ -111,17 +132,42 @@ export default function UpcomingPlans() {
     endDate: dayjs().format("YYYY-MM-DD"),
   });
 
-  const handleView = (plan) => alert(`View plan: ${plan.title}`);
+  const handleView = (plan) => {
+    setSelectedPlan(plan);
+    setIsViewOpen(true);
+  };
 
-  const handleJoin = (plan) => {
-    setPlans((prev) =>
-      prev.map((p) =>
-        p.id === plan.id
-          ? { ...p, members: [...p.members, { id: Date.now(), name: "You", avatar: "/mockProfilePic2.jpg" }] }
-          : p
-      )
+  const handleJoin = async (plan) => {
+    const youAlreadyIn = plan.members.some((m) => m.id === CURRENT_USER.id);
+
+    if (!youAlreadyIn) {
+      // JOIN
+      setPlans((prev) =>
+        prev.map((p) =>
+          p.id === plan.id ? { ...p, members: [...p.members, CURRENT_USER] } : p
+        )
+      );
+      swalAlert("success", "You have joined this plan!");
+      return;
+    }
+
+    const ok = await swalAlertConfirm(
+      "Cancel join?",
+      "Do you want to leave this plan?"
     );
-    swalAlert("success","You has joined the party!")
+    if (ok.isConfirmed) {
+      setPlans((prev) =>
+        prev.map((p) =>
+          p.id === plan.id
+            ? {
+                ...p,
+                members: p.members.filter((m) => m.id !== CURRENT_USER.id),
+              }
+            : p
+        )
+      );
+      swalAlert("success", "You have left the plan.");
+    }
   };
 
   const handleCreate = (e) => {
@@ -139,10 +185,11 @@ export default function UpcomingPlans() {
 
     setPlans((prev) =>
       [...prev, newPlan].sort(
-        (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        (a, b) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
       )
     );
-    swalAlert("success","Create appointment successfully")
+    swalAlert("success", "Create appointment successfully");
     setIsCreateOpen(false);
     setForm({
       title: "",
@@ -152,9 +199,9 @@ export default function UpcomingPlans() {
     });
   };
 
-    const handleDelete = async (plan) => {
+  const handleDelete = async (plan) => {
     if (!window.confirm(`Delete "${plan.title}" ?`)) return;
-    setPlans(prev => prev.filter(p => p.id !== plan.id));
+    setPlans((prev) => prev.filter((p) => p.id !== plan.id));
   };
 
   return (
@@ -163,11 +210,17 @@ export default function UpcomingPlans() {
 
       <div className="flex flex-col gap-4">
         {plans.map((plan) => (
-          <PlanCard key={plan.id} plan={plan} onView={handleView} onJoin={handleJoin} onDelete={handleDelete} />
+          <PlanCard
+            key={plan.id}
+            plan={plan}
+            onView={handleView}
+            onJoin={handleJoin}
+            onDelete={handleDelete}
+            joined={plan.members.some((m) => m.id === CURRENT_USER.id)}
+          />
         ))}
       </div>
 
-      {/* แถบล่างแบบ sticky */}
       <div className="sticky bottom-0 mt-5">
         <div className="bg-white/80 backdrop-blur rounded-2xl p-3 flex justify-end">
           <button
@@ -180,7 +233,9 @@ export default function UpcomingPlans() {
       </div>
 
       <Modal open={isCreateOpen} onClose={() => setIsCreateOpen(false)}>
-        <h3 className="text-xl font-bold text-[#5C4B51] mb-4">Create appointment</h3>
+        <h3 className="text-xl font-bold text-[#5C4B51] mb-4">
+          Create appointment
+        </h3>
         <form onSubmit={handleCreate} className="flex flex-col gap-3">
           <input
             type="text"
@@ -197,7 +252,9 @@ export default function UpcomingPlans() {
               placeholder="Place"
               className="flex-1 px-3 py-2 rounded-lg bg-[#F7F3D7] outline-none"
               value={form.place}
-              onChange={(e) => setForm((f) => ({ ...f, place: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, place: e.target.value }))
+              }
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -207,7 +264,9 @@ export default function UpcomingPlans() {
                 type="date"
                 className="px-3 py-2 rounded-lg bg-[#F7F3D7] outline-none"
                 value={form.startDate}
-                onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, startDate: e.target.value }))
+                }
               />
             </div>
             <div className="flex flex-col">
@@ -216,7 +275,9 @@ export default function UpcomingPlans() {
                 type="date"
                 className="px-3 py-2 rounded-lg bg-[#F7F3D7] outline-none"
                 value={form.endDate}
-                onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, endDate: e.target.value }))
+                }
               />
             </div>
           </div>
@@ -238,6 +299,50 @@ export default function UpcomingPlans() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal open={isViewOpen} onClose={() => setIsViewOpen(false)}>
+        {selectedPlan && (
+          <div>
+            <h3 className="text-xl font-bold text-[#5C4B51] mb-2">
+              {selectedPlan.title}
+            </h3>
+            <div className="text-[#B7A969] mb-4 flex items-center gap-2">
+              <MapPinIcon size={16} /> {selectedPlan.place}
+            </div>
+
+            <div className="mb-2 font-semibold text-[#5C4B51]">
+              Members ({selectedPlan.members.length})
+            </div>
+            {selectedPlan.members.length === 0 ? (
+              <div className="text-sm text-[#8f9a97]">
+                No one has joined yet.
+              </div>
+            ) : (
+              <ul className="flex flex-col gap-2 max-h-64 overflow-auto">
+                {selectedPlan.members.map((m) => (
+                  <li key={m.id} className="flex items-center gap-3">
+                    <img
+                      src={m.avatar}
+                      alt={m.name}
+                      className="w-8 h-8 rounded-full object-cover border border-[#8CBEB2]"
+                    />
+                    <span className="text-[#5C4B51]">{m.name}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="flex justify-end mt-4">
+              <button
+                className="px-4 py-2 rounded-xl bg-[#8CBEB2] text-white font-semibold hover:brightness-105 cursor-pointer"
+                onClick={() => setIsViewOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

@@ -16,6 +16,6 @@ export const swalAlertConfirm = (icon,title, text) => {
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
+    confirmButtonText: "Yes!",
   });
 };
