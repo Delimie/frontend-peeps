@@ -283,9 +283,19 @@ function MainSideBar() {
         >
           Group's Bill
         </NavLink>
-        <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
+        {/* <button className="hover:text-[#8CBEB2] text-left text-[#5C4B51]">
           Appointment
-        </button>
+        </button> */}
+        <NavLink
+          to={`/peeps/${currentGroup}/appointment`}
+          className={({ isActive }) =>
+            isActive
+              ? "text-[#8CBEB2] font-bold"
+              : "text-[#5C4B51] hover:text-[#8CBEB2]"
+          }
+        >
+          Appointment
+        </NavLink>
         <NavLink
           to={`/peeps/${currentGroup}/management`}
           className={({ isActive }) =>

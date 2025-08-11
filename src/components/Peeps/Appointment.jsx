@@ -1,9 +1,12 @@
-import React from 'react'
+import UpcomingPlans from "./AppointmentComponent";
+
 
 function Appointment() {
   return (
-    <div>Appointment</div>
-  )
+    <div>
+     <UpcomingPlans/>
+    </div>
+  );
 }
 
-export default Appointment
+export default Appointment;

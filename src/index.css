@@ -54,3 +54,17 @@ h1{
 .slide-hover-btn:hover::before {
   transform: scaleX(1);
 }
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  display: inline-block;
+}
+.status-accent {
+  background: #8CBEB2;
+}
+.status-neutral {
+  background: #ccc;
+}
