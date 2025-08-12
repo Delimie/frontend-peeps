@@ -1,9 +1,8 @@
 // src/components/Plans/UpcomingPlans.jsx
-import { CalendarPlus2, MapPinIcon, Plus, Trash2 } from "lucide-react";
+import { CalendarPlus2, MapPinIcon, Plus, Trash2, Clock3 } from "lucide-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import Modal from "../Modal";
-import { toast } from "react-toastify";
 import { swalAlert, swalAlertConfirm } from "../../utils/swalAlert";
 
 const mockPlans = [
@@ -13,6 +12,8 @@ const mockPlans = [
   //   place: "กรุงเทพมหานคร",
   //   startDate: "2025-08-13",
   //   endDate: "2025-08-13",
+  //   startTime: "18:00",
+  //   endTime: "21:00",
   //   members: [
   //     { id: 1, name: "Lyrielle", avatar: "/mockProfilePic1.jpg" },
   //     { id: 2, name: "Aster", avatar: "/mockProfilePic3.jpg" },
@@ -24,6 +25,8 @@ const mockPlans = [
     place: "พระรามสอง",
     startDate: "2025-09-05",
     endDate: "2025-09-05",
+    startTime: "13:30",
+    endTime: "15:00",
     members: [{ id: 3, name: "Nova", avatar: "/mockProfilePic2.jpg" }],
   },
   {
@@ -32,6 +35,8 @@ const mockPlans = [
     place: "บางแสน",
     startDate: "2025-09-18",
     endDate: "2025-09-20",
+    startTime: "08:00",
+    endTime: "19:00",
     members: [],
   },
 ];
@@ -65,13 +70,21 @@ function MemberDots({ members, max = 4 }) {
   );
 }
 
-function PlanCard({ plan, onView, onJoin, onDelete,joined  }) {
+function PlanCard({ plan, onView, onJoin, onDelete, joined }) {
   const isRange = plan.startDate !== plan.endDate;
   const dateText = isRange
     ? `${dayjs(plan.startDate).format("DD/MM/YYYY")} - ${dayjs(
         plan.endDate
       ).format("DD/MM/YYYY")}`
     : dayjs(plan.startDate).format("DD/MM/YYYY");
+
+  const hasStart = Boolean(plan.startTime);
+  const hasEnd = Boolean(plan.endTime);
+  const timeText = hasStart && hasEnd
+    ? `${plan.startTime} - ${plan.endTime}`
+    : hasStart
+    ? `${plan.startTime}`
+    : null;
 
   return (
     <div className="relative w-full bg-white rounded-2xl shadow-sm border border-[#F2EBBF] px-5 py-4">
@@ -96,6 +109,12 @@ function PlanCard({ plan, onView, onJoin, onDelete,joined  }) {
             </div>
           </div>
           <div className="text-[#5C4B51]/80 text-sm mt-1">{dateText}</div>
+          {timeText && (
+            <div className="text-[#5C4B51]/70 text-sm mt-0.5 inline-flex items-center gap-1">
+              <Clock3 size={14} />
+              <span>{timeText}</span>
+            </div>
+          )}
 
           <div className="mt-3 flex items-center gap-3">
             <button
@@ -130,6 +149,8 @@ export default function UpcomingPlans() {
     place: "",
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
+    startTime: "09:00",
+    endTime: "18:00",
   });
 
   const handleView = (plan) => {
@@ -180,13 +201,16 @@ export default function UpcomingPlans() {
       place: form.place.trim(),
       startDate: form.startDate,
       endDate: form.endDate,
+      startTime: form.startTime,
+      endTime: form.endTime,
       members: [],
     };
 
     setPlans((prev) =>
       [...prev, newPlan].sort(
         (a, b) =>
-          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+          new Date(`${a.startDate}T${a.startTime || "00:00"}`).getTime() -
+          new Date(`${b.startDate}T${b.startTime || "00:00"}`).getTime()
       )
     );
     swalAlert("success", "Create appointment successfully");
@@ -196,6 +220,8 @@ export default function UpcomingPlans() {
       place: "",
       startDate: dayjs().format("YYYY-MM-DD"),
       endDate: dayjs().format("YYYY-MM-DD"),
+      startTime: "09:00",
+      endTime: "18:00",
     });
   };
 
@@ -205,10 +231,10 @@ export default function UpcomingPlans() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full min-h-0 flex flex-col">
       <h2 className="text-2xl font-bold text-[#5C4B51] mb-3">Upcoming Plans</h2>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto">
         {plans.map((plan) => (
           <PlanCard
             key={plan.id}
@@ -257,6 +283,8 @@ export default function UpcomingPlans() {
               }
             />
           </div>
+
+          {/* Date & Time */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col">
               <label className="text-sm text-[#5C4B51] mb-1">Start date</label>
@@ -268,6 +296,15 @@ export default function UpcomingPlans() {
                   setForm((f) => ({ ...f, startDate: e.target.value }))
                 }
               />
+              <label className="text-sm text-[#5C4B51] mt-2 mb-1">Start time</label>
+              <input
+                type="time"
+                className="px-3 py-2 rounded-lg bg-[#F7F3D7] outline-none"
+                value={form.startTime}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, startTime: e.target.value }))
+                }
+              />
             </div>
             <div className="flex flex-col">
               <label className="text-sm text-[#5C4B51] mb-1">End date</label>
@@ -277,6 +314,15 @@ export default function UpcomingPlans() {
                 value={form.endDate}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, endDate: e.target.value }))
+                }
+              />
+              <label className="text-sm text-[#5C4B51] mt-2 mb-1">End time</label>
+              <input
+                type="time"
+                className="px-3 py-2 rounded-lg bg-[#F7F3D7] outline-none"
+                value={form.endTime}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, endTime: e.target.value }))
                 }
               />
             </div>
@@ -307,17 +353,35 @@ export default function UpcomingPlans() {
             <h3 className="text-xl font-bold text-[#5C4B51] mb-2">
               {selectedPlan.title}
             </h3>
-            <div className="text-[#B7A969] mb-4 flex items-center gap-2">
+            <div className="text-[#B7A969] mb-2 flex items-center gap-2">
               <MapPinIcon size={16} /> {selectedPlan.place}
             </div>
+
+            {/* Date */}
+            <div className="text-[#5C4B51] mb-1">
+              <span className="font-semibold">Date:</span>{" "}
+              {selectedPlan.startDate !== selectedPlan.endDate
+                ? `${dayjs(selectedPlan.startDate).format("DD/MM/YYYY")} - ${dayjs(
+                    selectedPlan.endDate
+                  ).format("DD/MM/YYYY")}`
+                : dayjs(selectedPlan.startDate).format("DD/MM/YYYY")}
+            </div>
+            {/* Time */}
+            {(selectedPlan.startTime || selectedPlan.endTime) && (
+              <div className="text-[#5C4B51] mb-4 inline-flex items-center gap-2">
+                <Clock3 size={16} />
+                <span>
+                  {selectedPlan.startTime}
+                  {selectedPlan.endTime ? ` - ${selectedPlan.endTime}` : ""}
+                </span>
+              </div>
+            )}
 
             <div className="mb-2 font-semibold text-[#5C4B51]">
               Members ({selectedPlan.members.length})
             </div>
             {selectedPlan.members.length === 0 ? (
-              <div className="text-sm text-[#8f9a97]">
-                No one has joined yet.
-              </div>
+              <div className="text-sm text-[#8f9a97]">No one has joined yet.</div>
             ) : (
               <ul className="flex flex-col gap-2 max-h-64 overflow-auto">
                 {selectedPlan.members.map((m) => (
