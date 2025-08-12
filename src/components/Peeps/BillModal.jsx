@@ -17,19 +17,20 @@ const members = [
 ];
 
 function BillModal({ open, onClose }) {
-  const { groupId } = useParams()
-  const token = useAuthStore(state => state.token)
-  const user = useAuthStore(state => state.user)
-  const createExpense = useExpenseStore(state => state.createExpense)
-  const createSplit = useSplitStore(state => state.createSplit)
-  const groupUsers = useGroupStore(state => state.groupUsers)
-  const { register, handleSubmit, formState, reset, setValue, watch } = useForm()
-  const { isSubmitting, errors } = formState
+  const { groupId } = useParams();
+  const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user);
+  const createExpense = useExpenseStore((state) => state.createExpense);
+  const createSplit = useSplitStore((state) => state.createSplit);
+  const groupUsers = useGroupStore((state) => state.groupUsers);
+  const { register, handleSubmit, formState, reset, setValue, watch } =
+    useForm();
+  const { isSubmitting, errors } = formState;
   // console.log(user)
-  const billName = watch('title')
-  const total = watch('amount')
+  const billName = watch("title");
+  const total = watch("amount");
 
-  const currentGroupUsers = groupUsers.filter(u => u.id !== user.id);
+  const currentGroupUsers = groupUsers.filter((u) => u.id !== user.id);
 
   const [step, setStep] = useState(1);
 
@@ -46,24 +47,24 @@ function BillModal({ open, onClose }) {
         receiptImage: "fake.jpg",
         groupId: Number(groupId),
         userId: user.id,
-        date: today.toISOString().split("T")[0]
-      }
-      console.log("[CREATE DATA]", expenseData)
+        date: today.toISOString().split("T")[0],
+      };
+      console.log("[CREATE DATA]", expenseData);
       // const result = await createExpense(createData, token)
       // console.log(result)
-      setCreateData(expenseData)
-      toast.success("Assigned success")
-      setStep(2)
+      setCreateData(expenseData);
+      toast.success("Assigned success");
+      setStep(2);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const onSubmitSplit = async () => {
     try {
       const result = await createExpense(createData, token);
-      console.log(result.data.expense.id)
-      const expenseId = result.data.expense.id
+      console.log(result.data.expense.id);
+      const expenseId = result.data.expense.id;
       setCreatedExpenseId(expenseId);
       const splitData = currentGroupUsers.map((user, i) => ({
         userId: user.id,
@@ -129,7 +130,7 @@ function BillModal({ open, onClose }) {
               placeholder="กรุณากรอกชื่อบิล"
               // value={billName}
               // onChange={(e) => setBillName(e.target.value)}
-              {...register('title')}
+              {...register("title")}
               className="w-full rounded-lg px-3 py-2 bg-[#F7F3D7] text-[#555] mb-4 outline-none border-none placeholder:text-[#B7A969] font-medium"
             />
 
@@ -141,7 +142,7 @@ function BillModal({ open, onClose }) {
               placeholder="ยอดทั้งหมด"
               // value={total}
               // onChange={(e) => setTotal(e.target.value)}
-              {...register('amount')}
+              {...register("amount")}
               className="w-full rounded-lg px-4 py-2 bg-[#F7F3D7] text-[#555] mb-5 outline-none border-none placeholder:text-[#B7A969] font-medium"
             />
 
@@ -164,7 +165,7 @@ function BillModal({ open, onClose }) {
               // onClick={() => setStep(2)}
               type="submit"
               disabled={!billName || Number(total) <= 0 || isSubmitting}
-            // disabled={isSubmitting}
+              // disabled={isSubmitting}
             >
               Next
             </button>
@@ -195,7 +196,13 @@ function BillModal({ open, onClose }) {
                 >
                   {/* กลุ่ม avatar + name */}
                   <div className="flex items-center gap-2 min-w-0">
-                    <Avatar size={40} />
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-[#8CBEB2]">
+                      <img
+                        src={el.profileImage}
+                        alt={el.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     <span
                       className="text-[#222] font-semibold truncate"
                       style={{ width: 150 }}
@@ -203,6 +210,7 @@ function BillModal({ open, onClose }) {
                       {el.name}
                     </span>
                   </div>
+
                   {/* กลุ่ม input + ฿ */}
                   <div className="flex items-center gap-1">
                     <input
@@ -216,7 +224,7 @@ function BillModal({ open, onClose }) {
                         newSplits[i] = e.target.value;
                         setSplits(newSplits);
                       }}
-                    // {...register("amount")}
+                      // {...register("amount")}
                     />
                     <span className="text-[#222] text-base">฿</span>
                   </div>
